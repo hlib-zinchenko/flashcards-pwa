@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#5b5bd6"/>
+  <g transform="rotate(-8 256 256)">
+    <rect x="132" y="150" width="248" height="200" rx="24" fill="#ffffff" opacity="0.45"/>
+  </g>
+  <rect x="132" y="170" width="248" height="200" rx="24" fill="#ffffff"/>
+  <text x="256" y="310" font-family="Hiragino Sans, Noto Sans JP, sans-serif" font-size="130" font-weight="700" text-anchor="middle" fill="#5b5bd6">あ</text>
+</svg>
