@@ -6,6 +6,7 @@ import type { Card } from '../types';
 export interface CardInput {
   front: string;
   back: string;
+  notes?: string;
   tags: string[];
 }
 
@@ -27,6 +28,7 @@ function newCard(deckId: string, input: CardInput, position: number, now: number
     deckId,
     front: input.front.trim(),
     back: input.back.trim(),
+    notes: (input.notes ?? '').trim(),
     tags: [...new Set(input.tags)],
     position,
     level: 0,
@@ -60,6 +62,7 @@ export async function updateCard(id: string, input: CardInput & { deckId?: strin
       tags: [...new Set(input.tags)],
       updatedAt: Date.now(),
     };
+    if (input.notes !== undefined) changes.notes = input.notes.trim();
     if (input.deckId && input.deckId !== card.deckId) {
       changes.deckId = input.deckId;
       changes.position = await nextPosition(input.deckId);

@@ -8,7 +8,7 @@ const tag = (id: string, name: string): Tag => ({ id, name, preset: false, creat
 
 describe('parseBackup', () => {
   it('round-trips a backup', () => {
-    const lib: Library = { decks: [deck('d1')], cards: [card({ deckId: 'd1', tags: ['verb', 't1'] })], tags: [tag('t1', 'N5')] };
+    const lib: Library = { decks: [deck('d1')], cards: [card({ deckId: 'd1', tags: ['verb', 't1'], notes: 'irregular' })], tags: [tag('t1', 'N5')] };
     expect(parseBackup(JSON.stringify(createBackup(lib, 5)))).toEqual(createBackup(lib, 5));
   });
   it('rejects foreign files', () => {

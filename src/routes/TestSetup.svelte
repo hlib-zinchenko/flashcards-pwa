@@ -85,14 +85,13 @@
     ['back', () => t('test.back')],
   ];
   const modes: [Mode, () => string][] = [
-    ['finite', () => t('test.finite')],
-    ['infinite', () => t('test.infinite')],
+    ['cram', () => t('test.cram')],
+    ['refresh', () => t('test.refresh')],
   ];
   const sorts: [SortMode, () => string][] = [
     ['deck', () => t('test.sortDeck')],
     ['random', () => t('test.sortRandom')],
-    ['az', () => t('test.sortAz')],
-    ['za', () => t('test.sortZa')],
+    ['level', () => t('test.sortLevel')],
   ];
 </script>
 
@@ -144,6 +143,7 @@
           <button type="button" aria-pressed={cfg.mode === value} onclick={() => (cfg.mode = value)}>{label()}</button>
         {/each}
       </div>
+      <p class="muted small mode-hint">{cfg.mode === 'cram' ? t('test.cramHint') : t('test.refreshHint')}</p>
     </section>
 
     <section class="section">
@@ -230,6 +230,9 @@
     font-weight: 500;
     letter-spacing: 0;
     text-transform: none;
+  }
+  .mode-hint {
+    margin: 8px 0 0;
   }
   .custom {
     width: 120px;

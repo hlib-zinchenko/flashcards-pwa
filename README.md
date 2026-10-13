@@ -6,19 +6,19 @@ Offline flashcards that install to your phone's home screen. You don't need an A
 
 ## Features
 
-- **Decks & cards:** create, rename and delete decks; add, edit, reorder and move cards. Quick-add form: Enter moves to the next field, Enter again saves.
+- **Decks & cards:** create, rename and delete decks; add, edit, reorder and move cards, with optional notes per card. Quick-add form: Enter moves to the next field, Enter again saves.
 - **Tags:** built-in `verb`, `noun`, `adjective`, `phrase`, plus your own.
 - **Learning levels:** New → Weak → Learning → Confident → Strong → Mastered. *Know* moves a card up one level, *Don't know* moves it down one. There is no scheduling: you choose what to study.
 - **Test mode**
   - Pick one or more decks, show the front or back first.
-  - *All cards till end* (missed cards come back until you know them) or *Infinite*.
-  - Order: deck order, random, A→Z, Z→A.
+  - *Cram*: known cards leave the session, missed ones go back at a random spot until you know them all. *Refresh*: one pass, answers only update levels.
+  - Order: deck order, random, level ascending (weakest first).
   - Filter by level and tag, and limit the number of cards.
-  - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card.
-  - Keyboard: Space flips · → / ← grade · E edits · Esc finishes.
+  - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card. A **Notes** button on both sides of the card reveals its notes.
+  - Keyboard: Space flips · → know · ← don't know · E edits · Esc finishes.
 - **Import / export**
   - JSON backup of the whole library (with progress), for moving to another device. Merge or replace on import.
-  - CSV/TSV per deck: `front,back,tags` with tags separated by `|`. Handy for writing cards in Excel or Google Sheets on a PC.
+  - CSV/TSV per deck: `front,back,tags,notes` with tags separated by `|` (tags and notes optional). Handy for writing cards in Excel or Google Sheets on a PC.
 - English and Ukrainian UI, light and dark theme, works offline.
 
 ## Install on a phone
@@ -32,10 +32,10 @@ Offline flashcards that install to your phone's home screen. You don't need an A
 ## CSV format
 
 ```csv
-front,back,tags
-食べる,to eat,verb|N5
-水,water,noun
-おはようございます,good morning,phrase
+front,back,tags,notes
+食べる,to eat,verb|N5,ichidan verb
+水,water,noun,
+おはようございます,good morning,phrase,polite
 ```
 
 The header row is optional. Comma, tab and semicolon separators are all detected automatically.

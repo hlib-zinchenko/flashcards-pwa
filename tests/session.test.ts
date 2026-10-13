@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPool, DEFAULT_CONFIG, filterCards, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
+import { buildPool, DEFAULT_CONFIG, filterCards, normalizeConfig, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
 import type { Level } from '../src/lib/types';
 import { card, seeded } from './helpers';
 
@@ -24,61 +24,72 @@ describe('filterCards', () => {
 describe('sortCards', () => {
   const deckOrder = new Map([['d1', 1], ['d2', 0]]);
   const cards = [
-    card({ id: 'x', deckId: 'd1', position: 0, front: 'b', back: 'Z' }),
-    card({ id: 'y', deckId: 'd1', position: 1, front: 'A', back: 'y' }),
-    card({ id: 'z', deckId: 'd2', position: 5, front: 'c', back: 'x' }),
+    card({ id: 'x', deckId: 'd1', position: 0, level: 3 }),
+    card({ id: 'y', deckId: 'd1', position: 1, level: 1 }),
+    card({ id: 'z', deckId: 'd2', position: 5, level: 3 }),
   ];
-  const ids = (sort: TestConfig['sort'], direction: TestConfig['direction'] = 'front') =>
-    sortCards(cards, { sort, direction }, deckOrder).map((c) => c.id);
+  const ids = (sort: TestConfig['sort']) => sortCards(cards, { sort }, deckOrder).map((c) => c.id);
 
   it('deck order uses deck position then card position', () => expect(ids('deck')).toEqual(['z', 'x', 'y']));
-  it('sorts A→Z case-insensitively by prompt side', () => expect(ids('az')).toEqual(['y', 'x', 'z']));
-  it('sorts Z→A', () => expect(ids('za')).toEqual(['z', 'x', 'y']));
-  it('uses back side when direction is back', () => expect(ids('az', 'back')).toEqual(['z', 'y', 'x']));
+  it('level sorts ascending, ties in deck order', () => expect(ids('level')).toEqual(['y', 'z', 'x']));
   it('random is a permutation', () => {
-    expect(sortCards(cards, { sort: 'random', direction: 'front' }, deckOrder, seeded(3)).map((c) => c.id).sort()).toEqual(['x', 'y', 'z']);
+    expect(sortCards(cards, { sort: 'random' }, deckOrder, seeded(3)).map((c) => c.id).sort()).toEqual(['x', 'y', 'z']);
   });
 });
 
 describe('buildPool', () => {
   it('applies the limit after sorting', () => {
-    const cards = ['d', 'b', 'a', 'c'].map((f, i) => card({ id: f, front: f, position: i }));
-    expect(buildPool(cards, cfg({ sort: 'az', limit: 2 }), new Map()).map((c) => c.id)).toEqual(['a', 'b']);
+    const cards = [3, 1, 0, 2].map((level, i) => card({ id: `l${level}`, level: level as Level, position: i }));
+    expect(buildPool(cards, cfg({ sort: 'level', limit: 2 }), new Map()).map((c) => c.id)).toEqual(['l0', 'l1']);
     expect(buildPool(cards, cfg({ limit: null }), new Map())).toHaveLength(4);
   });
 });
 
-describe('Session (finite)', () => {
+describe('normalizeConfig', () => {
+  it('replaces modes and orders from older versions', () => {
+    const old = { mode: 'infinite', sort: 'az', limit: 20 } as unknown as Partial<TestConfig>;
+    expect(normalizeConfig(old)).toMatchObject({ mode: 'cram', sort: 'deck', limit: 20 });
+  });
+});
+
+describe('Session (cram)', () => {
   it('shows each card once when all known', () => {
-    const s = new Session(['a', 'b', 'c'], 'finite');
+    const s = new Session(['a', 'b', 'c'], 'cram');
     const seen: string[] = [];
     while (!s.done) { seen.push(s.current!); s.grade(true); }
     expect(seen).toEqual(['a', 'b', 'c']);
     expect(s.firstTry.size).toBe(3);
+    expect(s.completed).toBe(3);
   });
 
-  it('re-queues missed cards until known', () => {
-    const s = new Session(['a', 'b', 'c', 'd', 'e', 'f'], 'finite', { rng: () => 0 });
-    expect(s.current).toBe('a');
-    s.grade(false); // a goes 3 slots ahead: b c d a e f
+  it('puts missed cards back at a random spot until known', () => {
+    // rng 0.5 with 5 cards left → index 1 + floor(2.5) = 3
+    const s = new Session(['a', 'b', 'c', 'd', 'e', 'f'], 'cram', { rng: () => 0.5 });
+    s.grade(false); // queue: b c d a e f
     const seen: string[] = [];
     while (!s.done) { seen.push(s.current!); s.grade(true); }
     expect(seen).toEqual(['b', 'c', 'd', 'a', 'e', 'f']);
     expect(s.firstTry.has('a')).toBe(false);
     expect(s.missed.has('a')).toBe(true);
-    expect(s.remaining).toBe(0);
+    expect(s.completed).toBe(6);
   });
 
-  it('puts a missed card at the end when few cards remain', () => {
-    const s = new Session(['a', 'b'], 'finite', { rng: () => 0.99 });
+  it('never puts a missed card right next when others remain', () => {
+    const s = new Session(['a', 'b'], 'cram', { rng: () => 0 });
     s.grade(false);
     expect(s.current).toBe('b');
     s.grade(true);
     expect(s.current).toBe('a');
   });
 
+  it('can put a missed card at the very end', () => {
+    const s = new Session(['a', 'b', 'c'], 'cram', { rng: () => 0.99 });
+    s.grade(false);
+    expect([s.current, (s.grade(true), s.current), (s.grade(true), s.current)]).toEqual(['b', 'c', 'a']);
+  });
+
   it('repeats a single card until known', () => {
-    const s = new Session(['a'], 'finite');
+    const s = new Session(['a'], 'cram');
     s.grade(false);
     expect(s.current).toBe('a');
     s.grade(true);
@@ -86,34 +97,39 @@ describe('Session (finite)', () => {
   });
 
   it('is done immediately for an empty pool', () => {
-    expect(new Session([], 'finite').done).toBe(true);
-    expect(new Session([], 'infinite').done).toBe(true);
+    expect(new Session([], 'cram').done).toBe(true);
+    expect(new Session([], 'refresh').done).toBe(true);
+  });
+
+  it('ends after every card is known, whatever the misses', () => {
+    const rng = seeded(7);
+    const s = new Session(['a', 'b', 'c', 'd'], 'cram', { rng });
+    let prev = '';
+    for (let i = 0; i < 1000 && !s.done; i++) {
+      expect(s.current).not.toBe(prev);
+      prev = s.current!;
+      s.grade(rng() < 0.4);
+    }
+    expect(s.done).toBe(true);
+    expect(s.learned.size).toBe(4);
   });
 });
 
-describe('Session (infinite)', () => {
-  it('loops forever over the pool', () => {
-    const s = new Session(['a', 'b'], 'infinite');
+describe('Session (refresh)', () => {
+  it('shows every card exactly once and records misses', () => {
+    const s = new Session(['a', 'b', 'c'], 'refresh');
     const seen: string[] = [];
-    for (let i = 0; i < 6; i++) { seen.push(s.current!); s.grade(true); }
-    expect(seen).toEqual(['a', 'b', 'a', 'b', 'a', 'b']);
-    expect(s.done).toBe(false);
-  });
-
-  it('never shows the same card twice in a row when reshuffling', () => {
-    const s = new Session(['a', 'b', 'c'], 'infinite', { reshuffle: true, rng: seeded(7) });
-    let prev = '';
-    for (let i = 0; i < 300; i++) {
-      expect(s.current).not.toBe(prev);
-      prev = s.current!;
-      s.grade(i % 3 !== 0);
-    }
+    while (!s.done) { seen.push(s.current!); s.grade(seen.length !== 2); }
+    expect(seen).toEqual(['a', 'b', 'c']);
+    expect([...s.missed]).toEqual(['b']);
+    expect(s.completed).toBe(3);
+    expect(s.answered).toBe(3);
   });
 });
 
 describe('summarize', () => {
   it('counts level changes', () => {
-    const s = new Session(['a', 'b', 'c'], 'finite');
+    const s = new Session(['a', 'b', 'c'], 'cram');
     s.grade(true); s.grade(false); s.grade(true); s.grade(true);
     const start = new Map<string, Level>([['a', 0], ['b', 3], ['c', 5]]);
     const now = new Map<string, Level>([['a', 2], ['b', 3], ['c', 4]]);

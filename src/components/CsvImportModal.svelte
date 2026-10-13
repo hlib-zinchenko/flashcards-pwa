@@ -50,6 +50,7 @@
         parsed.rows.map((r) => ({
           front: r.front,
           back: r.back,
+          notes: r.notes,
           tags: r.tags.map((name) => tagIds.get(normalizeTagName(name))!).filter(Boolean),
         })),
       );

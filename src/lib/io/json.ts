@@ -80,6 +80,7 @@ export function parseBackup(text: string, now = Date.now()): Backup {
       deckId,
       front: str(c, 'front', what),
       back: str(c, 'back', what),
+      notes: typeof c.notes === 'string' ? c.notes : undefined,
       tags: cardTags.filter((t) => tagIds.has(t) || isPresetTagId(t)),
       position: num(c, 'position', i),
       level: (Number.isInteger(level) && level >= 0 && level <= 5 ? level : 0) as Level,

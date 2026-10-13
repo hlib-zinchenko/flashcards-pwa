@@ -25,6 +25,8 @@
   // svelte-ignore state_referenced_locally
   let back = $state(initial.back);
   // svelte-ignore state_referenced_locally
+  let notes = $state(initial.notes ?? '');
+  // svelte-ignore state_referenced_locally
   let selected = $state([...initial.tags]);
   // svelte-ignore state_referenced_locally
   let deckId = $state(initial.deckId);
@@ -32,7 +34,7 @@
   function submit(e: SubmitEvent) {
     e.preventDefault();
     if (!front.trim() && !back.trim()) return;
-    onsubmit({ front, back, tags: selected, deckId });
+    onsubmit({ front, back, notes, tags: selected, deckId });
   }
 </script>
 
@@ -44,6 +46,10 @@
   <label class="field">
     <span>{t('card.back')}</span>
     <textarea class="input" bind:value={back} rows="2" placeholder={t('card.backPlaceholder')}></textarea>
+  </label>
+  <label class="field">
+    <span>{t('card.notes')}</span>
+    <textarea class="input" bind:value={notes} rows="2" placeholder={t('card.notesPlaceholder')}></textarea>
   </label>
   <div class="field">
     <span>{t('card.tags')}</span>

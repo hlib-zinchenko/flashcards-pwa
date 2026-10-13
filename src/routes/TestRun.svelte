@@ -11,7 +11,7 @@
   import { loadPref, savePref } from '../lib/prefs';
   import { gradeCard, updateCard, type CardInput } from '../lib/repo/cards';
   import { navigate } from '../lib/router.svelte';
-  import { buildPool, Session, sortCards, summarize, type Mode, type Summary } from '../lib/session';
+  import { buildPool, Session, sortCards, summarize, type Summary } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
   import type { Card, Level } from '../lib/types';
 
@@ -39,7 +39,7 @@
   const progress = $derived.by(() => {
     version;
     if (!session) return { done: 0, total: 0, answered: 0 };
-    return { done: session.learned.size, total: session.pool.length, answered: session.answered };
+    return { done: session.completed, total: session.pool.length, answered: session.answered };
   });
   const prompt = $derived(current ? (cfg.direction === 'front' ? current.front : current.back) : '');
   const answer = $derived(current ? (cfg.direction === 'front' ? current.back : current.front) : '');
@@ -47,15 +47,11 @@
     (current?.tags ?? []).map((id) => tagById.get(id)).filter((tag) => !!tag).map((tag) => tagLabel(tag)),
   );
 
-  function begin(pool: Card[], mode: Mode) {
+  function begin(pool: Card[]) {
     cards.clear();
     for (const c of pool) cards.set(c.id, c);
     startLevels = new Map(pool.map((c) => [c.id, c.level]));
-    session = new Session(
-      pool.map((c) => c.id),
-      mode,
-      { reshuffle: cfg.sort === 'random' },
-    );
+    session = new Session(pool.map((c) => c.id), cfg.mode);
     summary = null;
     flipped = false;
     version++;
@@ -65,11 +61,9 @@
     const [decks, all] = await Promise.all([db.decks.toArray(), db.cards.toArray()]);
     const deckOrder = new Map(decks.map((d) => [d.id, d.position]));
     let pool: Card[];
-    let mode = cfg.mode;
     if (onlyIds) {
       const ids = new Set(onlyIds);
       pool = sortCards(all.filter((c) => ids.has(c.id)), cfg, deckOrder);
-      mode = 'finite';
     } else {
       pool = buildPool(all, cfg, deckOrder);
     }
@@ -77,7 +71,7 @@
       navigate('/test', { replace: true });
       return;
     }
-    begin(pool, mode);
+    begin(pool);
   }
 
   onMount(() => {
@@ -116,7 +110,8 @@
   async function saveEdit(input: CardInput) {
     if (!current) return;
     await updateCard(current.id, input);
-    cards.set(current.id, { ...current, front: input.front.trim(), back: input.back.trim(), tags: [...input.tags] });
+    const updated = await db.cards.get(current.id);
+    if (updated) cards.set(updated.id, updated);
     editOpen = false;
   }
 
@@ -189,12 +184,8 @@
         <Icon name="close" />
       </button>
       <div class="progress">
-        {#if session?.mode === 'finite'}
-          <div class="track"><div class="fill" style:width="{(progress.done / progress.total) * 100}%"></div></div>
-          <span class="muted small">{progress.done} / {progress.total}</span>
-        {:else}
-          <span class="muted small">{t('run.answered', { n: progress.answered })}</span>
-        {/if}
+        <div class="track"><div class="fill" style:width="{(progress.done / progress.total) * 100}%"></div></div>
+        <span class="muted small">{progress.done} / {progress.total}</span>
       </div>
       <button class="icon-btn" type="button" onclick={() => (editOpen = true)} aria-label={t('run.edit')} title={t('run.edit')}>
         <Icon name="edit" size={20} />
@@ -208,6 +199,7 @@
           bind:flipped
           {prompt}
           {answer}
+          notes={current.notes}
           {tagLabels}
           ongrade={grade}
           onedit={() => (editOpen = true)}

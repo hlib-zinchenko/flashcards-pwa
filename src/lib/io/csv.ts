@@ -5,6 +5,7 @@ export interface CsvRow {
   back: string;
   /** Tag names (not ids) */
   tags: string[];
+  notes: string;
 }
 
 export interface CsvParseResult {
@@ -56,7 +57,7 @@ export function parseCsv(text: string, opts: { header?: boolean } = {}): CsvPars
       skipped++;
       continue;
     }
-    rows.push({ front, back, tags: splitTags(cells[2] ?? '') });
+    rows.push({ front, back, tags: splitTags(cells[2] ?? ''), notes: (cells[3] ?? '').trim() });
   }
   return { rows, delimiter: result.meta.delimiter, header, skipped };
 }
@@ -66,8 +67,8 @@ export function toCsv(rows: readonly CsvRow[]): string {
   return (
     '﻿' +
     Papa.unparse({
-      fields: ['front', 'back', 'tags'],
-      data: rows.map((r) => [r.front, r.back, r.tags.join(TAG_SEPARATOR)]),
+      fields: ['front', 'back', 'tags', 'notes'],
+      data: rows.map((r) => [r.front, r.back, r.tags.join(TAG_SEPARATOR), r.notes]),
     })
   );
 }

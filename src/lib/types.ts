@@ -19,6 +19,8 @@ export interface Card {
   deckId: string;
   front: string;
   back: string;
+  /** Free-form extra info, hidden in tests until tapped. Missing on older cards. */
+  notes?: string;
   /** Tag ids */
   tags: string[];
   /** Order inside the deck */

@@ -5,6 +5,7 @@
   let {
     prompt,
     answer,
+    notes = '',
     flipped = $bindable(false),
     tagLabels = [],
     ongrade,
@@ -12,6 +13,7 @@
   }: {
     prompt: string;
     answer: string;
+    notes?: string;
     flipped?: boolean;
     tagLabels?: string[];
     ongrade: (known: boolean) => void;
@@ -27,6 +29,7 @@
   let dy = $state(0);
   let dragging = $state(false);
   let leaving = $state(false);
+  let notesOpen = $state(false);
 
   let pointerId: number | null = null;
   let start = { x: 0, y: 0, t: 0 };
@@ -38,6 +41,8 @@
 
   function onDown(e: PointerEvent) {
     if (leaving || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    // Notes button and scrollable notes handle their own touches.
+    if (e.target instanceof Element && e.target.closest('[data-nodrag]')) return;
     pointerId = e.pointerId;
     el.setPointerCapture(e.pointerId);
     start = { x: e.clientX, y: e.clientY, t: performance.now() };
@@ -110,6 +115,18 @@
   }
 </script>
 
+<!-- Shown on both faces; open/closed state is shared, so it survives a flip. -->
+{#snippet notesBlock()}
+  {#if notes}
+    {#if notesOpen}
+      <p class="notes" data-nodrag>{notes}</p>
+    {/if}
+    <button class="notes-btn" type="button" data-nodrag aria-expanded={notesOpen} onclick={() => (notesOpen = !notesOpen)}>
+      {notesOpen ? t('run.hideNotes') : t('run.showNotes')}
+    </button>
+  {/if}
+{/snippet}
+
 <div
   class="card"
   class:dragging
@@ -127,12 +144,13 @@
   onpointercancel={onCancel}
   onlostpointercapture={onCancel}
   onkeydown={(e) => {
-    if (e.key === 'Enter') flipped = !flipped;
+    if (e.key === 'Enter' && e.target === e.currentTarget) flipped = !flipped;
   }}
 >
   <div class="flipper" class:flipped>
     <div class="face front">
       <p class="text {sizeClass(prompt)}">{prompt}</p>
+      {@render notesBlock()}
       <span class="hint">{t('run.tapToFlip')}</span>
     </div>
     <div class="face back">
@@ -143,6 +161,7 @@
           {#each tagLabels as label (label)}<span class="tag-pill">{label}</span>{/each}
         </div>
       {/if}
+      {@render notesBlock()}
     </div>
   </div>
   <div class="stamp know" style:opacity={knowAmount}>{t('run.know')}</div>
@@ -202,6 +221,11 @@
   .back {
     transform: rotateY(180deg);
   }
+  /* Only the visible face takes taps. */
+  .flipper:not(.flipped) .back,
+  .flipper.flipped .front {
+    pointer-events: none;
+  }
   .text {
     margin: 0;
     max-width: 100%;
@@ -251,6 +275,35 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 4px;
+  }
+  .notes {
+    flex: 0 1 auto;
+    min-height: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 10px 12px;
+    overflow-y: auto;
+    border-radius: 12px;
+    background: var(--surface-2);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-align: left;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    touch-action: pan-y;
+    user-select: text;
+    -webkit-user-select: text;
+  }
+  .notes-btn {
+    flex: none;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
   }
   .stamp {
     position: absolute;

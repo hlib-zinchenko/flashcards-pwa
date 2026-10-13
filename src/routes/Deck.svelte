@@ -67,7 +67,7 @@
     return ($cards ?? []).filter(
       (c) =>
         (!filterTag || c.tags.includes(filterTag)) &&
-        (!q || c.front.toLowerCase().includes(q) || c.back.toLowerCase().includes(q)),
+        (!q || [c.front, c.back, c.notes ?? ''].some((text) => text.toLowerCase().includes(q))),
     );
   });
   const filtering = $derived(!!query.trim() || filterTag !== null);
@@ -134,6 +134,7 @@
       front: c.front,
       back: c.back,
       tags: c.tags.map((tid) => tagById.get(tid)).filter((tag) => !!tag).map((tag) => tag.name),
+      notes: c.notes ?? '',
     }));
     await saveFile(`${safeFileName($deck?.name ?? 'deck')}.csv`, toCsv(rows), 'text/csv');
   }
