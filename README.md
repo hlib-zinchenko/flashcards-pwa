@@ -59,6 +59,15 @@ Icons are generated from `public/icon.svg` with `npx pwa-assets-generator`.
 
 ## Deploy
 
-Every push to `main` runs tests, builds, and deploys to GitHub Pages (`.github/workflows/deploy.yml`).
+Pushing a version tag (`v*`) runs tests, builds, and deploys to GitHub Pages (`.github/workflows/deploy.yml`). The tag must match the `version` in `package.json`:
 
-One-time setup: **GitHub repo → Settings → Pages → Source: GitHub Actions**. If you rename the repo, update `base` in `vite.config.ts` and the icon paths in `index.html`.
+```sh
+npm version patch   # bumps package.json, commits, tags vX.Y.Z
+git push --follow-tags
+```
+
+You can also run the workflow by hand from the Actions tab.
+
+Pushes to `main` and pull requests run type checks, tests and a build without deploying (`.github/workflows/ci.yml`).
+
+One-time setup: **GitHub repo → Settings → Pages → Source: GitHub Actions**, and allow tags to deploy under **Settings → Environments → github-pages → Deployment branches and tags** (add a tag rule `v*`). If you rename the repo, update `base` in `vite.config.ts` and the icon paths in `index.html`.
