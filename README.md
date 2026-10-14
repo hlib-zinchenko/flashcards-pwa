@@ -1,6 +1,8 @@
 # Flashcards PWA
 
-Offline flashcards that install to your phone's home screen. You don't need an App Store, an account or a server. Your data stays on your device.
+Offline flashcards that install to your phone's home screen. No App Store, no account, no server. Your data stays on your device.
+
+I built this for my partner: she wanted a flashcard app on her iPhone and none of the existing ones, free or paid, fit how she studies. A native app meant a developer fee and App Store review, so I made it a PWA instead.
 
 **Live app:** https://hlib-zinchenko.github.io/flashcards-pwa/
 
