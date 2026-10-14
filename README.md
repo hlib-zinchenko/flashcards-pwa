@@ -4,6 +4,15 @@ Offline flashcards that install to your phone's home screen. You don't need an A
 
 **Live app:** https://hlib-zinchenko.github.io/flashcards-pwa/
 
+<p>
+  <img src="docs/screenshots/decks.png" alt="Deck list with learning-level bars" width="220">
+  <img src="docs/screenshots/deck.png" alt="Deck with its cards and tags" width="220">
+  <img src="docs/screenshots/test-setup.png" alt="Test setup: decks, mode, order, level and tag filters" width="220">
+  <img src="docs/screenshots/test-swipe.png" alt="Swiping a card right to mark it known" width="220">
+  <img src="docs/screenshots/test-back.png" alt="Card back with tags and notes" width="220">
+  <img src="docs/screenshots/test-back-dark.png" alt="Card back in dark theme" width="220">
+</p>
+
 ## Features
 
 - **Decks & cards:** create, rename and delete decks; add, edit, reorder and move cards, with optional notes per card. Quick-add form: Enter moves to the next field, Enter again saves.

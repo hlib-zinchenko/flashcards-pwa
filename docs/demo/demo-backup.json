@@ -1,0 +1,965 @@
+{
+  "app": "flashcards-pwa",
+  "schemaVersion": 1,
+  "exportedAt": 1791968400000,
+  "decks": [
+    {
+      "id": "demo-deck-1",
+      "name": "Japanese N5 verbs",
+      "position": 0,
+      "createdAt": 1789549200000,
+      "updatedAt": 1791882000000
+    },
+    {
+      "id": "demo-deck-2",
+      "name": "Food & drink",
+      "position": 1,
+      "createdAt": 1789635600000,
+      "updatedAt": 1791882000000
+    },
+    {
+      "id": "demo-deck-3",
+      "name": "Travel phrases",
+      "position": 2,
+      "createdAt": 1789722000000,
+      "updatedAt": 1791882000000
+    },
+    {
+      "id": "demo-deck-4",
+      "name": "Adjectives",
+      "position": 3,
+      "createdAt": 1789808400000,
+      "updatedAt": 1791882000000
+    }
+  ],
+  "cards": [
+    {
+      "id": "demo-card-1-1",
+      "deckId": "demo-deck-1",
+      "front": "食べる",
+      "back": "to eat",
+      "tags": [
+        "verb",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 0,
+      "level": 5,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789549200000,
+      "updatedAt": 1791882000000,
+      "notes": "ichidan verb · たべる",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-1-2",
+      "deckId": "demo-deck-1",
+      "front": "飲む",
+      "back": "to drink",
+      "tags": [
+        "verb",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 1,
+      "level": 5,
+      "timesSeen": 12,
+      "timesKnown": 11,
+      "timesMissed": 1,
+      "createdAt": 1789549260000,
+      "updatedAt": 1791882000000,
+      "notes": "godan verb · のむ",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-1-3",
+      "deckId": "demo-deck-1",
+      "front": "行く",
+      "back": "to go",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 2,
+      "level": 4,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789549320000,
+      "updatedAt": 1791882000000,
+      "notes": "godan, irregular te-form: 行って",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-1-4",
+      "deckId": "demo-deck-1",
+      "front": "来る",
+      "back": "to come",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 3,
+      "level": 4,
+      "timesSeen": 9,
+      "timesKnown": 8,
+      "timesMissed": 1,
+      "createdAt": 1789549380000,
+      "updatedAt": 1791882000000,
+      "notes": "irregular · くる",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-1-5",
+      "deckId": "demo-deck-1",
+      "front": "見る",
+      "back": "to see, to watch",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 4,
+      "level": 4,
+      "timesSeen": 9,
+      "timesKnown": 9,
+      "timesMissed": 0,
+      "createdAt": 1789549440000,
+      "updatedAt": 1791882000000,
+      "notes": "ichidan · みる",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-1-6",
+      "deckId": "demo-deck-1",
+      "front": "する",
+      "back": "to do",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 5,
+      "level": 5,
+      "timesSeen": 13,
+      "timesKnown": 12,
+      "timesMissed": 1,
+      "createdAt": 1789549500000,
+      "updatedAt": 1791882000000,
+      "notes": "irregular",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-1-7",
+      "deckId": "demo-deck-1",
+      "front": "書く",
+      "back": "to write",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 6,
+      "level": 3,
+      "timesSeen": 7,
+      "timesKnown": 6,
+      "timesMissed": 1,
+      "createdAt": 1789549560000,
+      "updatedAt": 1791882000000,
+      "notes": "godan · かく",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-1-8",
+      "deckId": "demo-deck-1",
+      "front": "読む",
+      "back": "to read",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 7,
+      "level": 3,
+      "timesSeen": 9,
+      "timesKnown": 7,
+      "timesMissed": 2,
+      "createdAt": 1789549620000,
+      "updatedAt": 1791882000000,
+      "notes": "godan · よむ",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-1-9",
+      "deckId": "demo-deck-1",
+      "front": "聞く",
+      "back": "to listen, to ask",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 8,
+      "level": 3,
+      "timesSeen": 9,
+      "timesKnown": 8,
+      "timesMissed": 1,
+      "createdAt": 1789549680000,
+      "updatedAt": 1791882000000,
+      "notes": "godan · きく",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-1-10",
+      "deckId": "demo-deck-1",
+      "front": "話す",
+      "back": "to speak",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 9,
+      "level": 2,
+      "timesSeen": 7,
+      "timesKnown": 4,
+      "timesMissed": 3,
+      "createdAt": 1789549740000,
+      "updatedAt": 1791882000000,
+      "notes": "godan · はなす",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-1-11",
+      "deckId": "demo-deck-1",
+      "front": "買う",
+      "back": "to buy",
+      "tags": [
+        "verb",
+        "demo-tag-n5",
+        "demo-tag-travel"
+      ],
+      "position": 10,
+      "level": 2,
+      "timesSeen": 7,
+      "timesKnown": 5,
+      "timesMissed": 2,
+      "createdAt": 1789549800000,
+      "updatedAt": 1791882000000,
+      "notes": "godan · かう",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-1-12",
+      "deckId": "demo-deck-1",
+      "front": "待つ",
+      "back": "to wait",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 11,
+      "level": 2,
+      "timesSeen": 9,
+      "timesKnown": 6,
+      "timesMissed": 3,
+      "createdAt": 1789549860000,
+      "updatedAt": 1791882000000,
+      "notes": "godan · まつ",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-1-13",
+      "deckId": "demo-deck-1",
+      "front": "起きる",
+      "back": "to wake up",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 12,
+      "level": 1,
+      "timesSeen": 5,
+      "timesKnown": 2,
+      "timesMissed": 3,
+      "createdAt": 1789549920000,
+      "updatedAt": 1791882000000,
+      "notes": "ichidan · おきる",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-1-14",
+      "deckId": "demo-deck-1",
+      "front": "寝る",
+      "back": "to sleep",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 13,
+      "level": 1,
+      "timesSeen": 7,
+      "timesKnown": 3,
+      "timesMissed": 4,
+      "createdAt": 1789549980000,
+      "updatedAt": 1791882000000,
+      "notes": "ichidan · ねる",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-1-15",
+      "deckId": "demo-deck-1",
+      "front": "泳ぐ",
+      "back": "to swim",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 14,
+      "level": 1,
+      "timesSeen": 7,
+      "timesKnown": 4,
+      "timesMissed": 3,
+      "createdAt": 1789550040000,
+      "updatedAt": 1791882000000,
+      "notes": "godan · およぐ",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-1-16",
+      "deckId": "demo-deck-1",
+      "front": "働く",
+      "back": "to work",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 15,
+      "level": 0,
+      "timesSeen": 1,
+      "timesKnown": 0,
+      "timesMissed": 1,
+      "createdAt": 1789550100000,
+      "updatedAt": 1791882000000,
+      "notes": "godan · はたらく",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-1-17",
+      "deckId": "demo-deck-1",
+      "front": "休む",
+      "back": "to rest",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 16,
+      "level": 0,
+      "timesSeen": 0,
+      "timesKnown": 0,
+      "timesMissed": 0,
+      "createdAt": 1789550160000,
+      "updatedAt": 1791882000000,
+      "notes": "godan · やすむ"
+    },
+    {
+      "id": "demo-card-1-18",
+      "deckId": "demo-deck-1",
+      "front": "教える",
+      "back": "to teach",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 17,
+      "level": 0,
+      "timesSeen": 3,
+      "timesKnown": 2,
+      "timesMissed": 1,
+      "createdAt": 1789550220000,
+      "updatedAt": 1791882000000,
+      "notes": "ichidan · おしえる",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-2-1",
+      "deckId": "demo-deck-2",
+      "front": "水",
+      "back": "water",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 0,
+      "level": 5,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789635600000,
+      "updatedAt": 1791882000000,
+      "notes": "みず",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-2-2",
+      "deckId": "demo-deck-2",
+      "front": "お茶",
+      "back": "green tea",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 1,
+      "level": 5,
+      "timesSeen": 12,
+      "timesKnown": 11,
+      "timesMissed": 1,
+      "createdAt": 1789635660000,
+      "updatedAt": 1791882000000,
+      "notes": "おちゃ",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-2-3",
+      "deckId": "demo-deck-2",
+      "front": "ご飯",
+      "back": "rice, meal",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 2,
+      "level": 4,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789635720000,
+      "updatedAt": 1791882000000,
+      "notes": "ごはん",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-2-4",
+      "deckId": "demo-deck-2",
+      "front": "魚",
+      "back": "fish",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 3,
+      "level": 4,
+      "timesSeen": 9,
+      "timesKnown": 8,
+      "timesMissed": 1,
+      "createdAt": 1789635780000,
+      "updatedAt": 1791882000000,
+      "notes": "さかな",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-2-5",
+      "deckId": "demo-deck-2",
+      "front": "肉",
+      "back": "meat",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 4,
+      "level": 3,
+      "timesSeen": 8,
+      "timesKnown": 7,
+      "timesMissed": 1,
+      "createdAt": 1789635840000,
+      "updatedAt": 1791882000000,
+      "notes": "にく",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-2-6",
+      "deckId": "demo-deck-2",
+      "front": "野菜",
+      "back": "vegetables",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 5,
+      "level": 3,
+      "timesSeen": 10,
+      "timesKnown": 8,
+      "timesMissed": 2,
+      "createdAt": 1789635900000,
+      "updatedAt": 1791882000000,
+      "notes": "やさい",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-2-7",
+      "deckId": "demo-deck-2",
+      "front": "果物",
+      "back": "fruit",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 6,
+      "level": 2,
+      "timesSeen": 6,
+      "timesKnown": 4,
+      "timesMissed": 2,
+      "createdAt": 1789635960000,
+      "updatedAt": 1791882000000,
+      "notes": "くだもの",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-2-8",
+      "deckId": "demo-deck-2",
+      "front": "卵",
+      "back": "egg",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 7,
+      "level": 2,
+      "timesSeen": 8,
+      "timesKnown": 5,
+      "timesMissed": 3,
+      "createdAt": 1789636020000,
+      "updatedAt": 1791882000000,
+      "notes": "たまご",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-2-9",
+      "deckId": "demo-deck-2",
+      "front": "美味しい",
+      "back": "tasty, delicious",
+      "tags": [
+        "adjective",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 8,
+      "level": 3,
+      "timesSeen": 9,
+      "timesKnown": 8,
+      "timesMissed": 1,
+      "createdAt": 1789636080000,
+      "updatedAt": 1791882000000,
+      "notes": "おいしい · い-adjective",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-2-10",
+      "deckId": "demo-deck-2",
+      "front": "甘い",
+      "back": "sweet",
+      "tags": [
+        "adjective",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 9,
+      "level": 1,
+      "timesSeen": 6,
+      "timesKnown": 2,
+      "timesMissed": 4,
+      "createdAt": 1789636140000,
+      "updatedAt": 1791882000000,
+      "notes": "あまい",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-2-11",
+      "deckId": "demo-deck-2",
+      "front": "辛い",
+      "back": "spicy",
+      "tags": [
+        "adjective",
+        "demo-tag-food"
+      ],
+      "position": 10,
+      "level": 1,
+      "timesSeen": 6,
+      "timesKnown": 3,
+      "timesMissed": 3,
+      "createdAt": 1789636200000,
+      "updatedAt": 1791882000000,
+      "notes": "からい · also つらい = painful",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-2-12",
+      "deckId": "demo-deck-2",
+      "front": "牛乳",
+      "back": "milk",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 11,
+      "level": 0,
+      "timesSeen": 3,
+      "timesKnown": 2,
+      "timesMissed": 1,
+      "createdAt": 1789636260000,
+      "updatedAt": 1791882000000,
+      "notes": "ぎゅうにゅう",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-3-1",
+      "deckId": "demo-deck-3",
+      "front": "おはようございます",
+      "back": "good morning",
+      "tags": [
+        "phrase"
+      ],
+      "position": 0,
+      "level": 5,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789722000000,
+      "updatedAt": 1791882000000,
+      "notes": "polite",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-3-2",
+      "deckId": "demo-deck-3",
+      "front": "ありがとうございます",
+      "back": "thank you",
+      "tags": [
+        "phrase"
+      ],
+      "position": 1,
+      "level": 5,
+      "timesSeen": 12,
+      "timesKnown": 11,
+      "timesMissed": 1,
+      "createdAt": 1789722060000,
+      "updatedAt": 1791882000000,
+      "notes": "polite",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-3-3",
+      "deckId": "demo-deck-3",
+      "front": "すみません",
+      "back": "excuse me / sorry",
+      "tags": [
+        "phrase",
+        "demo-tag-travel"
+      ],
+      "position": 2,
+      "level": 4,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789722120000,
+      "updatedAt": 1791882000000,
+      "notes": "to get attention in a shop or restaurant",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-3-4",
+      "deckId": "demo-deck-3",
+      "front": "いくらですか",
+      "back": "how much is it?",
+      "tags": [
+        "phrase",
+        "demo-tag-travel"
+      ],
+      "position": 3,
+      "level": 3,
+      "timesSeen": 8,
+      "timesKnown": 6,
+      "timesMissed": 2,
+      "createdAt": 1789722180000,
+      "updatedAt": 1791882000000,
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-3-5",
+      "deckId": "demo-deck-3",
+      "front": "駅はどこですか",
+      "back": "where is the station?",
+      "tags": [
+        "phrase",
+        "demo-tag-travel"
+      ],
+      "position": 4,
+      "level": 2,
+      "timesSeen": 7,
+      "timesKnown": 5,
+      "timesMissed": 2,
+      "createdAt": 1789722240000,
+      "updatedAt": 1791882000000,
+      "notes": "えき = station",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-3-6",
+      "deckId": "demo-deck-3",
+      "front": "これをください",
+      "back": "this one, please",
+      "tags": [
+        "phrase",
+        "demo-tag-travel",
+        "demo-tag-food"
+      ],
+      "position": 5,
+      "level": 2,
+      "timesSeen": 9,
+      "timesKnown": 6,
+      "timesMissed": 3,
+      "createdAt": 1789722300000,
+      "updatedAt": 1791882000000,
+      "notes": "point at the item",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-3-7",
+      "deckId": "demo-deck-3",
+      "front": "英語のメニューはありますか",
+      "back": "do you have an English menu?",
+      "tags": [
+        "phrase",
+        "demo-tag-travel",
+        "demo-tag-food"
+      ],
+      "position": 6,
+      "level": 1,
+      "timesSeen": 5,
+      "timesKnown": 2,
+      "timesMissed": 3,
+      "createdAt": 1789722360000,
+      "updatedAt": 1791882000000,
+      "notes": "えいご = English",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-3-8",
+      "deckId": "demo-deck-3",
+      "front": "お会計をお願いします",
+      "back": "the bill, please",
+      "tags": [
+        "phrase",
+        "demo-tag-travel",
+        "demo-tag-food"
+      ],
+      "position": 7,
+      "level": 0,
+      "timesSeen": 2,
+      "timesKnown": 1,
+      "timesMissed": 1,
+      "createdAt": 1789722420000,
+      "updatedAt": 1791882000000,
+      "notes": "おかいけい",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-3-9",
+      "deckId": "demo-deck-3",
+      "front": "予約しています",
+      "back": "I have a reservation",
+      "tags": [
+        "phrase",
+        "demo-tag-travel"
+      ],
+      "position": 8,
+      "level": 0,
+      "timesSeen": 0,
+      "timesKnown": 0,
+      "timesMissed": 0,
+      "createdAt": 1789722480000,
+      "updatedAt": 1791882000000,
+      "notes": "よやく = reservation"
+    },
+    {
+      "id": "demo-card-4-1",
+      "deckId": "demo-deck-4",
+      "front": "大きい",
+      "back": "big",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 0,
+      "level": 2,
+      "timesSeen": 6,
+      "timesKnown": 4,
+      "timesMissed": 2,
+      "createdAt": 1789808400000,
+      "updatedAt": 1791882000000,
+      "notes": "おおきい",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-4-2",
+      "deckId": "demo-deck-4",
+      "front": "小さい",
+      "back": "small",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 1,
+      "level": 2,
+      "timesSeen": 8,
+      "timesKnown": 5,
+      "timesMissed": 3,
+      "createdAt": 1789808460000,
+      "updatedAt": 1791882000000,
+      "notes": "ちいさい",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-4-3",
+      "deckId": "demo-deck-4",
+      "front": "新しい",
+      "back": "new",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 2,
+      "level": 1,
+      "timesSeen": 7,
+      "timesKnown": 4,
+      "timesMissed": 3,
+      "createdAt": 1789808520000,
+      "updatedAt": 1791882000000,
+      "notes": "あたらしい",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-4-4",
+      "deckId": "demo-deck-4",
+      "front": "古い",
+      "back": "old (things)",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 3,
+      "level": 1,
+      "timesSeen": 6,
+      "timesKnown": 2,
+      "timesMissed": 4,
+      "createdAt": 1789808580000,
+      "updatedAt": 1791882000000,
+      "notes": "ふるい · not for people",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-4-5",
+      "deckId": "demo-deck-4",
+      "front": "高い",
+      "back": "expensive; tall",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 4,
+      "level": 0,
+      "timesSeen": 0,
+      "timesKnown": 0,
+      "timesMissed": 0,
+      "createdAt": 1789808640000,
+      "updatedAt": 1791882000000,
+      "notes": "たかい"
+    },
+    {
+      "id": "demo-card-4-6",
+      "deckId": "demo-deck-4",
+      "front": "安い",
+      "back": "cheap",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 5,
+      "level": 0,
+      "timesSeen": 3,
+      "timesKnown": 2,
+      "timesMissed": 1,
+      "createdAt": 1789808700000,
+      "updatedAt": 1791882000000,
+      "notes": "やすい",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-4-7",
+      "deckId": "demo-deck-4",
+      "front": "静か",
+      "back": "quiet",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 6,
+      "level": 0,
+      "timesSeen": 0,
+      "timesKnown": 0,
+      "timesMissed": 0,
+      "createdAt": 1789808760000,
+      "updatedAt": 1791882000000,
+      "notes": "しずか · な-adjective"
+    }
+  ],
+  "tags": [
+    {
+      "id": "verb",
+      "name": "verb",
+      "preset": true,
+      "createdAt": 1789376400000
+    },
+    {
+      "id": "noun",
+      "name": "noun",
+      "preset": true,
+      "createdAt": 1789376400001
+    },
+    {
+      "id": "adjective",
+      "name": "adjective",
+      "preset": true,
+      "createdAt": 1789376400002
+    },
+    {
+      "id": "phrase",
+      "name": "phrase",
+      "preset": true,
+      "createdAt": 1789376400003
+    },
+    {
+      "id": "demo-tag-n5",
+      "name": "N5",
+      "preset": false,
+      "createdAt": 1789462800000
+    },
+    {
+      "id": "demo-tag-food",
+      "name": "food",
+      "preset": false,
+      "createdAt": 1789462800000
+    },
+    {
+      "id": "demo-tag-travel",
+      "name": "travel",
+      "preset": false,
+      "createdAt": 1789462800000
+    }
+  ]
+}
