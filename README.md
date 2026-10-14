@@ -15,7 +15,7 @@ Offline flashcards that install to your phone's home screen. You don't need an A
   - Order: deck order, random, level ascending (weakest first).
   - Filter by level and tag, and limit the number of cards.
   - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card. A **Notes** button on both sides of the card reveals its notes.
-  - Keyboard: Space flips · → know · ← don't know · E edits · Esc finishes.
+  - Keyboard: Space / ↑ / ↓ flip · → know · ← don't know · E edits · Esc finishes.
 - **Import / export**
   - JSON backup of the whole library (with progress), for moving to another device. Merge or replace on import.
   - CSV/TSV per deck: `front,back,tags,notes` with tags separated by `|` (tags and notes optional). Handy for writing cards in Excel or Google Sheets on a PC.
@@ -40,7 +40,17 @@ front,back,tags,notes
 
 The header row is optional. Comma, tab and semicolon separators are all detected automatically.
 
+## Your data
+
+Everything lives in the browser's IndexedDB on your device. Nothing is sent anywhere. The app asks the browser to keep storage persistent (you can also do it in Settings), but the browser can still clear it, so export a backup now and then.
+
+## Updates
+
+The app works offline from a cached copy. When a new version is deployed, it shows a **Reload** prompt; tap it to switch. The current version is shown in Settings → About.
+
 ## Development
+
+Requires Node 22.
 
 ```bash
 npm install
@@ -49,25 +59,45 @@ npm test           # unit tests (Vitest)
 npm run check      # svelte-check / TypeScript
 npm run build      # production build into dist/
 npm run preview    # serve the build at http://localhost:4173/flashcards-pwa/
+npm run icons      # regenerate PWA icons from public/icon.svg
 ```
 
-Stack: Svelte 5 + TypeScript + Vite, Dexie (IndexedDB), vite-plugin-pwa (Workbox), PapaParse.
+Stack: Svelte 5 (runes) + TypeScript + Vite, Dexie (IndexedDB), vite-plugin-pwa (Workbox), PapaParse.
 
-Pure logic lives in `src/lib/{learning,session,gestures}.ts` and `src/lib/io/{csv,json}.ts`, with tests in `tests/`.
+```
+src/
+  routes/        screens: Decks, Deck, TestSetup, TestRun, Settings
+  components/    shared UI (modals, card editor, swipe card, tag picker…)
+  lib/
+    db.ts        Dexie schema
+    repo/        database reads and writes (decks, cards, tags, library import)
+    io/          CSV and JSON backup parsing, file save/pick
+    learning.ts  level changes
+    session.ts   test filtering, ordering and the cram/refresh session
+    gestures.ts  swipe classification
+    i18n/        English (source of truth) and Ukrainian strings
+tests/           Vitest unit tests for the pure logic in lib/
+```
 
-Icons are generated from `public/icon.svg` with `npx pwa-assets-generator`.
+## Release & deploy
 
-## Deploy
+Releases are deployed to GitHub Pages by pushing a version tag (`.github/workflows/deploy.yml`). The workflow checks that the tag matches the `version` in `package.json`, runs the tests, builds and deploys.
 
-Pushing a version tag (`v*`) runs tests, builds, and deploys to GitHub Pages (`.github/workflows/deploy.yml`). The tag must match the `version` in `package.json`:
-
-```sh
-npm version patch   # bumps package.json, commits, tags vX.Y.Z
+```bash
+npm version patch          # or minor / major: bumps package.json, commits, tags vX.Y.Z
 git push --follow-tags
 ```
 
-You can also run the workflow by hand from the Actions tab.
+Then create a GitHub release from the tag with notes. To redeploy an existing release, run the workflow by hand from the Actions tab and pick the tag.
 
 Pushes to `main` and pull requests run type checks, tests and a build without deploying (`.github/workflows/ci.yml`).
 
-One-time setup: **GitHub repo → Settings → Pages → Source: GitHub Actions**, and allow tags to deploy under **Settings → Environments → github-pages → Deployment branches and tags** (add a tag rule `v*`). If you rename the repo, update `base` in `vite.config.ts` and the icon paths in `index.html`.
+One-time setup:
+- **Settings → Pages → Source:** GitHub Actions.
+- **Settings → Environments → github-pages → Deployment branches and tags:** add a tag rule `v*`.
+
+If you rename the repo, update `base` in `vite.config.ts` and the icon paths in `index.html`.
+
+## License
+
+MIT
