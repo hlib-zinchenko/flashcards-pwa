@@ -49,7 +49,8 @@
   }
 
   // ---- Backup ----
-  let pending = $state<Backup | null>(null);
+  // raw: deep $state proxies can't be structured-cloned into IndexedDB (DataCloneError)
+  let pending = $state.raw<Backup | null>(null);
   let importOpen = $state(false);
 
   async function exportLibrary() {
