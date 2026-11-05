@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Icon from '../components/Icon.svelte';
+  import Icon, { type IconName } from '../components/Icon.svelte';
   import Modal from '../components/Modal.svelte';
   import NameModal from '../components/NameModal.svelte';
   import TopBar from '../components/TopBar.svelte';
@@ -23,6 +23,12 @@
   const languages: [Lang, string][] = [
     ['en', 'English'],
     ['uk', 'Українська'],
+  ];
+  const REPO = 'https://github.com/hlib-zinchenko/flashcards-pwa';
+  const links: { href: string; icon: IconName; label: () => string }[] = [
+    { href: 'https://hzinchenko.com/', icon: 'globe', label: () => t('settings.madeBy', { name: 'Hlib Zinchenko' }) },
+    { href: REPO, icon: 'code', label: () => t('settings.sourceCode') },
+    { href: `${REPO}/issues`, icon: 'message', label: () => t('settings.feedback') },
   ];
   const themes: [ThemePref, () => string][] = [
     ['system', () => t('settings.themeSystem')],
@@ -241,9 +247,22 @@
 
   <section class="section">
     <h2 class="section-title">{t('settings.about')}</h2>
-    <div class="panel box">
-      <p>{t('settings.offline')}</p>
-      <p class="muted small">{t('settings.version', { v: __APP_VERSION__ })}</p>
+    <div class="panel list">
+      <div class="box">
+        <p>{t('settings.offline')}</p>
+        <p class="muted small">{t('settings.version', { v: __APP_VERSION__ })}</p>
+      </div>
+      <ul class="links">
+        {#each links as link (link.href)}
+          <li>
+            <a href={link.href} target="_blank" rel="noopener">
+              <Icon name={link.icon} size={18} />
+              <span class="grow">{link.label()}</span>
+              <Icon name="external" size={16} />
+            </a>
+          </li>
+        {/each}
+      </ul>
     </div>
   </section>
 </div>
@@ -318,6 +337,24 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+  }
+  .links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .links a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 4px 16px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .links a:active {
+    background: var(--surface-2);
   }
   .choices {
     display: grid;

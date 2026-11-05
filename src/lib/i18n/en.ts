@@ -198,6 +198,9 @@ export const en = {
   'settings.install': 'App',
   'settings.about': 'About',
   'settings.version': 'Version {v}',
+  'settings.madeBy': 'Made by {name}',
+  'settings.sourceCode': 'Source code on GitHub',
+  'settings.feedback': 'Report a problem or suggest a feature',
   'settings.offline': 'Works offline. Your data never leaves this device.',
 
   'install.button': 'Install',

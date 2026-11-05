@@ -196,6 +196,9 @@ export const uk: Messages = {
   'settings.install': 'Застосунок',
   'settings.about': 'Про застосунок',
   'settings.version': 'Версія {v}',
+  'settings.madeBy': 'Автор: {name}',
+  'settings.sourceCode': 'Вихідний код на GitHub',
+  'settings.feedback': 'Повідомити про проблему чи запропонувати ідею',
   'settings.offline': 'Працює офлайн. Ваші дані не покидають цей пристрій.',
 
   'install.button': 'Встановити',
