@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ConfirmDialog from './components/ConfirmDialog.svelte';
   import TabBar from './components/TabBar.svelte';
   import Toast from './components/Toast.svelte';
   import UpdatePrompt from './components/UpdatePrompt.svelte';
@@ -28,4 +29,5 @@
   <TabBar />
 {/if}
 <Toast />
+<ConfirmDialog />
 <UpdatePrompt />

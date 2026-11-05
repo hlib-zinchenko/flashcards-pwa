@@ -1,10 +1,21 @@
 <script lang="ts">
-  import { toast } from '../lib/toast.svelte';
+  import { hideToast, toast } from '../lib/toast.svelte';
+
+  function runAction() {
+    const action = toast.action;
+    hideToast();
+    action?.run();
+  }
 </script>
 
 {#if toast.message}
   {#key toast.id}
-    <div class="toast" role="status">{toast.message}</div>
+    <div class="toast" class:with-action={!!toast.action} role="status">
+      <span>{toast.message}</span>
+      {#if toast.action}
+        <button type="button" onclick={runAction}>{toast.action.label}</button>
+      {/if}
+    </div>
   {/key}
 {/if}
 
@@ -14,6 +25,9 @@
     left: 50%;
     bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 16px);
     z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     max-width: calc(100% - 32px);
     padding: 10px 16px;
     border-radius: 999px;
@@ -25,6 +39,25 @@
     transform: translateX(-50%);
     animation: pop 0.2s ease-out;
     pointer-events: none;
+  }
+  .toast.with-action {
+    padding: 4px 4px 4px 16px;
+    pointer-events: auto;
+  }
+  button {
+    min-height: 40px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  button:active {
+    background: color-mix(in srgb, var(--bg) 18%, transparent);
   }
   @keyframes pop {
     from {

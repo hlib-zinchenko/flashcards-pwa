@@ -22,7 +22,7 @@
     top: 0;
     z-index: 10;
     padding-top: var(--safe-top);
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    background: color-mix(in srgb, var(--bg) 95%, transparent);
     backdrop-filter: saturate(1.6) blur(14px);
     -webkit-backdrop-filter: saturate(1.6) blur(14px);
   }

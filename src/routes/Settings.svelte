@@ -13,6 +13,9 @@
   import { createTag, deleteTag, renameTag, TagExistsError } from '../lib/repo/tags';
   import type { ThemePref } from '../lib/theme';
   import { setTheme, theme } from '../lib/theme.svelte';
+  import { backupDue, daysSince } from '../lib/backup';
+  import { backupStatus, markBackedUp } from '../lib/backup.svelte';
+  import { askConfirm } from '../lib/confirm.svelte';
   import { showToast } from '../lib/toast.svelte';
   import type { Tag } from '../lib/types';
 
@@ -52,7 +55,8 @@
   }
 
   async function removeTag(tag: Tag) {
-    if (confirm(t('tags.deleteConfirm', { name: tag.name }))) await deleteTag(tag.id);
+    const ok = await askConfirm({ title: t('tags.delete'), message: t('tags.deleteConfirm', { name: tag.name }), confirmLabel: t('common.delete') });
+    if (ok) await deleteTag(tag.id);
   }
 
   // ---- Backup ----
@@ -63,8 +67,20 @@
   async function exportLibrary() {
     const backup = createBackup(await loadLibrary());
     await saveFile(`flashcards-${dateStamp()}.json`, JSON.stringify(backup), 'application/json');
+    markBackedUp();
     showToast(t('settings.exported'));
   }
+
+  const lastBackup = $derived(
+    backupStatus.lastAt === null
+      ? t('settings.lastBackupNever')
+      : t('settings.lastBackup', {
+          when: new Intl.RelativeTimeFormat(i18n.lang, { numeric: 'auto' }).format(-daysSince(backupStatus.lastAt, Date.now()), 'day'),
+        }),
+  );
+
+  /** Only show the App section when there's an install action to offer. */
+  const showInstall = $derived(!install.standalone && (!!install.prompt || isIos));
 
   async function chooseBackup() {
     const file = await pickFile('.json,application/json');
@@ -80,7 +96,10 @@
 
   async function applyImport(mode: 'merge' | 'replace') {
     if (!pending) return;
-    if (mode === 'replace' && !confirm(t('settings.replaceConfirm'))) return;
+    if (mode === 'replace') {
+      const ok = await askConfirm({ title: t('settings.replace'), message: t('settings.replaceConfirm'), confirmLabel: t('settings.replace') });
+      if (!ok) return;
+    }
     try {
       if (mode === 'merge') await importMerge(pending);
       else await importReplace(pending);
@@ -177,6 +196,11 @@
     <h2 class="section-title">{t('settings.backup')}</h2>
     <div class="panel box">
       <p class="muted small">{t('settings.backupHint')}</p>
+      {#if backupDue(backupStatus)}
+        <p class="nudge small" role="status">{lastBackup}. {t('settings.backupNudge', { n: backupStatus.sessionsSince })}</p>
+      {:else}
+        <p class="small">{lastBackup}</p>
+      {/if}
       <div class="buttons">
         <button class="btn" type="button" onclick={exportLibrary}><Icon name="download" size={18} />{t('settings.export')}</button>
         <button class="btn" type="button" onclick={chooseBackup}><Icon name="upload" size={18} />{t('settings.import')}</button>
@@ -184,23 +208,21 @@
     </div>
   </section>
 
-  <section class="section">
-    <h2 class="section-title">{t('settings.install')}</h2>
-    <div class="panel box">
-      {#if install.standalone}
-        <p>{t('settings.installed')}</p>
-      {:else if install.prompt}
-        <p class="muted small">{t('install.steps')}</p>
-        <button class="btn btn-primary" type="button" onclick={promptInstall}>{t('install.button')}</button>
-      {:else if isIos}
-        <p><strong>{t('install.iosTitle')}</strong></p>
-        <p class="muted small">{t('install.iosSteps')}</p>
-        <p class="muted small">{t('install.storageWarning')}</p>
-      {:else}
-        <p class="muted small">{t('install.steps')}</p>
-      {/if}
-    </div>
-  </section>
+  {#if showInstall}
+    <section class="section">
+      <h2 class="section-title">{t('settings.install')}</h2>
+      <div class="panel box">
+        {#if install.prompt}
+          <p class="muted small">{t('install.steps')}</p>
+          <button class="btn btn-primary" type="button" onclick={promptInstall}>{t('install.button')}</button>
+        {:else}
+          <p><strong>{t('install.iosTitle')}</strong></p>
+          <p class="muted small">{t('install.iosSteps')}</p>
+          <p class="muted small">{t('install.storageWarning')}</p>
+        {/if}
+      </div>
+    </section>
+  {/if}
 
   <section class="section">
     <h2 class="section-title">{t('settings.storage')}</h2>
@@ -285,6 +307,12 @@
   }
   .box p:last-child {
     margin-bottom: 0;
+  }
+  .nudge {
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--danger) 12%, transparent);
+    color: var(--text);
   }
   .buttons {
     display: flex;

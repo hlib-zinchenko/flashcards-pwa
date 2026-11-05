@@ -5,6 +5,7 @@
   import Icon from '../components/Icon.svelte';
   import Modal from '../components/Modal.svelte';
   import SwipeCard from '../components/SwipeCard.svelte';
+  import { countSession } from '../lib/backup.svelte';
   import { db } from '../lib/db';
   import { t, tagLabel } from '../lib/i18n/index.svelte';
   import { allTags } from '../lib/live';
@@ -32,6 +33,8 @@
   let missedIds = $state<string[]>([]);
   /** Each graded card as it was before its grade, newest last; parallel to the Session's undo history. */
   let gradedBefore: (Card | undefined)[] = [];
+  /** This session already counts toward the backup reminder. */
+  let counted = false;
   let editOpen = $state(false);
   let showGestures = $state(!loadPref('gestureHintSeen', false));
   let swipeCard: SwipeCard | undefined = $state();
@@ -66,6 +69,7 @@
     startLevels = new Map(pool.map((c) => [c.id, c.level]));
     session = new Session(pool.map((c) => c.id), cfg.mode);
     gradedBefore = [];
+    counted = false;
     summary = null;
     flipped = false;
     version++;
@@ -142,6 +146,10 @@
     summary = summarize(session, startLevels, levels);
     endedEarly = !session.done;
     remaining = session.remaining;
+    if (!counted) {
+      counted = true;
+      countSession();
+    }
     missedIds = [...session.missed];
   }
 
@@ -306,7 +314,7 @@
         <div class="gestures-box panel">
           <h2>{t('run.gestureTitle')}</h2>
           <ul>
-            <li><span class="g">👆</span>{t('run.gestureTap')}</li>
+            <li><span class="g"><Icon name="tap" size={20} /></span>{t('run.gestureTap')}</li>
             <li><span class="g know">→</span>{t('run.gestureRight')}</li>
             <li><span class="g miss">←</span>{t('run.gestureLeft')}</li>
             <li><span class="g accent">↓</span>{t('run.gestureDown')}</li>
