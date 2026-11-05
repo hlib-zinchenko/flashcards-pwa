@@ -1,4 +1,7 @@
 import { mount } from 'svelte';
+import '@fontsource-variable/onest/wght.css';
+import './fonts.css';
+import '@fontsource/biz-udpgothic/japanese-700.css';
 import './app.css';
 import App from './App.svelte';
 import { i18n } from './lib/i18n/index.svelte';

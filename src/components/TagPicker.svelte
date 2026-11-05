@@ -66,8 +66,9 @@
 
 <style>
   .add {
-    border-style: dashed;
-    color: var(--muted);
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--border);
+    color: var(--muted-2);
   }
   .new-tag {
     width: 150px;

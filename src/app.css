@@ -1,33 +1,67 @@
+/* Card stock: pressed paper tiles on a lavender table.
+   Lavender #B0A3CE is the brand and the light-mode ground; mint means "know",
+   rose means "don't know". Tiles get a solid edge below instead of a soft shadow. */
 :root {
   color-scheme: light dark;
-  --bg: #f5f4f1;
-  --surface: #ffffff;
-  --surface-2: #eeece7;
-  --text: #1c1b1a;
-  --muted: #6d6a65;
-  --border: #e2dfd8;
-  --accent: #5b5bd6;
-  --accent-soft: #e8e8fb;
-  --on-accent: #ffffff;
-  --know: #15805a;
-  --miss: #c9333a;
-  --danger: #c4353a;
+  --bg: #b0a3ce;
+  --surface: oklch(98.5% 0.006 300);
+  --surface-edge: oklch(80% 0.04 300);
+  --surface-2: oklch(94% 0.022 300);
+  --text: oklch(21% 0.05 300);
+  --muted: oklch(36% 0.05 300);
+  /* Muted text on paper tiles, a step lighter than on the lavender ground. */
+  --muted-2: oklch(46% 0.04 300);
+  --border: oklch(87% 0.025 300);
+  --accent: oklch(42% 0.1 300);
+  --accent-soft: oklch(91% 0.04 300);
+  --accent-edge: oklch(72% 0.07 300);
+  --on-accent: oklch(98.5% 0.006 300);
+  /* Primary buttons: ink on light, paper on dark. */
+  --primary: oklch(21% 0.05 300);
+  --primary-edge: oklch(8% 0.03 300);
+  --on-primary: oklch(96% 0.012 300);
+  --butter: oklch(94% 0.07 98);
+  --butter-edge: oklch(78% 0.1 90);
+  --mint: #a8e4cb;
+  --mint-edge: oklch(68% 0.1 166);
+  --on-mint: #143b2d;
+  --rose: oklch(84% 0.08 10);
+  --rose-edge: oklch(66% 0.13 10);
+  --on-rose: #3d1019;
+  --nav: oklch(98.5% 0.006 300);
+  --nav-edge: oklch(80% 0.04 300);
+  --on-nav: oklch(34% 0.05 300);
+  --pill: #b0a3ce;
+  --on-pill: #231a36;
+  --know: oklch(45% 0.1 166);
+  --miss: oklch(50% 0.16 10);
+  --danger: oklch(50% 0.16 10);
   --on-danger: #ffffff;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.06);
-  --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.14);
+  --scrim: rgb(20 12 36 / 0.45);
+  --shadow-lg: 0 18px 40px -18px rgb(20 12 36 / 0.45);
 
-  --lv0: #a3a6ab;
-  --lv1: #e5484d;
-  --lv2: #f2a03c;
-  --lv3: #c8b62a;
-  --lv4: #4cad5b;
-  --lv5: #2f7fd8;
+  /* Card levels: cool from lavender into mint as cards are learned; weak stays rose. */
+  --lv0: oklch(86% 0.014 300);
+  --lv1: oklch(67% 0.15 10);
+  --lv2: oklch(72% 0.085 300);
+  --lv3: oklch(67% 0.09 262);
+  --lv4: oklch(72% 0.09 214);
+  --lv5: oklch(80% 0.12 166);
 
-  --radius: 14px;
-  --radius-sm: 10px;
+  /* Onest covers Latin and Cyrillic; Japanese falls through to BIZ UDPGothic
+     (Japanese subsets only, so its full-width Cyrillic is never used). */
+  --font-ui: 'Onest Variable', 'BIZ UDPGothic', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI',
+    system-ui, sans-serif;
+  --font-head: 'Murecho Variable', 'BIZ UDPGothic', 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
+  --font-card: var(--font-ui);
+
+  --edge: 5px;
+  --radius: 20px;
+  --radius-sm: 14px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --tabbar-h: 58px;
+  /* Floating tab bar: 52px pill + its edge + the gap below it. */
+  --tabbar-h: 76px;
 }
 
 /* Theme: Settings → Appearance sets data-theme="light" or "dark" on <html>;
@@ -38,44 +72,80 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #111113;
-    --surface: #1b1b1e;
-    --surface-2: #26262a;
-    --text: #ececef;
-    --muted: #9b9ba4;
-    --border: #2f2f35;
-    --accent: #8587f2;
-    --accent-soft: #2a2a4a;
-    --on-accent: #0f0f1f;
-    --know: #34b884;
-    --miss: #f06569;
-    --danger: #f06569;
-    --on-danger: #1a0b0c;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
-    --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.5);
-    --lv0: #74777d;
-    --lv3: #d6c53a;
+    --bg: oklch(21.5% 0.04 298);
+    --surface: oklch(31% 0.035 298);
+    --surface-edge: oklch(16% 0.03 298);
+    --surface-2: oklch(26% 0.035 298);
+    --text: oklch(95% 0.015 300);
+    --muted: oklch(76% 0.04 300);
+    --muted-2: oklch(76% 0.04 300);
+    --border: oklch(38% 0.035 298);
+    --accent: oklch(82% 0.07 300);
+    --accent-soft: oklch(38% 0.07 300);
+    --accent-edge: oklch(24% 0.05 300);
+    --on-accent: oklch(21% 0.05 300);
+    --primary: oklch(95% 0.015 300);
+    --primary-edge: oklch(70% 0.04 300);
+    --on-primary: oklch(21% 0.05 300);
+    --butter: oklch(42% 0.06 95);
+    --butter-edge: oklch(27% 0.04 90);
+    --mint: oklch(80% 0.1 166);
+    --mint-edge: oklch(55% 0.09 166);
+    --rose: oklch(76% 0.11 10);
+    --rose-edge: oklch(55% 0.12 10);
+    --nav: oklch(15.5% 0.03 298);
+    --nav-edge: oklch(10% 0.025 298);
+    --on-nav: oklch(82% 0.03 300);
+    --know: oklch(82% 0.1 166);
+    --miss: oklch(78% 0.12 10);
+    --danger: oklch(78% 0.12 10);
+    --on-danger: #2a0a10;
+    --scrim: rgb(0 0 0 / 0.55);
+    --shadow-lg: 0 18px 40px -18px rgb(0 0 0 / 0.7);
+    --lv0: oklch(46% 0.02 300);
+    --lv1: oklch(70% 0.14 10);
+    --lv3: oklch(70% 0.09 262);
+    --lv4: oklch(74% 0.09 214);
+    --lv5: oklch(81% 0.12 166);
   }
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #111113;
-  --surface: #1b1b1e;
-  --surface-2: #26262a;
-  --text: #ececef;
-  --muted: #9b9ba4;
-  --border: #2f2f35;
-  --accent: #8587f2;
-  --accent-soft: #2a2a4a;
-  --on-accent: #0f0f1f;
-  --know: #34b884;
-  --miss: #f06569;
-  --danger: #f06569;
-  --on-danger: #1a0b0c;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.5);
-  --lv0: #74777d;
-  --lv3: #d6c53a;
+  --bg: oklch(21.5% 0.04 298);
+  --surface: oklch(31% 0.035 298);
+  --surface-edge: oklch(16% 0.03 298);
+  --surface-2: oklch(26% 0.035 298);
+  --text: oklch(95% 0.015 300);
+  --muted: oklch(76% 0.04 300);
+  --muted-2: oklch(76% 0.04 300);
+  --border: oklch(38% 0.035 298);
+  --accent: oklch(82% 0.07 300);
+  --accent-soft: oklch(38% 0.07 300);
+  --accent-edge: oklch(24% 0.05 300);
+  --on-accent: oklch(21% 0.05 300);
+  --primary: oklch(95% 0.015 300);
+  --primary-edge: oklch(70% 0.04 300);
+  --on-primary: oklch(21% 0.05 300);
+  --butter: oklch(42% 0.06 95);
+  --butter-edge: oklch(27% 0.04 90);
+  --mint: oklch(80% 0.1 166);
+  --mint-edge: oklch(55% 0.09 166);
+  --rose: oklch(76% 0.11 10);
+  --rose-edge: oklch(55% 0.12 10);
+  --nav: oklch(15.5% 0.03 298);
+  --nav-edge: oklch(10% 0.025 298);
+  --on-nav: oklch(82% 0.03 300);
+  --know: oklch(82% 0.1 166);
+  --miss: oklch(78% 0.12 10);
+  --danger: oklch(78% 0.12 10);
+  --on-danger: #2a0a10;
+  --scrim: rgb(0 0 0 / 0.55);
+  --shadow-lg: 0 18px 40px -18px rgb(0 0 0 / 0.7);
+  --lv0: oklch(46% 0.02 300);
+  --lv1: oklch(70% 0.14 10);
+  --lv3: oklch(70% 0.09 262);
+  --lv4: oklch(74% 0.09 214);
+  --lv5: oklch(81% 0.12 166);
 }
 
 *,
@@ -94,8 +164,8 @@ body {
   min-height: 100dvh;
   background: var(--bg);
   color: var(--text);
-  font: 16px/1.45 system-ui, -apple-system, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP',
-    'Segoe UI', Roboto, 'Yu Gothic UI', 'Meiryo', sans-serif;
+  font: 500 16px/1.45 var(--font-ui);
+  font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
@@ -155,49 +225,72 @@ h3 {
   font-size: 0.875rem;
 }
 
-/* ---------- Buttons ---------- */
+/* Headings and figures use the heavy display face. */
+.display {
+  font-family: var(--font-head);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Buttons ----------
+   Card stock: a solid edge below; pressing pushes the tile down onto it. */
 .btn {
+  --tile: var(--surface);
+  --tile-edge: var(--surface-edge);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 44px;
-  padding: 0 16px;
-  border: 1px solid var(--border);
+  min-height: 46px;
+  margin-bottom: 4px;
+  padding: 0 18px;
+  border: 0;
   border-radius: var(--radius-sm);
-  background: var(--surface);
+  background: var(--tile);
+  box-shadow: 0 4px 0 var(--tile-edge);
   color: var(--text);
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
   cursor: pointer;
   user-select: none;
-  transition: transform 0.08s, background 0.15s;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
 }
 .btn:active {
-  transform: scale(0.97);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--tile-edge);
 }
 .btn:disabled {
   opacity: 0.45;
   cursor: default;
   transform: none;
+  box-shadow: 0 4px 0 var(--tile-edge);
 }
 .btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--on-accent);
+  --tile: var(--primary);
+  --tile-edge: var(--primary-edge);
+  color: var(--on-primary);
+}
+.btn-mint {
+  --tile: var(--mint);
+  --tile-edge: var(--mint-edge);
+  color: var(--on-mint);
 }
 .btn-danger {
   color: var(--danger);
 }
 /* Primary action that destroys data (confirm dialogs). */
 .btn-destructive {
-  background: var(--danger);
-  border-color: var(--danger);
-  color: var(--on-danger);
+  --tile: var(--rose);
+  --tile-edge: var(--rose-edge);
+  color: var(--on-rose);
 }
 .btn-ghost {
   background: transparent;
-  border-color: transparent;
+  box-shadow: none;
+}
+.btn-ghost:active,
+.btn-ghost:disabled {
+  box-shadow: none;
 }
 .btn-block {
   width: 100%;
@@ -215,32 +308,56 @@ h3 {
   cursor: pointer;
 }
 .icon-btn:active {
-  background: var(--surface-2);
+  background: color-mix(in srgb, var(--surface) 50%, transparent);
+}
+/* Square paper tile for top-bar actions. */
+.icon-tile {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 3px;
+  padding: 0;
+  border: 0;
+  border-radius: 13px;
+  background: var(--surface);
+  box-shadow: 0 3px 0 var(--surface-edge);
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+}
+.icon-tile:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--surface-edge);
+}
+.icon-tile:disabled {
+  opacity: 0.4;
+  cursor: default;
+  transform: none;
+  box-shadow: 0 3px 0 var(--surface-edge);
 }
 
 /* Keyboard focus: one ring for buttons, chips, links and other controls. */
 :where(button, a, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: 2.5px solid var(--text);
+  outline-offset: 3px;
 }
 
 /* ---------- Surfaces ---------- */
 .panel {
   background: var(--surface);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: 0 var(--edge) 0 var(--surface-edge);
 }
 
 .section {
   margin-top: 20px;
 }
 .section-title {
-  margin: 0 4px 8px;
-  font-size: 0.8rem;
+  margin: 0 4px 10px;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--muted);
 }
 
@@ -252,15 +369,15 @@ h3 {
 .field > span {
   display: block;
   margin-bottom: 4px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--muted-2);
 }
 .input {
   width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
   outline: none;
@@ -276,65 +393,71 @@ textarea.input {
 }
 
 /* ---------- Chips & segmented ----------
-   Chips and segments share one selected look: accent tint, accent outline. */
+   Chips and segments share one selected look: an ink tile with paper text. */
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px 8px;
 }
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid var(--border);
+  min-height: 38px;
+  margin-bottom: 3px;
+  padding: 0 14px;
+  border: 0;
   border-radius: 999px;
   background: var(--surface);
+  box-shadow: 0 3px 0 var(--surface-edge);
+  color: var(--text);
   font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   user-select: none;
 }
 .chip[aria-pressed='true'] {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  color: var(--text);
+  background: var(--primary);
+  box-shadow: 0 3px 0 var(--primary-edge);
+  color: var(--on-primary);
 }
 .chip .count {
-  font-size: 0.78rem;
-  color: var(--muted);
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 .tag-pill {
   display: inline-block;
-  padding: 1px 8px;
+  padding: 2px 9px;
   border-radius: 999px;
-  background: var(--surface-2);
-  color: var(--muted);
-  font-size: 0.75rem;
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
 .seg {
   display: flex;
-  padding: 3px;
-  border-radius: var(--radius-sm);
-  background: var(--surface-2);
+  gap: 4px;
+  padding: 4px;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 4px 0 var(--surface-edge);
 }
 .seg button {
   flex: 1;
-  min-height: 38px;
+  min-height: 40px;
   padding: 0 8px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 12px;
   background: transparent;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--muted);
+  font-weight: 700;
+  color: var(--muted-2);
   cursor: pointer;
 }
 .seg button[aria-pressed='true'] {
-  background: var(--accent-soft);
-  color: var(--text);
-  box-shadow: inset 0 0 0 1px var(--accent);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 
 .level-dot {
@@ -343,4 +466,11 @@ textarea.input {
   height: 10px;
   border-radius: 50%;
   flex: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .icon-tile {
+    transition: none;
+  }
 }

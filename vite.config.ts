@@ -8,6 +8,10 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 
 
 export default defineConfig({
   base: '/flashcards-pwa/',
+  build: {
+    // Keep font files as separate assets: inlining the small Japanese slices bloats the CSS.
+    assetsInlineLimit: (file) => (/\.woff2?$/.test(file) ? false : undefined),
+  },
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
@@ -15,7 +19,7 @@ export default defineConfig({
     svelte(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'icon.svg'],
+      includeAssets: ['favicon.ico', 'favicon.svg', 'apple-touch-icon-180x180.png'],
       manifest: {
         name: 'Flashcards',
         short_name: 'Flashcards',
@@ -23,8 +27,8 @@ export default defineConfig({
         lang: 'en',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#f6f5f2',
-        theme_color: '#5b5bd6',
+        background_color: '#b0a3ce',
+        theme_color: '#b0a3ce',
         start_url: '.',
         scope: '.',
         icons: [
@@ -32,10 +36,24 @@ export default defineConfig({
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
           { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: 'monochrome-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'monochrome' },
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+        // Fonts: precache Latin/Cyrillic and the Japanese card face, so the app looks right offline.
+        // Murecho's Japanese slices (headings only) are cached the first time they're used.
+        globPatterns: [
+          '**/*.{js,css,html,ico,png,svg,webmanifest}',
+          'assets/*-{latin,latin-ext,cyrillic,cyrillic-ext}-wght-normal-*.woff2',
+          'assets/biz-udpgothic-japanese-700-normal-*.woff2',
+        ],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === 'font',
+            handler: 'CacheFirst',
+            options: { cacheName: 'fonts', expiration: { maxEntries: 200 } },
+          },
+        ],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
       },

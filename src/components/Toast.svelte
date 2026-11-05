@@ -31,8 +31,8 @@
     max-width: calc(100% - 32px);
     padding: 10px 16px;
     border-radius: 999px;
-    background: var(--text);
-    color: var(--bg);
+    background: var(--primary);
+    color: var(--on-primary);
     font-size: 0.9rem;
     font-weight: 600;
     box-shadow: var(--shadow-lg);
@@ -57,7 +57,7 @@
     cursor: pointer;
   }
   button:active {
-    background: color-mix(in srgb, var(--bg) 18%, transparent);
+    background: color-mix(in srgb, var(--on-primary) 18%, transparent);
   }
   @keyframes pop {
     from {

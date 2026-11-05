@@ -276,7 +276,7 @@
   }
   .options {
     margin-top: 24px;
-    border-top: 1px solid var(--border);
+    border-top: 1.5px solid color-mix(in srgb, var(--text) 16%, transparent);
   }
   .options summary {
     display: flex;
@@ -336,6 +336,5 @@
     min-height: 52px;
     margin: 0 auto;
     font-size: 1.05rem;
-    box-shadow: var(--shadow-lg);
   }
 </style>

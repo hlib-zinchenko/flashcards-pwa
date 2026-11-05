@@ -396,8 +396,14 @@
   }
   .add-toggle {
     margin-top: 16px;
-    border-style: dashed;
-    color: var(--accent);
+    border: 2px dashed color-mix(in srgb, var(--text) 40%, transparent);
+    background: transparent;
+    box-shadow: none;
+    color: var(--text);
+  }
+  .add-toggle:active {
+    background: color-mix(in srgb, var(--surface) 40%, transparent);
+    box-shadow: none;
   }
   .toolbar {
     display: flex;
@@ -429,7 +435,7 @@
   }
   .cards {
     display: grid;
-    gap: 8px;
+    gap: 12px;
     margin: 12px 0 0;
     padding: 0;
     list-style: none;
@@ -474,7 +480,9 @@
     white-space: nowrap;
   }
   .front {
-    font-weight: 600;
+    font-family: var(--font-card);
+    font-size: 1.05rem;
+    font-weight: 700;
   }
   .back {
     font-size: 0.92rem;
