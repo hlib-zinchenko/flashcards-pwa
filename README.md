@@ -10,7 +10,7 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
 
 <p>
   <img src="docs/screenshots/decks.png" alt="Deck list with a Review weak cards button, a play button per deck and a card-level legend" width="220">
-  <img src="docs/screenshots/test-setup.png" alt="Test setup: decks, number of cards, and a collapsed Options row showing the current settings" width="220">
+  <img src="docs/screenshots/test-setup.png" alt="Test setup: decks, number of cards, direction, mode, order, levels and tags" width="220">
   <img src="docs/screenshots/test-back.png" alt="Card back with tags and notes, with undo in the header" width="220">
   <img src="docs/screenshots/test-swipe.png" alt="Swiping a card right to mark it known" width="220">
   <img src="docs/screenshots/summary.png" alt="Summary after quitting early: 6 of 7 known, missed cards listed, Continue button" width="220">
@@ -26,7 +26,7 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
 - **Tags:** built-in `verb`, `noun`, `adjective`, `phrase`, plus your own.
 - **Learning levels:** New → Weak → Learning → Confident → Strong → Mastered. *Know* moves a card up one level, *Don't know* moves it down one. There is no scheduling: you choose what to study. The home screen shows a colored bar per deck and a legend with totals per level.
 - **Test mode**
-  - Pick one or more decks and how many cards. Everything else sits under **Options**, which shows the current choices when collapsed:
+  - Pick one or more decks and how many cards, then the rest of the options, all on one screen:
     - show the front or back first;
     - *Cram*: known cards leave the session, missed ones go back at a random spot until you know them all. *Refresh*: one pass, answers only update levels;
     - order: deck order, random, level ascending (weakest first);

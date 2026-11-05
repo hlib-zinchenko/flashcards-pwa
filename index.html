@@ -14,7 +14,37 @@
         document.querySelector('meta[name="theme-color"]').content = dark ? '#1c1529' : '#b0a3ce';
       } catch (e) {}
     </script>
-    <meta name="description" content="Offline flashcards for learning anything" />
+    <title>Flashcards: offline flashcard app for your phone</title>
+    <meta name="description" content="Make flashcard decks and learn them with quick swipe tests. Works offline and installs to your home screen. No account: your cards stay on your device." />
+    <link rel="canonical" href="https://flashcards.hzinchenko.com/" />
+    <!-- Sharing previews. Absolute URLs: update them if the domain changes. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Flashcards" />
+    <meta property="og:title" content="Flashcards" />
+    <meta property="og:description" content="Make flashcard decks and learn them with quick swipe tests. Works offline, no account needed." />
+    <meta property="og:url" content="https://flashcards.hzinchenko.com/" />
+    <meta property="og:image" content="https://flashcards.hzinchenko.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Flashcards app: a fanned stack of cards, the top one reading 好き" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="uk_UA" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Flashcards",
+        "url": "https://flashcards.hzinchenko.com/",
+        "description": "Offline flashcards that install to your phone's home screen. No account, no server: your cards stay on your device.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any (web browser)",
+        "inLanguage": ["en", "uk"],
+        "image": "https://flashcards.hzinchenko.com/og-image.png",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    </script>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -22,7 +52,6 @@
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
-    <title>Flashcards</title>
   </head>
   <body>
     <div id="app"></div>

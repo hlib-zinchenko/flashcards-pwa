@@ -47,6 +47,8 @@ export default defineConfig({
           'assets/*-{latin,latin-ext,cyrillic,cyrillic-ext}-wght-normal-*.woff2',
           'assets/biz-udpgothic-japanese-700-normal-*.woff2',
         ],
+        // The link-sharing preview is for crawlers, not for the app offline.
+        globIgnores: ['**/og-image.png'],
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === 'font',
