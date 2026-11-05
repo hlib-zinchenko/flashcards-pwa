@@ -1,3 +1,5 @@
+<img src="docs/icons/readme-icon.svg" alt="Flashcards app icon: three fanned cards, the top one reading 好き" width="112">
+
 # Flashcards PWA
 
 Offline flashcards that install to your phone's home screen. No App Store, no account, no server. Your data stays on your device.
@@ -9,8 +11,8 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
 <p>
   <img src="docs/screenshots/decks.png" alt="Deck list with a Review weak cards button, a play button per deck and a card-level legend" width="220">
   <img src="docs/screenshots/test-setup.png" alt="Test setup: decks, number of cards, and a collapsed Options row showing the current settings" width="220">
-  <img src="docs/screenshots/test-swipe.png" alt="Swiping a card right to mark it known" width="220">
   <img src="docs/screenshots/test-back.png" alt="Card back with tags and notes, with undo in the header" width="220">
+  <img src="docs/screenshots/test-swipe.png" alt="Swiping a card right to mark it known" width="220">
   <img src="docs/screenshots/summary.png" alt="Summary after quitting early: 6 of 7 known, missed cards listed, Continue button" width="220">
   <img src="docs/screenshots/deck.png" alt="Deck with its cards and tags" width="220">
   <img src="docs/screenshots/settings.png" alt="Settings with language and System, Light, Dark appearance" width="220">

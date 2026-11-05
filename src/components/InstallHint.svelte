@@ -34,8 +34,8 @@
     gap: 4px;
     margin-top: 12px;
     padding: 14px 6px 14px 16px;
-    border-color: var(--accent);
     background: var(--accent-soft);
+    box-shadow: 0 var(--edge) 0 var(--accent-edge);
   }
   .text {
     flex: 1;

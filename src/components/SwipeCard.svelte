@@ -207,16 +207,16 @@
     gap: 12px;
     padding: 28px 22px;
     overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 22px;
+    border-radius: 28px;
     background: var(--surface);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 7px 0 var(--surface-edge);
     text-align: center;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
   }
   .card:focus-visible .face {
-    outline: 3px solid var(--accent);
+    outline: 3px solid var(--text);
+    outline-offset: 3px;
   }
   .back {
     transform: rotateY(180deg);
@@ -231,11 +231,12 @@
     max-width: 100%;
     overflow-wrap: anywhere;
     white-space: pre-wrap;
-    font-weight: 600;
-    line-height: 1.25;
+    font-family: var(--font-card);
+    font-weight: 700;
+    line-height: 1.2;
   }
   .xxl {
-    font-size: 4.2rem;
+    font-size: 4.4rem;
   }
   .xl {
     font-size: 2.6rem;
@@ -247,21 +248,23 @@
     font-size: 1.25rem;
   }
   .sm {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 500;
     text-align: left;
   }
   .hint {
     position: absolute;
-    bottom: 16px;
-    color: var(--muted);
+    bottom: 18px;
+    color: var(--muted-2);
     font-size: 0.8rem;
   }
   .prompt-small {
     margin: 0;
     max-width: 100%;
-    color: var(--muted);
-    font-size: 1rem;
+    color: var(--muted-2);
+    font-family: var(--font-card);
+    font-size: 1.1rem;
+    font-weight: 700;
     overflow-wrap: anywhere;
     white-space: pre-wrap;
     display: -webkit-box;
@@ -281,12 +284,13 @@
     min-height: 0;
     max-width: 100%;
     margin: 0;
-    padding: 10px 12px;
+    padding: 12px 14px;
     overflow-y: auto;
-    border-radius: 12px;
+    border-radius: 14px;
     background: var(--surface-2);
-    font-size: 0.95rem;
-    line-height: 1.4;
+    font-family: var(--font-card);
+    font-size: 1rem;
+    line-height: 1.5;
     text-align: left;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -296,40 +300,41 @@
   }
   .notes-btn {
     flex: none;
-    padding: 6px 14px;
-    border: 1px solid var(--border);
+    padding: 7px 16px;
+    border: 0;
     border-radius: 999px;
-    background: var(--surface);
-    color: var(--accent);
-    font-size: 0.85rem;
-    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--text);
+    font-size: 0.875rem;
+    font-weight: 700;
     cursor: pointer;
   }
   .stamp {
     position: absolute;
     top: 22px;
-    padding: 4px 12px;
-    border: 3px solid currentColor;
-    border-radius: 10px;
-    font-size: 1.3rem;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 1.15rem;
     font-weight: 800;
-    text-transform: uppercase;
     opacity: 0;
     pointer-events: none;
   }
   .stamp.know {
     left: 20px;
-    color: var(--know);
+    background: var(--mint);
+    color: var(--on-mint);
     transform: rotate(-12deg);
   }
   .stamp.miss {
     right: 20px;
-    color: var(--miss);
+    background: var(--rose);
+    color: var(--on-rose);
     transform: rotate(12deg);
   }
   .stamp.edit {
     left: 50%;
-    color: var(--accent);
+    background: var(--primary);
+    color: var(--on-primary);
     transform: translateX(-50%);
   }
 </style>

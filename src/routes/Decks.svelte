@@ -53,10 +53,10 @@
 <TopBar title={t('decks.title')}>
   {#snippet actions()}
     <button class="icon-btn" type="button" onclick={importCsv} aria-label={t('decks.importCsv')} title={t('decks.importCsv')}>
-      <Icon name="upload" />
+      <Icon name="upload" size={19} />
     </button>
-    <button class="icon-btn accent" type="button" onclick={() => (creating = true)} aria-label={t('decks.new')} title={t('decks.new')}>
-      <Icon name="plus" size={26} />
+    <button class="icon-btn" type="button" onclick={() => (creating = true)} aria-label={t('decks.new')} title={t('decks.new')}>
+      <Icon name="plus" size={21} />
     </button>
   {/snippet}
 </TopBar>
@@ -66,8 +66,8 @@
 
   {#if $allDecks && $allDecks.length === 0}
     <div class="empty">
-      <div class="art" aria-hidden="true">あ</div>
-      <h2>{t('decks.empty')}</h2>
+      <div class="art display" aria-hidden="true">あ</div>
+      <h2 class="display">{t('decks.empty')}</h2>
       <p class="muted">{t('decks.emptyHint')}</p>
       <button class="btn btn-primary" type="button" onclick={() => (creating = true)}>
         <Icon name="plus" size={18} />{t('decks.new')}
@@ -78,23 +78,23 @@
     </div>
   {:else if $allDecks}
     {#if reviewCount > 0}
-      <div class="review">
-        <button class="btn btn-primary btn-block" type="button" onclick={() => startQuick(allDeckIds, REVIEW_LEVELS)}>
-          <Icon name="play" size={18} />{t('decks.review', { n: reviewCount })}
-        </button>
-        <p class="muted small">{t('decks.reviewHint')}</p>
-      </div>
+      <button class="review tile" type="button" onclick={() => startQuick(allDeckIds, REVIEW_LEVELS)}>
+        <span class="review-n display">{reviewCount}</span>
+        <span class="review-text">
+          <b>{t('decks.reviewTitle')}</b>
+          <small>{t('decks.reviewHint')}</small>
+        </span>
+        <span class="go"><Icon name="play" size={16} /></span>
+      </button>
     {/if}
 
-    <ul class="list">
-      {#each $allDecks as deck (deck.id)}
+    <ul class="grid">
+      {#each $allDecks as deck, i (deck.id)}
         {@const cards = byDeck.get(deck.id) ?? []}
-        <li class="deck panel">
+        <li class="deck tile tone-{i % 3}">
           <a class="link" href={href(`/deck/${deck.id}`)}>
-            <div class="row">
-              <span class="name">{deck.name}</span>
-              <span class="muted small">{t('decks.cards', { n: cards.length })}</span>
-            </div>
+            <span class="name">{deck.name}</span>
+            <span class="tally"><span class="display">{cards.length}</span><small>{t('decks.cardsWord', { n: cards.length })}</small></span>
             <LevelBar counts={levelCounts(cards)} />
           </a>
           {#if cards.length > 0}
@@ -105,7 +105,7 @@
               aria-label={t('decks.study', { name: deck.name })}
               title={t('decks.study', { name: deck.name })}
             >
-              <Icon name="play" size={18} />
+              <Icon name="play" size={14} />
             </button>
           {/if}
         </li>
@@ -140,64 +140,141 @@
 <CsvImportModal bind:open={csvOpen} text={csvText} fileName={csvName} onimported={(id) => navigate(`/deck/${id}`)} />
 
 <style>
-  .accent {
-    color: var(--accent);
+  .tile {
+    --tile: var(--surface);
+    --tile-edge: var(--surface-edge);
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--tile);
+    box-shadow: 0 var(--edge) 0 var(--tile-edge);
+    color: var(--text);
+    transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+  }
+  .tile:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 var(--tile-edge);
   }
   .review {
-    margin-top: 12px;
+    --tile: var(--mint);
+    --tile-edge: var(--mint-edge);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    margin-top: 8px;
+    padding: 16px;
+    color: var(--on-mint);
+    text-align: left;
+    cursor: pointer;
   }
-  .review .btn {
-    min-height: 52px;
-    font-size: 1.05rem;
+  .review-n {
+    font-size: 2.9rem;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
   }
-  .review p {
-    margin: 6px 4px 0;
-    text-align: center;
-  }
-  .list {
+  .review-text {
     display: grid;
-    gap: 10px;
-    margin: 16px 0 0;
+    flex: 1;
+    gap: 2px;
+    min-width: 0;
+  }
+  .review-text b {
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+  .review-text small {
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+  .go {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    padding-left: 2px;
+    border-radius: 50%;
+    background: var(--on-mint);
+    color: var(--mint);
+  }
+  .go :global(path),
+  .play :global(path) {
+    fill: currentColor;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px 12px;
+    margin: 20px 0 0;
     padding: 0;
     list-style: none;
   }
   .deck {
+    position: relative;
     display: flex;
-    align-items: center;
-    overflow: hidden;
+  }
+  .deck.tone-1 {
+    --tile: var(--accent-soft);
+    --tile-edge: var(--accent-edge);
+  }
+  .deck.tone-2 {
+    --tile: var(--butter);
+    --tile-edge: var(--butter-edge);
   }
   .link {
-    display: grid;
+    display: flex;
     flex: 1;
+    flex-direction: column;
     min-width: 0;
-    gap: 12px;
-    padding: 16px;
+    min-height: 136px;
+    padding: 14px;
     color: inherit;
     text-decoration: none;
+    border-radius: inherit;
   }
-  .link:active {
-    background: var(--surface-2);
+  .name {
+    padding-right: 40px;
+    font-weight: 700;
+    font-size: 0.98rem;
+    line-height: 1.22;
+    overflow-wrap: anywhere;
+  }
+  .tally {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-top: auto;
+    padding: 10px 0;
+  }
+  .tally .display {
+    font-size: 2.1rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .tally small {
+    font-size: 0.8rem;
+    opacity: 0.75;
   }
   .play {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     display: grid;
-    flex: none;
     place-items: center;
-    width: 44px;
-    height: 44px;
-    margin: 0 12px 0 0;
+    width: 34px;
+    height: 34px;
     padding: 0 0 0 2px;
     border: 0;
     border-radius: 50%;
-    background: var(--accent-soft);
-    color: var(--accent);
+    background: color-mix(in srgb, var(--text) 10%, transparent);
+    color: var(--text);
     cursor: pointer;
   }
   .play:active {
-    background: var(--accent);
-    color: var(--on-accent);
+    transform: scale(0.94);
   }
   .legend {
-    margin-top: 24px;
+    margin-top: 28px;
   }
   .legend ul {
     display: flex;
@@ -206,31 +283,19 @@
     margin: 0 4px;
     padding: 0;
     list-style: none;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
   }
   .legend li {
     display: inline-flex;
     align-items: center;
     gap: 6px;
   }
+  /* A ring keeps the lavender "Learning" dot visible on the lavender ground. */
+  .legend .level-dot {
+    box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--text) 25%, transparent);
+  }
   .legend .count {
     color: var(--muted);
-  }
-  .row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--muted);
-  }
-  .name {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    color: var(--text);
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
   .empty {
     display: flex;
@@ -240,6 +305,9 @@
     padding: 48px 16px;
     text-align: center;
   }
+  .empty h2 {
+    font-size: 1.6rem;
+  }
   .empty p {
     max-width: 320px;
     margin: 0 0 8px;
@@ -247,14 +315,19 @@
   .art {
     display: grid;
     place-items: center;
-    width: 88px;
-    height: 88px;
-    margin-bottom: 8px;
-    border-radius: 22px;
-    background: var(--accent-soft);
-    color: var(--accent);
+    width: 96px;
+    height: 120px;
+    margin-bottom: 14px;
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: 0 var(--edge) 0 var(--surface-edge);
+    color: var(--text);
     font-size: 3rem;
-    font-weight: 700;
     transform: rotate(-6deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile {
+      transition: none;
+    }
   }
 </style>

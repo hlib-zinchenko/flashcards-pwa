@@ -52,8 +52,8 @@
     max-height: calc(100dvh - var(--safe-top) - 24px);
     margin: calc(var(--safe-top) + 12px) auto auto;
     padding: 0;
-    border: 1px solid var(--border);
-    border-radius: 18px;
+    border: 0;
+    border-radius: 24px;
     background: var(--surface);
     color: var(--text);
     box-shadow: var(--shadow-lg);
@@ -64,7 +64,7 @@
     }
   }
   dialog::backdrop {
-    background: rgb(0 0 0 / 0.4);
+    background: var(--scrim);
   }
   .sheet {
     display: flex;
@@ -79,7 +79,10 @@
   }
   h2 {
     flex: 1;
-    font-size: 1.1rem;
+    font-family: var(--font-head);
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
   }
   .body {
     overflow-y: auto;
@@ -89,8 +92,8 @@
   footer {
     display: flex;
     gap: 8px;
-    padding: 12px 18px 18px;
-    border-top: 1px solid var(--border);
+    padding: 14px 18px 18px;
+    border-top: 1.5px dashed var(--border);
   }
   footer :global(.btn) {
     flex: 1;

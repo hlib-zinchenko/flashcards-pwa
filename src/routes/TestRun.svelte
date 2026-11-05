@@ -215,16 +215,18 @@
     <div class="summary">
       <div class="summary-body">
         <div class="headline">
-          <p class="eyebrow">{endedEarly ? t('summary.ended', { n: remaining }) : t('summary.title')}</p>
-          <h1>{t('summary.headline', { known: summary.firstTry, total: summary.uniqueCards })}</h1>
-          {#if cfg.mode === 'cram'}<p class="muted">{t('summary.firstTryNote')}</p>{/if}
+          <p class="status">{endedEarly ? t('summary.ended', { n: remaining }) : t('summary.title')}</p>
+          <h1 aria-label={t('summary.headline', { known: summary.firstTry, total: summary.uniqueCards })}>
+            <span class="score display" aria-hidden="true">{summary.firstTry}<span class="of">/{summary.uniqueCards}</span></span>
+            <span class="caption" aria-hidden="true">{cfg.mode === 'cram' ? `${t('summary.knownCaption')} ${t('summary.firstTryNote')}` : t('summary.knownCaption')}</span>
+          </h1>
         </div>
 
         <dl class="stats">
-          <div><dt>{t('summary.answered')}</dt><dd>{summary.answered}</dd></div>
-          <div><dt>{t('summary.missed')}</dt><dd class="miss">{summary.missed}</dd></div>
-          <div><dt>{t('summary.levelUps')}</dt><dd class="know">↑ {summary.levelUps}</dd></div>
-          <div><dt>{t('summary.levelDowns')}</dt><dd class="miss">↓ {summary.levelDowns}</dd></div>
+          <div class="up"><dd class="display">{summary.levelUps}</dd><dt>{t('summary.levelUps')}</dt></div>
+          <div class="down"><dd class="display">{summary.levelDowns}</dd><dt>{t('summary.levelDowns')}</dt></div>
+          <div><dd class="display">{summary.missed}</dd><dt>{t('summary.missed')}</dt></div>
+          <div><dd class="display">{summary.answered}</dd><dt>{t('summary.answered')}</dt></div>
         </dl>
 
         {#if missedCards.length > 0}
@@ -267,22 +269,25 @@
     </div>
   {:else if current}
     <header>
-      <button class="icon-btn" type="button" onclick={finish} aria-label={t('run.finish')} title={t('run.finish')}>
-        <Icon name="close" />
+      <button class="icon-tile" type="button" onclick={finish} aria-label={t('run.finish')} title={t('run.finish')}>
+        <Icon name="close" size={20} />
       </button>
       <div class="progress">
         <div class="track"><div class="fill" style:width="{(progress.done / progress.total) * 100}%"></div></div>
-        <span class="muted small">{progress.done} / {progress.total}</span>
+        <span class="count display">{progress.done} / {progress.total}</span>
       </div>
-      <button class="icon-btn" type="button" onclick={undo} disabled={!canUndo} aria-label={t('run.undo')} title={t('run.undo')}>
-        <Icon name="undo" size={20} />
+      <button class="icon-tile" type="button" onclick={undo} disabled={!canUndo} aria-label={t('run.undo')} title={t('run.undo')}>
+        <Icon name="undo" size={19} />
       </button>
-      <button class="icon-btn" type="button" onclick={() => (editOpen = true)} aria-label={t('run.edit')} title={t('run.edit')}>
-        <Icon name="edit" size={20} />
+      <button class="icon-tile" type="button" onclick={() => (editOpen = true)} aria-label={t('run.edit')} title={t('run.edit')}>
+        <Icon name="edit" size={18} />
       </button>
     </header>
 
     <main class="stage">
+      <!-- The cards still waiting, peeking out from under the current one. -->
+      {#if progress.total - progress.done > 1}<div class="ghost g1" aria-hidden="true"></div>{/if}
+      {#if progress.total - progress.done > 2}<div class="ghost g2" aria-hidden="true"></div>{/if}
       {#key progress.answered}
         <SwipeCard
           bind:this={swipeCard}
@@ -299,13 +304,13 @@
 
     <footer>
       <button class="answer miss" class:dim={!flipped} type="button" onclick={() => swipeCard?.fly(false)}>
-        <Icon name="close" size={20} />{t('run.dontKnow')}
+        {t('run.dontKnow')}
       </button>
-      <button class="icon-btn flip" type="button" onclick={() => (flipped = !flipped)} aria-label={t('run.flip')} title={t('run.flip')}>
-        <Icon name="flip" />
+      <button class="answer flip" type="button" onclick={() => (flipped = !flipped)} aria-label={t('run.flip')} title={t('run.flip')}>
+        <Icon name="reset" size={20} />
       </button>
       <button class="answer know" class:dim={!flipped} type="button" onclick={() => swipeCard?.fly(true)}>
-        <Icon name="check" size={20} />{t('run.know')}
+        {t('run.know')}
       </button>
     </footer>
 
@@ -347,7 +352,7 @@
     flex-direction: column;
     max-width: 640px;
     margin: 0 auto;
-    padding: calc(var(--safe-top) + 4px) 16px calc(var(--safe-bottom) + 12px);
+    padding: calc(var(--safe-top) + 8px) 16px calc(var(--safe-bottom) + 16px);
     overflow: hidden;
     overscroll-behavior: none;
     touch-action: none;
@@ -361,73 +366,102 @@
     display: flex;
     flex: 1;
     align-items: center;
-    justify-content: center;
     gap: 10px;
+    min-width: 0;
+    padding: 0 4px;
   }
   .track {
     flex: 1;
-    height: 6px;
+    height: 8px;
     overflow: hidden;
     border-radius: 999px;
-    background: var(--surface-2);
+    background: color-mix(in srgb, var(--surface) 45%, transparent);
   }
   .fill {
     height: 100%;
     border-radius: inherit;
-    background: var(--know);
+    background: var(--text);
     transition: width 0.3s;
   }
+  .count {
+    flex: none;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+  }
   .stage {
+    position: relative;
     display: flex;
     flex: 1;
     min-height: 0;
-    padding: 12px 4px 16px;
+    padding: 18px 6px 22px;
+  }
+  .ghost {
+    position: absolute;
+    inset: 24px 16px 26px;
+    border-radius: 28px;
+    pointer-events: none;
+  }
+  .g1 {
+    background: var(--accent-soft);
+    box-shadow: 0 6px 0 var(--accent-edge);
+    transform: rotate(3.5deg) translate(6px, 4px);
+  }
+  .g2 {
+    background: var(--butter);
+    box-shadow: 0 6px 0 var(--butter-edge);
+    transform: rotate(-3deg) translate(-4px, 2px);
   }
   footer {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 48px 1fr;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
   }
   .answer {
+    --tile: var(--surface);
+    --tile-edge: var(--surface-edge);
     display: inline-flex;
-    flex: 1;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    min-height: 56px;
-    border: 2px solid currentColor;
+    height: 48px;
+    margin-bottom: 4px;
+    padding: 0 10px;
+    border: 0;
     border-radius: 16px;
-    background: var(--surface);
-    font-size: 1.02rem;
+    background: var(--tile);
+    box-shadow: 0 4px 0 var(--tile-edge);
+    color: var(--text);
+    font-size: 1rem;
     font-weight: 700;
+    white-space: nowrap;
     cursor: pointer;
+    transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, opacity 0.15s;
   }
   .answer:active {
-    transform: scale(0.97);
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--tile-edge);
   }
   /* Grade after seeing the answer; swiping still works for fast users. */
   .answer.dim {
-    opacity: 0.45;
-  }
-  .answer {
-    transition: opacity 0.15s;
-  }
-  header .icon-btn:disabled {
-    opacity: 0.3;
-    cursor: default;
+    opacity: 0.55;
   }
   .answer.know {
-    color: var(--know);
+    --tile: var(--mint);
+    --tile-edge: var(--mint-edge);
+    color: var(--on-mint);
   }
   .answer.miss {
-    color: var(--miss);
+    --tile: var(--rose);
+    --tile-edge: var(--rose-edge);
+    color: var(--on-rose);
   }
   .flip {
-    flex: none;
-    width: 52px;
-    height: 52px;
-    border: 1px solid var(--border);
-    background: var(--surface);
+    width: 48px;
+    padding: 0;
+    border-radius: 50%;
+  }
+  header .icon-tile:disabled {
+    opacity: 0.35;
   }
 
   .summary {
@@ -440,48 +474,78 @@
   /* Auto margins center the content but let a long missed list scroll from the top. */
   .summary-body {
     display: grid;
-    gap: 24px;
+    gap: 22px;
     margin: auto 0;
     padding: 16px 0;
-  }
-  .headline {
-    text-align: center;
   }
   .headline p {
     margin: 0;
   }
-  .eyebrow {
+  .status {
     color: var(--muted);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-size: 0.95rem;
+    font-weight: 600;
   }
   .headline h1 {
-    margin: 6px 0 2px;
-    font-size: 2.2rem;
-    line-height: 1.15;
+    display: grid;
+    gap: 8px;
+    margin: 8px 0 0;
+    font-weight: 700;
+  }
+  .score {
+    font-size: 6rem;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+  }
+  .of {
+    font-size: 0.5em;
+    opacity: 0.55;
+  }
+  .caption {
+    font-size: 1.1rem;
+    line-height: 1.3;
   }
   .stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
     margin: 0;
-    text-align: center;
   }
   .stats div {
-    padding: 10px 4px;
-    border-radius: var(--radius-sm);
-    background: var(--surface-2);
+    --tile: var(--surface);
+    --tile-edge: var(--surface-edge);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 10px 10px;
+    border-radius: 16px;
+    background: var(--tile);
+    box-shadow: 0 4px 0 var(--tile-edge);
+  }
+  .stats .up {
+    --tile: var(--mint);
+    --tile-edge: var(--mint-edge);
+    color: var(--on-mint);
+  }
+  .stats .down {
+    --tile: var(--rose);
+    --tile-edge: var(--rose-edge);
+    color: var(--on-rose);
   }
   dt {
-    color: var(--muted);
-    font-size: 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
   }
   dd {
-    margin: 2px 0 0;
-    font-size: 1.15rem;
-    font-weight: 700;
+    margin: 0;
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  @media (max-width: 360px) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   .missed ul {
     margin: 0;
@@ -492,17 +556,20 @@
     display: flex;
     gap: 12px;
     justify-content: space-between;
-    padding: 12px 14px;
-    border-top: 1px solid var(--border);
+    align-items: baseline;
+    padding: 13px 16px;
+    border-top: 1.5px dashed var(--border);
   }
   .missed li:first-child {
     border-top: 0;
   }
   .missed .q {
-    font-weight: 600;
+    font-family: var(--font-card);
+    font-size: 1.15rem;
+    font-weight: 700;
   }
   .missed .a {
-    color: var(--muted);
+    color: var(--muted-2);
     text-align: right;
   }
   .know {
@@ -516,7 +583,7 @@
   }
   .summary-actions {
     display: grid;
-    gap: 10px;
+    gap: 8px;
   }
   .summary-actions .btn {
     min-height: 50px;
@@ -529,12 +596,16 @@
     display: grid;
     place-items: center;
     padding: 24px;
-    background: rgb(0 0 0 / 0.45);
+    background: var(--scrim);
   }
   .gestures-box {
     width: 100%;
     max-width: 380px;
     padding: 22px;
+  }
+  .gestures-box h2 {
+    font-family: var(--font-head);
+    font-weight: 900;
   }
   .gestures-box ul {
     display: grid;
@@ -559,12 +630,25 @@
     font-size: 1.2rem;
     font-weight: 800;
   }
+  .g.know {
+    background: var(--mint);
+    color: var(--on-mint);
+  }
+  .g.miss {
+    background: var(--rose);
+    color: var(--on-rose);
+  }
   .keys {
     margin: 0 0 16px;
   }
   @media (pointer: coarse) {
     .keys {
       display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .answer {
+      transition: none;
     }
   }
 </style>

@@ -16,16 +16,27 @@
   const active = $derived(router.route.name === 'deck' ? 'decks' : router.route.name);
 </script>
 
+<!-- Floating card-stock pill. The current tab grows to show its label; the others show only their icon. -->
 <nav class="tabbar">
-  {#each tabs as tab (tab.name)}
-    <a href={href(tab.path)} class:active={active === tab.name} aria-current={active === tab.name ? 'page' : undefined}>
-      <span class="icon">
-        <Icon name={tab.icon} size={22} />
-        {#if tab.name === 'settings' && nudge}<span class="dot" title={t('nav.backupDue')}></span>{/if}
-      </span>
-      <span>{tab.label()}{#if tab.name === 'settings' && nudge}<span class="sr-only"> · {t('nav.backupDue')}</span>{/if}</span>
-    </a>
-  {/each}
+  <div class="pill">
+    {#each tabs as tab (tab.name)}
+      {@const on = active === tab.name}
+      <a
+        href={href(tab.path)}
+        class:active={on}
+        aria-current={on ? 'page' : undefined}
+        aria-label={on ? undefined : tab.label()}
+        title={on ? undefined : tab.label()}
+      >
+        <span class="icon">
+          <Icon name={tab.icon} size={20} />
+          {#if tab.name === 'settings' && nudge}<span class="dot" title={t('nav.backupDue')}></span>{/if}
+        </span>
+        {#if on}<span class="label">{tab.label()}</span>{/if}
+        {#if tab.name === 'settings' && nudge}<span class="visually-hidden">{t('nav.backupDue')}</span>{/if}
+      </a>
+    {/each}
+  </div>
 </nav>
 
 <style>
@@ -35,28 +46,41 @@
     z-index: 20;
     display: flex;
     justify-content: center;
-    padding-bottom: var(--safe-bottom);
-    border-top: 1px solid var(--border);
-    background: color-mix(in srgb, var(--surface) 90%, transparent);
-    backdrop-filter: saturate(1.6) blur(14px);
-    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+    padding: 0 16px calc(var(--safe-bottom) + 14px);
+    pointer-events: none;
+  }
+  .pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    width: 100%;
+    max-width: 420px;
+    padding: 6px;
+    border-radius: 999px;
+    background: var(--nav);
+    box-shadow: 0 var(--edge) 0 var(--nav-edge), 0 14px 30px -16px rgb(20 12 36 / 0.45);
+    pointer-events: auto;
   }
   a {
     display: flex;
-    flex: 1;
-    max-width: 200px;
-    height: var(--tabbar-h);
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    color: var(--muted);
-    font-size: 0.72rem;
-    font-weight: 600;
+    gap: 8px;
+    min-width: 56px;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    color: var(--on-nav);
+    font-size: 0.9rem;
+    font-weight: 700;
     text-decoration: none;
+    white-space: nowrap;
   }
   a.active {
-    color: var(--accent);
+    background: var(--pill);
+    color: var(--on-pill);
+    padding: 0 18px 0 16px;
   }
   .icon {
     position: relative;
@@ -64,20 +88,12 @@
   }
   .dot {
     position: absolute;
-    top: -2px;
-    right: -4px;
-    width: 9px;
-    height: 9px;
-    border: 2px solid var(--surface);
+    top: -3px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--nav);
     border-radius: 50%;
     background: var(--danger);
-  }
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
   }
 </style>
