@@ -68,8 +68,22 @@
 
   const total = $derived(poolSize(cards, cfg));
 
-  let customLimit = $state(cfg.limit && !QUICK_LIMITS.includes(cfg.limit) ? cfg.limit : 30);
-  const limitMode = $derived(cfg.limit === null ? 'all' : QUICK_LIMITS.includes(cfg.limit) ? String(cfg.limit) : 'custom');
+  // "Other" is remembered as chosen rather than worked out from the number, so typing 10, 20 or 50
+  // (or passing through them, as in 100) keeps the field open instead of jumping to that segment.
+  const savedCustom = cfg.limit !== null && !QUICK_LIMITS.includes(cfg.limit);
+  let customLimit = $state(savedCustom ? cfg.limit : 30);
+  let customChosen = $state(savedCustom);
+  const limitMode = $derived(customChosen ? 'custom' : cfg.limit === null ? 'all' : String(cfg.limit));
+
+  function setLimit(limit: number | null) {
+    customChosen = false;
+    cfg.limit = limit;
+  }
+
+  function chooseCustom() {
+    customChosen = true;
+    cfg.limit = Math.max(1, Math.floor(customLimit || 1));
+  }
 
   function toggle<T>(list: T[], value: T): T[] {
     return list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
@@ -153,21 +167,14 @@
     <section class="section">
       <h2 class="section-title">{t('test.count')}</h2>
       <div class="seg">
-        <button type="button" aria-pressed={limitMode === 'all'} onclick={() => (cfg.limit = null)}>{t('common.all')}</button>
+        <button type="button" aria-pressed={limitMode === 'all'} onclick={() => setLimit(null)}>{t('common.all')}</button>
         {#each QUICK_LIMITS as n (n)}
-          <button type="button" aria-pressed={limitMode === String(n)} onclick={() => (cfg.limit = n)}>{n}</button>
+          <button type="button" aria-pressed={limitMode === String(n)} onclick={() => setLimit(n)}>{n}</button>
         {/each}
-        <button type="button" aria-pressed={limitMode === 'custom'} onclick={() => (cfg.limit = customLimit)}>{t('test.countCustom')}</button>
+        <button type="button" aria-pressed={limitMode === 'custom'} onclick={chooseCustom}>{t('test.countCustom')}</button>
       </div>
       {#if limitMode === 'custom'}
-        <input
-          class="input custom"
-          type="number"
-          inputmode="numeric"
-          min="1"
-          bind:value={customLimit}
-          oninput={() => (cfg.limit = Math.max(1, Math.floor(customLimit || 1)))}
-        />
+        <input class="input custom" type="number" inputmode="numeric" min="1" bind:value={customLimit} oninput={chooseCustom} />
       {/if}
     </section>
 
