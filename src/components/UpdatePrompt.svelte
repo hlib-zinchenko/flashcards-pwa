@@ -4,10 +4,23 @@
   import { showToast } from '../lib/toast.svelte';
 
   const HOUR = 60 * 60 * 1000;
+  const MINUTE = 60 * 1000;
 
   const { needRefresh, offlineReady, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(_url, registration) {
-      if (registration) setInterval(() => registration.update(), HOUR);
+      if (!registration) return;
+      let lastCheck = Date.now();
+      const check = () => {
+        if (!navigator.onLine || registration.installing) return;
+        lastCheck = Date.now();
+        registration.update().catch(() => {});
+      };
+      setInterval(check, HOUR);
+      // An installed app is usually resumed from the background rather than reloaded, and iOS pauses
+      // timers there, so also check whenever the app comes back on screen (at most once a minute).
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && Date.now() - lastCheck > MINUTE) check();
+      });
     },
   });
 
