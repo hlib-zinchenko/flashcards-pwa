@@ -228,6 +228,10 @@
       case 'E':
         editOpen = true;
         break;
+      case 's':
+      case 'S':
+        swipeCard?.toggleSpeech();
+        break;
       case 'Escape':
         finish();
         break;

@@ -1,6 +1,8 @@
 <script lang="ts">
   import { classifyGesture, lockAxis, type Axis } from '../lib/gestures';
   import { t } from '../lib/i18n/index.svelte';
+  import { speak, speechSupported, stopSpeaking } from '../lib/speech.svelte';
+  import Icon from './Icon.svelte';
 
   let {
     prompt,
@@ -36,6 +38,37 @@
   let dragging = $state(false);
   let leaving = $state(false);
   let notesOpen = $state(false);
+  /** Face being read aloud. */
+  let speaking = $state<'front' | 'back' | null>(null);
+  /** Bumped on every start/stop, so a late onend from an interrupted reading is ignored. */
+  let speechRun = 0;
+
+  /** Read the visible face aloud, or stop if it's already being read. */
+  export function toggleSpeech() {
+    const face = flipped ? 'back' : 'front';
+    if (speaking === face) {
+      stopReading();
+      return;
+    }
+    const run = ++speechRun;
+    speaking = face;
+    speak(face === 'front' ? prompt : answer, () => {
+      if (run === speechRun) speaking = null;
+    });
+  }
+
+  function stopReading() {
+    if (speaking === null) return;
+    speechRun++;
+    speaking = null;
+    stopSpeaking();
+  }
+
+  // Stop reading when the card flips or leaves (each card is a new component).
+  $effect(() => {
+    void flipped;
+    return stopReading;
+  });
 
   let pointerId: number | null = null;
   let start = { x: 0, y: 0, t: 0 };
@@ -134,6 +167,23 @@
   {/if}
 {/snippet}
 
+{#snippet speakButton(face: 'front' | 'back')}
+  {#if speechSupported}
+    <button
+      class="speak-btn"
+      class:on={speaking === face}
+      type="button"
+      data-nodrag
+      aria-pressed={speaking === face}
+      aria-label={speaking === face ? t('run.stopSpeaking') : t('run.speak')}
+      title={speaking === face ? t('run.stopSpeaking') : t('run.speak')}
+      onclick={toggleSpeech}
+    >
+      <Icon name="volume" size={20} />
+    </button>
+  {/if}
+{/snippet}
+
 <div
   class="card"
   class:dragging
@@ -157,12 +207,14 @@
   <div class="flipper tone{tone}" class:flipped>
     <div class="face front">
       <p class="text {sizeClass(prompt)}">{prompt}</p>
+      {@render speakButton('front')}
       {@render notesBlock()}
       <span class="hint">{t('run.tapToFlip')}</span>
     </div>
     <div class="face back">
       <p class="prompt-small">{prompt}</p>
       <p class="text {sizeClass(answer)}">{answer}</p>
+      {@render speakButton('back')}
       {#if tagLabels.length}
         <div class="tags">
           {#each tagLabels as label (label)}<span class="tag-pill">{label}</span>{/each}
@@ -340,6 +392,23 @@
     font-size: 0.875rem;
     font-weight: 700;
     cursor: pointer;
+  }
+  .speak-btn {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 10%, transparent);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .speak-btn.on {
+    background: var(--primary);
+    color: var(--on-primary);
   }
   .stamp {
     position: absolute;

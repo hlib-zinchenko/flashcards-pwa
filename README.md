@@ -31,9 +31,9 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
     - *Cram*: known cards leave the session, missed ones go back at a random spot until you know them all. *Refresh*: one pass, answers only update levels;
     - order: deck order, random, level ascending (weakest first);
     - filter by level and tag.
-  - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card. A **Notes** button on both sides of the card reveals its notes.
+  - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card. A **Notes** button on both sides of the card reveals its notes, and a **speaker** button reads that side aloud with the device's built-in voices (works offline; Japanese, Ukrainian or English is picked from the text). Settings → Reading aloud picks the voice per language, with a sample to try each one, and the speed.
   - **Undo last answer** (header button) puts the card back and restores its level.
-  - Keyboard: Space / ↑ / ↓ flip · → know · ← don't know · Z or Backspace undo · E edits · Esc finishes.
+  - Keyboard: Space / ↑ / ↓ flip · → know · ← don't know · S reads aloud · Z or Backspace undo · E edits · Esc finishes.
   - The summary leads with how many cards you knew on the first try and lists the ones you missed. If you stop early, **Continue** picks up where you left off; **Done** goes back to where you started.
 - **Import / export**
   - JSON backup of the whole library (with progress), for moving to another device. Merge or replace on import.

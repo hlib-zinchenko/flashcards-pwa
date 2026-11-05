@@ -7,6 +7,17 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.6.0',
+    en: [
+      'Hear a card: tap 🔊 on either side during a test (or press S). Works offline.',
+      'Pick a voice for each language and the speed in Settings → Reading aloud.',
+    ],
+    uk: [
+      'Картку можна послухати: натисніть 🔊 на будь-якому боці під час тесту (або S). Працює офлайн.',
+      'Голос для кожної мови та швидкість можна вибрати в Налаштування → Читання вголос.',
+    ],
+  },
+  {
     version: '0.5.0',
     en: [
       'After an update, this sheet shows what changed. You can open it again from Settings → About.',

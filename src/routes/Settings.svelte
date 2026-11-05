@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import Icon, { type IconName } from '../components/Icon.svelte';
   import Modal from '../components/Modal.svelte';
   import NameModal from '../components/NameModal.svelte';
@@ -19,6 +19,8 @@
   import { showToast } from '../lib/toast.svelte';
   import { openWhatsNew } from '../lib/whatsNew.svelte';
   import type { Tag } from '../lib/types';
+  import { SAMPLE_TEXT, SPEECH_LANGS, voicesFor, type SpeechLang, type SpeechRate } from '../lib/speech';
+  import { deviceVoices, setRate, setVoice, speak, speechPrefs, speechSupported, stopSpeaking } from '../lib/speech.svelte';
 
   const tags = $derived(sortTags($allTags ?? []));
   const languages: [Lang, string][] = [
@@ -36,6 +38,64 @@
     ['light', () => t('settings.themeLight')],
     ['dark', () => t('settings.themeDark')],
   ];
+
+  // ---- Voice ----
+  const rates: [SpeechRate, () => string][] = [
+    ['slow', () => t('settings.speechSlow')],
+    ['normal', () => t('settings.speechNormal')],
+  ];
+  const regionOf = (lang: string) => lang.replace('_', '-').split('-')[1]?.toUpperCase() ?? '';
+
+  function langName(lang: SpeechLang): string {
+    const name = new Intl.DisplayNames([i18n.lang], { type: 'language' }).of(lang.split('-')[0]) ?? lang;
+    return name.charAt(0).toLocaleUpperCase(i18n.lang) + name.slice(1);
+  }
+
+  function voiceLabel(voice: SpeechSynthesisVoice, withRegion: boolean): string {
+    const region = regionOf(voice.lang);
+    if (!withRegion || !region) return voice.name;
+    return `${voice.name} · ${new Intl.DisplayNames([i18n.lang], { type: 'region' }).of(region) ?? region}`;
+  }
+
+  const voiceRows = $derived(
+    SPEECH_LANGS.map((lang) => {
+      const voices = voicesFor(deviceVoices(), lang);
+      const chosen = speechPrefs.voices[lang];
+      return {
+        lang,
+        voices,
+        // Region only matters when the list mixes them (English: US, UK, Australia…).
+        withRegion: new Set(voices.map((v) => regionOf(v.lang))).size > 1,
+        value: chosen && voices.some((v) => v.voiceURI === chosen) ? chosen : '',
+      };
+    }),
+  );
+
+  /** Language whose sample is playing. */
+  let trying = $state<SpeechLang | null>(null);
+
+  function tryVoice(lang: SpeechLang) {
+    if (trying === lang) {
+      trying = null;
+      stopSpeaking();
+      return;
+    }
+    trying = lang;
+    speak(SAMPLE_TEXT[lang], () => {
+      if (trying === lang) trying = null;
+    }, lang);
+  }
+
+  function chooseVoice(lang: SpeechLang, voiceURI: string) {
+    setVoice(lang, voiceURI || null);
+    // Let them hear what they picked.
+    trying = null;
+    tryVoice(lang);
+  }
+
+  onDestroy(() => {
+    if (trying) stopSpeaking();
+  });
 
   // ---- Tags ----
   let newTag = $state('');
@@ -163,6 +223,54 @@
       {/each}
     </div>
   </section>
+
+  {#if speechSupported}
+    <section class="section">
+      <h2 class="section-title">{t('settings.voice')}</h2>
+      <div class="panel list">
+        {#each voiceRows as row (row.lang)}
+          <div class="item voice">
+            <label class="voice-lang" for="voice-{row.lang}">{langName(row.lang)}</label>
+            <select
+              id="voice-{row.lang}"
+              class="input"
+              disabled={row.voices.length === 0}
+              value={row.value}
+              onchange={(e) => chooseVoice(row.lang, e.currentTarget.value)}
+            >
+              {#if row.voices.length}
+                <option value="">{t('settings.voiceAuto')}</option>
+                {#each row.voices as voice (voice.voiceURI)}
+                  <option value={voice.voiceURI}>{voiceLabel(voice, row.withRegion)}</option>
+                {/each}
+              {:else}
+                <option value="">{t('settings.voiceNone')}</option>
+              {/if}
+            </select>
+            <button
+              class="icon-btn try"
+              class:on={trying === row.lang}
+              type="button"
+              disabled={row.voices.length === 0}
+              aria-pressed={trying === row.lang}
+              aria-label={t('settings.voiceTry', { lang: langName(row.lang) })}
+              title={t('settings.voiceTry', { lang: langName(row.lang) })}
+              onclick={() => tryVoice(row.lang)}
+            >
+              <Icon name="volume" size={20} />
+            </button>
+          </div>
+        {/each}
+      </div>
+      <h3 class="sub-title">{t('settings.speechRate')}</h3>
+      <div class="seg">
+        {#each rates as [value, label] (value)}
+          <button type="button" aria-pressed={speechPrefs.rate === value} onclick={() => setRate(value)}>{label()}</button>
+        {/each}
+      </div>
+      <p class="muted small hint">{t('settings.voiceHint')}</p>
+    </section>
+  {/if}
 
   <section class="section">
     <h2 class="section-title">{t('settings.tags')}</h2>
@@ -324,6 +432,35 @@
   }
   .danger {
     color: var(--danger);
+  }
+  .voice,
+  .voice:last-child {
+    padding: 6px 6px 6px 14px;
+  }
+  .voice-lang {
+    flex: none;
+    width: 6.5em;
+    color: var(--text);
+  }
+  .voice select {
+    flex: 1;
+    min-width: 0;
+  }
+  .try.on {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+  .try:disabled {
+    opacity: 0.4;
+  }
+  .sub-title {
+    margin: 16px 4px 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .hint {
+    margin: 10px 4px 0;
   }
   .box {
     padding: 14px 16px;
