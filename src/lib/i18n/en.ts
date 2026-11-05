@@ -166,6 +166,10 @@ export const en = {
 
   'settings.title': 'Settings',
   'settings.language': 'Language',
+  'settings.appearance': 'Appearance',
+  'settings.themeSystem': 'System',
+  'settings.themeLight': 'Light',
+  'settings.themeDark': 'Dark',
   'settings.tags': 'Tags',
   'settings.backup': 'Backup & transfer',
   'settings.backupHint': 'Export the whole library (decks, cards, tags and progress) to a file, then import it on another device.',

@@ -29,8 +29,14 @@
   --tabbar-h: 58px;
 }
 
+/* Theme: Settings → Appearance sets data-theme="light" or "dark" on <html>;
+   without it (System) the device setting decides. The two dark blocks below
+   must stay identical. */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #111113;
     --surface: #1b1b1e;
     --surface-2: #26262a;
@@ -48,6 +54,25 @@
     --lv0: #74777d;
     --lv3: #d6c53a;
   }
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #111113;
+  --surface: #1b1b1e;
+  --surface-2: #26262a;
+  --text: #ececef;
+  --muted: #9b9ba4;
+  --border: #2f2f35;
+  --accent: #8587f2;
+  --accent-soft: #2a2a4a;
+  --on-accent: #0f0f1f;
+  --know: #34b884;
+  --miss: #f06569;
+  --danger: #f06569;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.5);
+  --lv0: #74777d;
+  --lv3: #d6c53a;
 }
 
 *,

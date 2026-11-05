@@ -11,6 +11,8 @@
   import { allTags } from '../lib/live';
   import { importMerge, importReplace, loadLibrary } from '../lib/repo/library';
   import { createTag, deleteTag, renameTag, TagExistsError } from '../lib/repo/tags';
+  import type { ThemePref } from '../lib/theme';
+  import { setTheme, theme } from '../lib/theme.svelte';
   import { showToast } from '../lib/toast.svelte';
   import type { Tag } from '../lib/types';
 
@@ -18,6 +20,11 @@
   const languages: [Lang, string][] = [
     ['en', 'English'],
     ['uk', 'Українська'],
+  ];
+  const themes: [ThemePref, () => string][] = [
+    ['system', () => t('settings.themeSystem')],
+    ['light', () => t('settings.themeLight')],
+    ['dark', () => t('settings.themeDark')],
   ];
 
   // ---- Tags ----
@@ -118,6 +125,15 @@
     <div class="seg">
       {#each languages as [code, name] (code)}
         <button type="button" aria-pressed={i18n.lang === code} onclick={() => setLang(code)}>{name}</button>
+      {/each}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">{t('settings.appearance')}</h2>
+    <div class="seg">
+      {#each themes as [value, label] (value)}
+        <button type="button" aria-pressed={theme.pref === value} onclick={() => setTheme(value)}>{label()}</button>
       {/each}
     </div>
   </section>

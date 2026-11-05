@@ -164,6 +164,10 @@ export const uk: Messages = {
 
   'settings.title': 'Налаштування',
   'settings.language': 'Мова',
+  'settings.appearance': 'Оформлення',
+  'settings.themeSystem': 'Системне',
+  'settings.themeLight': 'Світле',
+  'settings.themeDark': 'Темне',
   'settings.tags': 'Теги',
   'settings.backup': 'Резервна копія та перенесення',
   'settings.backupHint': 'Експортуйте всю бібліотеку (колоди, картки, теги й прогрес) у файл, а потім імпортуйте його на іншому пристрої.',
