@@ -3,6 +3,7 @@
   import TabBar from './components/TabBar.svelte';
   import Toast from './components/Toast.svelte';
   import UpdatePrompt from './components/UpdatePrompt.svelte';
+  import WhatsNew from './components/WhatsNew.svelte';
   import { router } from './lib/router.svelte';
   import Deck from './routes/Deck.svelte';
   import Decks from './routes/Decks.svelte';
@@ -31,3 +32,4 @@
 <Toast />
 <ConfirmDialog />
 <UpdatePrompt />
+<WhatsNew />

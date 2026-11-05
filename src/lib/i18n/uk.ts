@@ -211,4 +211,7 @@ export const uk: Messages = {
   'update.available': 'Доступна нова версія',
   'update.reload': 'Оновити',
   'update.offlineReady': 'Готово до роботи офлайн',
+
+  'whatsNew.title': 'Що нового',
+  'whatsNew.ok': 'Зрозуміло',
 };

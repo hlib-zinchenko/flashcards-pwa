@@ -47,4 +47,4 @@ npm version patch   # bumps, commits, tags
 git push --follow-tags
 ```
 
-Then write GitHub release notes for users: what changed and what they need to do (for example, tap Reload).
+Before `npm version`, add an entry for the new version at the top of `CHANGELOG` in `src/lib/changelog.ts` (short lines, `en` and `uk`) if users will notice the change; the app shows it once after updating ("What's new"). Skip it for releases with no visible change. Then write GitHub release notes for users: what changed and what they need to do (for example, tap Reload).

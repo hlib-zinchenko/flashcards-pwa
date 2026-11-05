@@ -17,6 +17,7 @@
   import { backupStatus, markBackedUp } from '../lib/backup.svelte';
   import { askConfirm } from '../lib/confirm.svelte';
   import { showToast } from '../lib/toast.svelte';
+  import { openWhatsNew } from '../lib/whatsNew.svelte';
   import type { Tag } from '../lib/types';
 
   const tags = $derived(sortTags($allTags ?? []));
@@ -253,6 +254,12 @@
         <p class="muted small">{t('settings.version', { v: __APP_VERSION__ })}</p>
       </div>
       <ul class="links">
+        <li>
+          <button type="button" onclick={openWhatsNew}>
+            <Icon name="sparkle" size={18} />
+            <span class="grow">{t('whatsNew.title')}</span>
+          </button>
+        </li>
         {#each links as link (link.href)}
           <li>
             <a href={link.href} target="_blank" rel="noopener">
@@ -343,17 +350,24 @@
     padding: 0;
     list-style: none;
   }
-  .links a {
+  .links a,
+  .links button {
     display: flex;
+    width: 100%;
     align-items: center;
     gap: 10px;
     min-height: 52px;
     padding: 4px 16px;
     border-top: 1px solid var(--border);
+    border-width: 1px 0 0;
+    background: none;
     color: var(--muted);
+    font: inherit;
+    text-align: left;
     text-decoration: none;
   }
-  .links a:active {
+  .links a:active,
+  .links button:active {
     background: var(--surface-2);
   }
   .choices {

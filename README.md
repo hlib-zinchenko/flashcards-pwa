@@ -65,7 +65,7 @@ Everything lives in the browser's IndexedDB on your device. Nothing is sent anyw
 
 ## Updates
 
-The app works offline from a cached copy. When a new version is deployed, it shows a **Reload** prompt; tap it to switch. The current version is shown in Settings → About.
+The app works offline from a cached copy. It checks for a new version every hour and whenever you come back to it, and shows a **Reload** prompt when one is out; tap it to switch. After an update, a **What's new** sheet lists what changed (it's also in Settings → About, next to the current version).
 
 ## Development
 

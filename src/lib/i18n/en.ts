@@ -213,6 +213,9 @@ export const en = {
   'update.available': 'A new version is available',
   'update.reload': 'Reload',
   'update.offlineReady': 'Ready to work offline',
+
+  'whatsNew.title': "What's new",
+  'whatsNew.ok': 'Got it',
 } as const;
 
 export type MessageKey = keyof typeof en;
