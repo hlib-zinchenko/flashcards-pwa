@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
 import { db, newId } from '../db';
-import { gradeUpdate } from '../learning';
+import { gradeFields, gradeUpdate } from '../learning';
 import type { Card } from '../types';
 
 export interface CardInput {
@@ -97,6 +97,12 @@ export async function resetDeckProgress(deckId: string): Promise<void> {
 }
 
 /** Apply a grade and return the updated card. */
+/** Undo a grade: write back the grade fields from the card as it was before. */
+export async function restoreGrade(before: Card): Promise<void> {
+  // An undefined lastReviewedAt removes the field, as on a never-reviewed card.
+  await db.cards.update(before.id, gradeFields(before));
+}
+
 export async function gradeCard(id: string, known: boolean): Promise<Card | undefined> {
   return db.transaction('rw', db.cards, async () => {
     const card = await db.cards.get(id);

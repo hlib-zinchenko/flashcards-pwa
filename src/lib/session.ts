@@ -117,6 +117,17 @@ export function buildPool(
   return cfg.limit && cfg.limit > 0 ? sorted.slice(0, cfg.limit) : sorted;
 }
 
+interface SessionSnapshot {
+  queue: string[];
+  current: string | null;
+  answered: number;
+  knownCount: number;
+  learned: string[];
+  missed: string[];
+  firstTry: string[];
+  attempted: string[];
+}
+
 /**
  * Card queue for one test run. Holds ids only, so card edits made
  * during a session don't need to touch it.
@@ -127,6 +138,8 @@ export class Session {
   private readonly rng: Rng;
   private queue: string[];
   current: string | null = null;
+  /** State before each grade, newest last, for undo. */
+  private history: SessionSnapshot[] = [];
 
   /** Ids answered "know" at least once. */
   readonly learned = new Set<string>();
@@ -155,9 +168,19 @@ export class Session {
     return this.mode === 'cram' ? this.learned.size : this.attempted.size;
   }
 
+  /** Cards still to finish, for a session that ends early. */
+  get remaining(): number {
+    return this.pool.length - this.completed;
+  }
+
+  get canUndo(): boolean {
+    return this.history.length > 0;
+  }
+
   grade(known: boolean): void {
     const id = this.current;
     if (id === null) return;
+    this.history.push(this.snapshot());
     this.answered++;
     if (!this.attempted.has(id)) {
       this.attempted.add(id);
@@ -171,6 +194,38 @@ export class Session {
       if (this.mode === 'cram') this.requeue(id);
     }
     this.advance();
+  }
+
+  /**
+   * Take back the last grade: that card becomes current again and every
+   * counter returns to what it was. Returns the card's id, or null if
+   * there is nothing to undo.
+   */
+  undo(): string | null {
+    const prev = this.history.pop();
+    if (!prev) return null;
+    this.queue = prev.queue;
+    this.current = prev.current;
+    this.answered = prev.answered;
+    this.knownCount = prev.knownCount;
+    for (const key of ['learned', 'missed', 'firstTry', 'attempted'] as const) {
+      this[key].clear();
+      for (const id of prev[key]) this[key].add(id);
+    }
+    return this.current;
+  }
+
+  private snapshot(): SessionSnapshot {
+    return {
+      queue: this.queue.slice(),
+      current: this.current,
+      answered: this.answered,
+      knownCount: this.knownCount,
+      learned: [...this.learned],
+      missed: [...this.missed],
+      firstTry: [...this.firstTry],
+      attempted: [...this.attempted],
+    };
   }
 
   /** Put a missed card back at a random spot, never right next. */

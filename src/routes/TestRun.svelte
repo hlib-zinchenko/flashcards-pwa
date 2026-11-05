@@ -9,7 +9,8 @@
   import { t, tagLabel } from '../lib/i18n/index.svelte';
   import { allTags } from '../lib/live';
   import { loadPref, savePref } from '../lib/prefs';
-  import { gradeCard, updateCard, type CardInput } from '../lib/repo/cards';
+  import { gradeFields } from '../lib/learning';
+  import { gradeCard, restoreGrade, updateCard, type CardInput } from '../lib/repo/cards';
   import { navigate } from '../lib/router.svelte';
   import { buildPool, Session, sortCards, summarize, type Summary } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
@@ -25,7 +26,12 @@
   let flipped = $state(false);
   let busy = false;
   let summary = $state<Summary | null>(null);
+  /** The summary is for a session the user quit; Continue resumes it. */
+  let endedEarly = $state(false);
+  let remaining = $state(0);
   let missedIds = $state<string[]>([]);
+  /** Each graded card as it was before its grade, newest last; parallel to the Session's undo history. */
+  let gradedBefore: (Card | undefined)[] = [];
   let editOpen = $state(false);
   let showGestures = $state(!loadPref('gestureHintSeen', false));
   let swipeCard: SwipeCard | undefined = $state();
@@ -41,8 +47,15 @@
     if (!session) return { done: 0, total: 0, answered: 0 };
     return { done: session.completed, total: session.pool.length, answered: session.answered };
   });
-  const prompt = $derived(current ? (cfg.direction === 'front' ? current.front : current.back) : '');
-  const answer = $derived(current ? (cfg.direction === 'front' ? current.back : current.front) : '');
+  const canUndo = $derived.by(() => {
+    version;
+    return session?.canUndo ?? false;
+  });
+  const missedCards = $derived(missedIds.map((id) => cards.get(id)).filter((c) => !!c));
+  const promptOf = (c: Card) => (cfg.direction === 'front' ? c.front : c.back);
+  const answerOf = (c: Card) => (cfg.direction === 'front' ? c.back : c.front);
+  const prompt = $derived(current ? promptOf(current) : '');
+  const answer = $derived(current ? answerOf(current) : '');
   const tagLabels = $derived(
     (current?.tags ?? []).map((id) => tagById.get(id)).filter((tag) => !!tag).map((tag) => tagLabel(tag)),
   );
@@ -52,6 +65,7 @@
     for (const c of pool) cards.set(c.id, c);
     startLevels = new Map(pool.map((c) => [c.id, c.level]));
     session = new Session(pool.map((c) => c.id), cfg.mode);
+    gradedBefore = [];
     summary = null;
     flipped = false;
     version++;
@@ -68,7 +82,7 @@
       pool = buildPool(all, cfg, deckOrder);
     }
     if (pool.length === 0) {
-      navigate('/test', { replace: true });
+      navigate(testState.origin, { replace: true });
       return;
     }
     begin(pool);
@@ -85,7 +99,9 @@
     busy = true;
     try {
       const id = session.current;
+      const before = cards.get(id);
       const updated = await gradeCard(id, known);
+      gradedBefore.push(before);
       if (updated) cards.set(id, updated);
       session.grade(known);
       flipped = false;
@@ -96,15 +112,42 @@
     }
   }
 
+  /** Take back the last answer: restore the card's level and show it again. */
+  async function undo() {
+    if (!session || busy || !session.canUndo) return;
+    busy = true;
+    try {
+      const before = gradedBefore.pop();
+      if (before) {
+        await restoreGrade(before);
+        const now = cards.get(before.id);
+        if (now) cards.set(before.id, { ...now, ...gradeFields(before) });
+      }
+      session.undo();
+      summary = null;
+      flipped = false;
+      version++;
+    } finally {
+      busy = false;
+    }
+  }
+
   function finish() {
     if (!session) return;
     if (session.answered === 0) {
-      navigate('/test');
+      navigate(testState.origin);
       return;
     }
     const levels = new Map([...cards].map(([id, c]) => [id, c.level]));
     summary = summarize(session, startLevels, levels);
+    endedEarly = !session.done;
+    remaining = session.remaining;
     missedIds = [...session.missed];
+  }
+
+  function resume() {
+    summary = null;
+    flipped = false;
   }
 
   async function saveEdit(input: CardInput) {
@@ -121,12 +164,18 @@
   }
 
   function onKey(e: KeyboardEvent) {
-    if (editOpen || summary || !current) return;
-    if (showGestures) {
+    if (editOpen) return;
+    if (showGestures && current && !summary) {
       if (e.key === 'Enter' || e.key === 'Escape') dismissGestures();
       return;
     }
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+    if (e.key === 'z' || e.key === 'Z' || e.key === 'Backspace') {
+      e.preventDefault();
+      undo();
+      return;
+    }
+    if (summary || !current) return;
     switch (e.key) {
       case ' ':
       case 'ArrowUp':
@@ -156,26 +205,56 @@
 <div class="run">
   {#if summary}
     <div class="summary">
-      <h1>{t('summary.title')}</h1>
-      <dl class="stats">
-        <div><dt>{t('summary.answered')}</dt><dd>{summary.answered}</dd></div>
-        <div><dt>{t('summary.firstTry')}</dt><dd class="know">{summary.firstTry}</dd></div>
-        <div><dt>{t('summary.missed')}</dt><dd class="miss">{summary.missed}</dd></div>
-        <div><dt>{t('summary.levelUps')}</dt><dd class="know">↑ {summary.levelUps}</dd></div>
-        <div><dt>{t('summary.levelDowns')}</dt><dd class="miss">↓ {summary.levelDowns}</dd></div>
-      </dl>
-      <div class="summary-actions">
-        {#if missedIds.length > 0}
-          <button class="btn btn-block" type="button" onclick={() => load(missedIds)}>
-            {t('summary.retryMissed', { n: missedIds.length })}
-          </button>
+      <div class="summary-body">
+        <div class="headline">
+          <p class="eyebrow">{endedEarly ? t('summary.ended', { n: remaining }) : t('summary.title')}</p>
+          <h1>{t('summary.headline', { known: summary.firstTry, total: summary.uniqueCards })}</h1>
+          {#if cfg.mode === 'cram'}<p class="muted">{t('summary.firstTryNote')}</p>{/if}
+        </div>
+
+        <dl class="stats">
+          <div><dt>{t('summary.answered')}</dt><dd>{summary.answered}</dd></div>
+          <div><dt>{t('summary.missed')}</dt><dd class="miss">{summary.missed}</dd></div>
+          <div><dt>{t('summary.levelUps')}</dt><dd class="know">↑ {summary.levelUps}</dd></div>
+          <div><dt>{t('summary.levelDowns')}</dt><dd class="miss">↓ {summary.levelDowns}</dd></div>
+        </dl>
+
+        {#if missedCards.length > 0}
+          <section class="missed">
+            <h2 class="section-title">{t('summary.missedCards')}</h2>
+            <ul class="panel">
+              {#each missedCards as c (c.id)}
+                <li><span class="q">{promptOf(c)}</span><span class="a">{answerOf(c)}</span></li>
+              {/each}
+            </ul>
+          </section>
         {/if}
-        <button class="btn btn-block" type="button" onclick={() => load()}>
-          <Icon name="reset" size={18} />{t('summary.again')}
-        </button>
-        <button class="btn btn-primary btn-block" type="button" onclick={() => navigate('/test')}>
-          {t('summary.done')}
-        </button>
+
+        <div class="summary-actions">
+          {#if endedEarly}
+            <button class="btn btn-primary btn-block" type="button" onclick={resume}>
+              <Icon name="play" size={18} />{t('summary.continue')}
+            </button>
+          {/if}
+          {#if missedIds.length > 0}
+            <button class="btn btn-block" type="button" onclick={() => load(missedIds)}>
+              {t('summary.retryMissed', { n: missedIds.length })}
+            </button>
+          {/if}
+          {#if !endedEarly}
+            <button class="btn btn-block" type="button" onclick={() => load()}>
+              <Icon name="reset" size={18} />{t('summary.again')}
+            </button>
+          {/if}
+          <button class="btn btn-block" class:btn-primary={!endedEarly} type="button" onclick={() => navigate(testState.origin)}>
+            {t('summary.done')}
+          </button>
+          {#if !endedEarly && canUndo}
+            <button class="btn btn-ghost btn-block" type="button" onclick={undo}>
+              <Icon name="undo" size={18} />{t('run.undo')}
+            </button>
+          {/if}
+        </div>
       </div>
     </div>
   {:else if current}
@@ -187,6 +266,9 @@
         <div class="track"><div class="fill" style:width="{(progress.done / progress.total) * 100}%"></div></div>
         <span class="muted small">{progress.done} / {progress.total}</span>
       </div>
+      <button class="icon-btn" type="button" onclick={undo} disabled={!canUndo} aria-label={t('run.undo')} title={t('run.undo')}>
+        <Icon name="undo" size={20} />
+      </button>
       <button class="icon-btn" type="button" onclick={() => (editOpen = true)} aria-label={t('run.edit')} title={t('run.edit')}>
         <Icon name="edit" size={20} />
       </button>
@@ -208,13 +290,13 @@
     </main>
 
     <footer>
-      <button class="answer miss" type="button" onclick={() => swipeCard?.fly(false)}>
+      <button class="answer miss" class:dim={!flipped} type="button" onclick={() => swipeCard?.fly(false)}>
         <Icon name="close" size={20} />{t('run.dontKnow')}
       </button>
       <button class="icon-btn flip" type="button" onclick={() => (flipped = !flipped)} aria-label={t('run.flip')} title={t('run.flip')}>
         <Icon name="flip" />
       </button>
-      <button class="answer know" type="button" onclick={() => swipeCard?.fly(true)}>
+      <button class="answer know" class:dim={!flipped} type="button" onclick={() => swipeCard?.fly(true)}>
         <Icon name="check" size={20} />{t('run.know')}
       </button>
     </footer>
@@ -315,6 +397,17 @@
   .answer:active {
     transform: scale(0.97);
   }
+  /* Grade after seeing the answer; swiping still works for fast users. */
+  .answer.dim {
+    opacity: 0.45;
+  }
+  .answer {
+    transition: opacity 0.15s;
+  }
+  header .icon-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
   .answer.know {
     color: var(--know);
   }
@@ -333,38 +426,76 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    justify-content: center;
-    gap: 24px;
     overflow-y: auto;
     touch-action: pan-y;
   }
-  .summary h1 {
+  /* Auto margins center the content but let a long missed list scroll from the top. */
+  .summary-body {
+    display: grid;
+    gap: 24px;
+    margin: auto 0;
+    padding: 16px 0;
+  }
+  .headline {
     text-align: center;
-    font-size: 1.7rem;
+  }
+  .headline p {
+    margin: 0;
+  }
+  .eyebrow {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .headline h1 {
+    margin: 6px 0 2px;
+    font-size: 2.2rem;
+    line-height: 1.15;
   }
   .stats {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
     margin: 0;
+    text-align: center;
   }
   .stats div {
-    padding: 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-  }
-  .stats div:first-child {
-    grid-column: 1 / -1;
+    padding: 10px 4px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
   }
   dt {
     color: var(--muted);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
   }
   dd {
     margin: 2px 0 0;
-    font-size: 1.8rem;
-    font-weight: 800;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+  .missed ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .missed li {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .missed li:first-child {
+    border-top: 0;
+  }
+  .missed .q {
+    font-weight: 600;
+  }
+  .missed .a {
+    color: var(--muted);
+    text-align: right;
   }
   .know {
     color: var(--know);

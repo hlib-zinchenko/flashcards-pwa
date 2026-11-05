@@ -139,6 +139,64 @@ describe('Session (cram)', () => {
   });
 });
 
+describe('Session undo', () => {
+  const state = (s: Session) => ({
+    current: s.current,
+    answered: s.answered,
+    known: s.knownCount,
+    completed: s.completed,
+    learned: [...s.learned],
+    missed: [...s.missed],
+    firstTry: [...s.firstTry],
+  });
+
+  it('has nothing to undo before the first grade', () => {
+    const s = new Session(['a', 'b'], 'cram');
+    expect(s.canUndo).toBe(false);
+    expect(s.undo()).toBeNull();
+    expect(s.current).toBe('a');
+  });
+
+  it('restores the state before a know', () => {
+    const s = new Session(['a', 'b', 'c'], 'cram');
+    const before = state(s);
+    s.grade(true);
+    expect(s.undo()).toBe('a');
+    expect(state(s)).toEqual(before);
+    expect(s.canUndo).toBe(false);
+  });
+
+  it('takes a missed card back out of the queue', () => {
+    const s = new Session(['a', 'b', 'c'], 'cram', { rng: () => 0.99 });
+    s.grade(false); // queue: c a
+    s.undo();
+    const seen: string[] = [];
+    while (!s.done) { seen.push(s.current!); s.grade(true); }
+    expect(seen).toEqual(['a', 'b', 'c']);
+    expect(s.missed.size).toBe(0);
+    expect(s.firstTry.size).toBe(3);
+  });
+
+  it('undoes several grades in order, including the last one', () => {
+    const s = new Session(['a', 'b'], 'refresh');
+    s.grade(true);
+    s.grade(false);
+    expect(s.done).toBe(true);
+    expect(s.undo()).toBe('b');
+    expect(s.done).toBe(false);
+    expect(s.undo()).toBe('a');
+    expect(state(s)).toEqual(state(new Session(['a', 'b'], 'refresh')));
+  });
+
+  it('counts remaining cards', () => {
+    const s = new Session(['a', 'b', 'c'], 'cram', { rng: () => 0 });
+    s.grade(false);
+    expect(s.remaining).toBe(3);
+    s.grade(true);
+    expect(s.remaining).toBe(2);
+  });
+});
+
 describe('Session (refresh)', () => {
   it('shows every card exactly once and records misses', () => {
     const s = new Session(['a', 'b', 'c'], 'refresh');

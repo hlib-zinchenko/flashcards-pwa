@@ -6,7 +6,7 @@
   import { loadPref, savePref } from '../lib/prefs';
   import { navigate } from '../lib/router.svelte';
   import { matchesTags, poolSize, type Direction, type Mode, type SortMode } from '../lib/session';
-  import { saveTestConfig, testState } from '../lib/testState.svelte';
+  import { saveTestConfig, startSession, testState } from '../lib/testState.svelte';
   import { LEVELS, type Level } from '../lib/types';
 
   const cfg = testState.config;
@@ -78,8 +78,7 @@
   const allDecksSelected = $derived(decks.length > 0 && decks.every((d) => cfg.deckIds.includes(d.id)));
 
   function start() {
-    testState.onlyCardIds = null;
-    navigate('/test/run');
+    startSession('/test');
   }
 
   let optionsOpen = $state(loadPref('testOptionsOpen', false));
