@@ -107,7 +107,6 @@ export const en = {
   'test.sortLevel': 'Level ↑',
   'test.levels': 'Levels',
   'test.tags': 'Tags',
-  'test.tagsHint': 'None selected — all cards',
   'test.count': 'Number of cards',
   'test.options': 'Options',
   'test.frontFirst': 'Front first',

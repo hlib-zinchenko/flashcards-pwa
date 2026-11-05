@@ -63,6 +63,8 @@
     return { m, untagged };
   });
   const visibleTags = $derived(tags.filter((tag) => tagCounts.m.get(tag.id) || cfg.tagIds.includes(tag.id)));
+  const showUntagged = $derived(tagCounts.untagged > 0 || cfg.includeUntagged);
+  const anyTag = $derived(cfg.tagIds.length === 0 && !cfg.includeUntagged);
 
   const total = $derived(poolSize(cards, cfg));
 
@@ -224,19 +226,34 @@
         </div>
       </section>
 
-      <section class="section">
-        <h2 class="section-title">{t('test.tags')} <span class="hint">· {t('test.tagsHint')}</span></h2>
-        <div class="chips">
-          {#each visibleTags as tag (tag.id)}
-            <button type="button" class="chip" aria-pressed={cfg.tagIds.includes(tag.id)} onclick={() => (cfg.tagIds = toggle(cfg.tagIds, tag.id))}>
-              {tagLabel(tag)} <span class="count">{tagCounts.m.get(tag.id) ?? 0}</span>
+      {#if visibleTags.length > 0 || showUntagged}
+        <section class="section">
+          <h2 class="section-title">{t('test.tags')}</h2>
+          <div class="chips">
+            <button
+              type="button"
+              class="chip"
+              aria-pressed={anyTag}
+              onclick={() => {
+                cfg.tagIds = [];
+                cfg.includeUntagged = false;
+              }}
+            >
+              {t('common.all')}
             </button>
-          {/each}
-          <button type="button" class="chip" aria-pressed={cfg.includeUntagged} onclick={() => (cfg.includeUntagged = !cfg.includeUntagged)}>
-            {t('tags.untagged')} <span class="count">{tagCounts.untagged}</span>
-          </button>
-        </div>
-      </section>
+            {#each visibleTags as tag (tag.id)}
+              <button type="button" class="chip" aria-pressed={cfg.tagIds.includes(tag.id)} onclick={() => (cfg.tagIds = toggle(cfg.tagIds, tag.id))}>
+                {tagLabel(tag)} <span class="count">{tagCounts.m.get(tag.id) ?? 0}</span>
+              </button>
+            {/each}
+            {#if showUntagged}
+              <button type="button" class="chip" aria-pressed={cfg.includeUntagged} onclick={() => (cfg.includeUntagged = !cfg.includeUntagged)}>
+                {t('tags.untagged')} <span class="count">{tagCounts.untagged}</span>
+              </button>
+            {/if}
+          </div>
+        </section>
+      {/if}
     </details>
   {/if}
 </div>
@@ -257,11 +274,6 @@
   .empty {
     padding: 48px 0;
     text-align: center;
-  }
-  .hint {
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: none;
   }
   .options {
     margin-top: 24px;

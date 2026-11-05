@@ -105,7 +105,6 @@ export const uk: Messages = {
   'test.sortLevel': 'Рівень ↑',
   'test.levels': 'Рівні',
   'test.tags': 'Теги',
-  'test.tagsHint': 'Нічого не вибрано — усі картки',
   'test.count': 'Кількість карток',
   'test.options': 'Параметри',
   'test.frontFirst': 'Спершу лицьова',
