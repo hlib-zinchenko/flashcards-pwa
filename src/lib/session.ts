@@ -85,6 +85,27 @@ export function sortCards(
   }
 }
 
+/** Number of cards a session with this config would hold. */
+export function poolSize(cards: readonly Card[], cfg: TestConfig): number {
+  const matching = filterCards(cards, cfg).length;
+  return cfg.limit && cfg.limit > 0 ? Math.min(cfg.limit, matching) : matching;
+}
+
+/** New and Weak: the cards the "Review weak cards" action on the Decks screen studies. */
+export const REVIEW_LEVELS: readonly Level[] = [0, 1];
+
+/**
+ * Config for a one-tap session: the given decks and levels with no tag filter.
+ * Keeps how the user likes to study (direction, mode, order, card count).
+ */
+export function quickConfig(
+  cfg: TestConfig,
+  deckIds: readonly string[],
+  levels: readonly Level[] = DEFAULT_CONFIG.levels,
+): TestConfig {
+  return { ...cfg, deckIds: [...deckIds], levels: [...levels], tagIds: [], includeUntagged: false };
+}
+
 /** Filter, sort, then apply the card limit. */
 export function buildPool(
   cards: readonly Card[],

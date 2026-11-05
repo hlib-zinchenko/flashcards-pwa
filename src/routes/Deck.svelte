@@ -17,7 +17,7 @@
   import { addCard, deckCards, deleteCard, resetDeckProgress, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
   import { deleteDeck, renameDeck } from '../lib/repo/decks';
   import { href, navigate } from '../lib/router.svelte';
-  import { DEFAULT_CONFIG } from '../lib/session';
+  import { quickConfig } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
   import { showToast } from '../lib/toast.svelte';
   import type { Card } from '../lib/types';
@@ -149,10 +149,7 @@
   }
 
   function study() {
-    testState.config.deckIds = [id];
-    testState.config.levels = [...DEFAULT_CONFIG.levels];
-    testState.config.tagIds = [];
-    testState.config.includeUntagged = false;
+    Object.assign(testState.config, quickConfig($state.snapshot(testState.config), [id]));
     navigate('/test');
   }
 </script>

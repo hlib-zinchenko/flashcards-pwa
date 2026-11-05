@@ -1,5 +1,7 @@
 import { loadPref, savePref } from './prefs';
-import { normalizeConfig, type TestConfig } from './session';
+import { navigate } from './router.svelte';
+import { normalizeConfig, quickConfig, type TestConfig } from './session';
+import type { Level } from './types';
 
 /** Test setup shared between the setup and run screens; remembered across launches. */
 export const testState = $state({
@@ -10,4 +12,12 @@ export const testState = $state({
 
 export function saveTestConfig(): void {
   savePref('testConfig', $state.snapshot(testState.config));
+}
+
+/** Start a session right away on these decks and levels, keeping the other saved settings. */
+export function startQuick(deckIds: readonly string[], levels?: readonly Level[]): void {
+  Object.assign(testState.config, quickConfig($state.snapshot(testState.config), deckIds, levels));
+  saveTestConfig();
+  testState.onlyCardIds = null;
+  navigate('/test/run');
 }
