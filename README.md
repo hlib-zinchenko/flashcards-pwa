@@ -6,7 +6,7 @@ Offline flashcards that install to your phone's home screen. No App Store, no ac
 
 I built this for my partner: she wanted a flashcard app on her iPhone and none of the existing ones, free or paid, fit how she studies. A native app meant a developer fee and App Store review, so I made it a PWA instead.
 
-**Live app:** https://hlib-zinchenko.github.io/flashcards-pwa/
+**Live app:** https://flashcards.hzinchenko.com/
 
 <p>
   <img src="docs/screenshots/decks.png" alt="Deck list with a Review weak cards button, a play button per deck and a card-level legend" width="220">
@@ -77,7 +77,7 @@ npm run dev        # dev server
 npm test           # unit tests (Vitest)
 npm run check      # svelte-check / TypeScript
 npm run build      # production build into dist/
-npm run preview    # serve the build at http://localhost:4173/flashcards-pwa/
+npm run preview    # serve the build at http://localhost:4173/
 npm run icons      # regenerate PWA icons from public/icon.svg
 ```
 
@@ -114,8 +114,9 @@ Pushes to `main` and pull requests run type checks, tests and a build without de
 One-time setup:
 - **Settings → Pages → Source:** GitHub Actions.
 - **Settings → Environments → github-pages → Deployment branches and tags:** add a tag rule `v*`.
+- **Settings → Pages → Custom domain:** `flashcards.hzinchenko.com`, with Enforce HTTPS. DNS has a `CNAME` from `flashcards` to `hlib-zinchenko.github.io`.
 
-If you rename the repo, update `base` in `vite.config.ts` and the icon paths in `index.html`.
+The app is served from the root of its domain (`base: '/'`). To host it under a path instead, update `base` in `vite.config.ts` and the icon paths in `index.html`. Changing the address moves nobody's data: each user has to export a backup at the old address and import it at the new one.
 
 ## License
 

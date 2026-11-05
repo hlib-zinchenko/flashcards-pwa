@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string };
 
 export default defineConfig({
-  base: '/flashcards-pwa/',
+  base: '/',
   build: {
     // Keep font files as separate assets: inlining the small Japanese slices bloats the CSS.
     assetsInlineLimit: (file) => (/\.woff2?$/.test(file) ? false : undefined),
