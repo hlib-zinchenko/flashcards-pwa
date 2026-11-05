@@ -25,6 +25,12 @@ export function gradeUpdate(card: Card, known: boolean, now = Date.now()): Parti
   };
 }
 
+/** The fields gradeUpdate changes, as they are on this card. Used to undo a grade. */
+export function gradeFields(card: Card): Pick<Card, 'level' | 'timesSeen' | 'timesKnown' | 'timesMissed' | 'lastReviewedAt' | 'updatedAt'> {
+  const { level, timesSeen, timesKnown, timesMissed, lastReviewedAt, updatedAt } = card;
+  return { level, timesSeen, timesKnown, timesMissed, lastReviewedAt, updatedAt };
+}
+
 /** Count cards per level, indexed by Level. */
 export function levelCounts(cards: readonly Pick<Card, 'level'>[]): number[] {
   const counts = [0, 0, 0, 0, 0, 0];

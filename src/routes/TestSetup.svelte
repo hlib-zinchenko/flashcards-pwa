@@ -3,9 +3,10 @@
   import TopBar from '../components/TopBar.svelte';
   import { levelLabel, sortTags, t, tagLabel } from '../lib/i18n/index.svelte';
   import { allCards, allDecks, allTags } from '../lib/live';
+  import { loadPref, savePref } from '../lib/prefs';
   import { navigate } from '../lib/router.svelte';
-  import { filterCards, matchesTags, type Direction, type Mode, type SortMode } from '../lib/session';
-  import { saveTestConfig, testState } from '../lib/testState.svelte';
+  import { matchesTags, poolSize, type Direction, type Mode, type SortMode } from '../lib/session';
+  import { saveTestConfig, startSession, testState } from '../lib/testState.svelte';
   import { LEVELS, type Level } from '../lib/types';
 
   const cfg = testState.config;
@@ -62,9 +63,10 @@
     return { m, untagged };
   });
   const visibleTags = $derived(tags.filter((tag) => tagCounts.m.get(tag.id) || cfg.tagIds.includes(tag.id)));
+  const showUntagged = $derived(tagCounts.untagged > 0 || cfg.includeUntagged);
+  const anyTag = $derived(cfg.tagIds.length === 0 && !cfg.includeUntagged);
 
-  const matching = $derived(filterCards(cards, cfg).length);
-  const total = $derived(cfg.limit ? Math.min(cfg.limit, matching) : matching);
+  const total = $derived(poolSize(cards, cfg));
 
   let customLimit = $state(cfg.limit && !QUICK_LIMITS.includes(cfg.limit) ? cfg.limit : 30);
   const limitMode = $derived(cfg.limit === null ? 'all' : QUICK_LIMITS.includes(cfg.limit) ? String(cfg.limit) : 'custom');
@@ -76,9 +78,30 @@
   const allDecksSelected = $derived(decks.length > 0 && decks.every((d) => cfg.deckIds.includes(d.id)));
 
   function start() {
-    testState.onlyCardIds = null;
-    navigate('/test/run');
+    startSession('/test');
   }
+
+  let optionsOpen = $state(loadPref('testOptionsOpen', false));
+  $effect(() => savePref('testOptionsOpen', optionsOpen));
+
+  /** Labels if there are one or two, otherwise a count. */
+  function few(labels: string[], countKey: 'test.levelsCount' | 'test.tagsCount'): string {
+    return labels.length <= 2 ? labels.join(', ') : t(countKey, { n: labels.length });
+  }
+
+  /** Current option values, shown on the collapsed Options row. */
+  const optionsSummary = $derived.by(() => {
+    const parts = [
+      cfg.direction === 'front' ? t('test.frontFirst') : t('test.backFirst'),
+      cfg.mode === 'cram' ? t('test.cram') : t('test.refresh'),
+      sorts.find(([value]) => value === cfg.sort)?.[1]() ?? '',
+      cfg.levels.length === LEVELS.length ? t('test.allLevels') : few(cfg.levels.map(levelLabel), 'test.levelsCount'),
+    ];
+    const tagNames = tags.filter((tag) => cfg.tagIds.includes(tag.id)).map(tagLabel);
+    if (cfg.includeUntagged) tagNames.push(t('tags.untagged'));
+    if (tagNames.length > 0) parts.push(few(tagNames, 'test.tagsCount'));
+    return parts.join(' · ');
+  });
 
   const directions: [Direction, () => string][] = [
     ['front', () => t('test.front')],
@@ -128,65 +151,6 @@
     </section>
 
     <section class="section">
-      <h2 class="section-title">{t('test.showFirst')}</h2>
-      <div class="seg">
-        {#each directions as [value, label] (value)}
-          <button type="button" aria-pressed={cfg.direction === value} onclick={() => (cfg.direction = value)}>{label()}</button>
-        {/each}
-      </div>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title">{t('test.mode')}</h2>
-      <div class="seg">
-        {#each modes as [value, label] (value)}
-          <button type="button" aria-pressed={cfg.mode === value} onclick={() => (cfg.mode = value)}>{label()}</button>
-        {/each}
-      </div>
-      <p class="muted small mode-hint">{cfg.mode === 'cram' ? t('test.cramHint') : t('test.refreshHint')}</p>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title">{t('test.order')}</h2>
-      <div class="seg">
-        {#each sorts as [value, label] (value)}
-          <button type="button" aria-pressed={cfg.sort === value} onclick={() => (cfg.sort = value)}>{label()}</button>
-        {/each}
-      </div>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title">{t('test.levels')}</h2>
-      <div class="chips">
-        {#each LEVELS as level (level)}
-          <button
-            type="button"
-            class="chip"
-            aria-pressed={cfg.levels.includes(level)}
-            onclick={() => (cfg.levels = toggle<Level>(cfg.levels, level).sort((a, b) => a - b))}
-          >
-            <span class="level-dot" style:background="var(--lv{level})"></span>
-            {levelLabel(level)} <span class="count">{levelCounts[level]}</span>
-          </button>
-        {/each}
-      </div>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title">{t('test.tags')} <span class="hint">· {t('test.tagsHint')}</span></h2>
-      <div class="chips">
-        {#each visibleTags as tag (tag.id)}
-          <button type="button" class="chip" aria-pressed={cfg.tagIds.includes(tag.id)} onclick={() => (cfg.tagIds = toggle(cfg.tagIds, tag.id))}>
-            {tagLabel(tag)} <span class="count">{tagCounts.m.get(tag.id) ?? 0}</span>
-          </button>
-        {/each}
-        <button type="button" class="chip" aria-pressed={cfg.includeUntagged} onclick={() => (cfg.includeUntagged = !cfg.includeUntagged)}>
-          {t('tags.untagged')} <span class="count">{tagCounts.untagged}</span>
-        </button>
-      </div>
-    </section>
-
-    <section class="section">
       <h2 class="section-title">{t('test.count')}</h2>
       <div class="seg">
         <button type="button" aria-pressed={limitMode === 'all'} onclick={() => (cfg.limit = null)}>{t('common.all')}</button>
@@ -206,6 +170,90 @@
         />
       {/if}
     </section>
+
+    <details class="options section" bind:open={optionsOpen}>
+      <summary>
+        <span class="options-text">
+          <span class="section-title">{t('test.options')}</span>
+          {#if !optionsOpen}<span class="muted small">{optionsSummary}</span>{/if}
+        </span>
+        <span class="chevron" aria-hidden="true"><Icon name="down" size={18} /></span>
+      </summary>
+
+      <section class="section">
+        <h2 class="section-title">{t('test.showFirst')}</h2>
+        <div class="seg">
+          {#each directions as [value, label] (value)}
+            <button type="button" aria-pressed={cfg.direction === value} onclick={() => (cfg.direction = value)}>{label()}</button>
+          {/each}
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">{t('test.mode')}</h2>
+        <div class="seg">
+          {#each modes as [value, label] (value)}
+            <button type="button" aria-pressed={cfg.mode === value} onclick={() => (cfg.mode = value)}>{label()}</button>
+          {/each}
+        </div>
+        <p class="muted small mode-hint">{cfg.mode === 'cram' ? t('test.cramHint') : t('test.refreshHint')}</p>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">{t('test.order')}</h2>
+        <div class="seg">
+          {#each sorts as [value, label] (value)}
+            <button type="button" aria-pressed={cfg.sort === value} onclick={() => (cfg.sort = value)}>{label()}</button>
+          {/each}
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">{t('test.levels')}</h2>
+        <div class="chips">
+          {#each LEVELS as level (level)}
+            <button
+              type="button"
+              class="chip"
+              aria-pressed={cfg.levels.includes(level)}
+              onclick={() => (cfg.levels = toggle<Level>(cfg.levels, level).sort((a, b) => a - b))}
+            >
+              <span class="level-dot" style:background="var(--lv{level})"></span>
+              {levelLabel(level)} <span class="count">{levelCounts[level]}</span>
+            </button>
+          {/each}
+        </div>
+      </section>
+
+      {#if visibleTags.length > 0 || showUntagged}
+        <section class="section">
+          <h2 class="section-title">{t('test.tags')}</h2>
+          <div class="chips">
+            <button
+              type="button"
+              class="chip"
+              aria-pressed={anyTag}
+              onclick={() => {
+                cfg.tagIds = [];
+                cfg.includeUntagged = false;
+              }}
+            >
+              {t('common.all')}
+            </button>
+            {#each visibleTags as tag (tag.id)}
+              <button type="button" class="chip" aria-pressed={cfg.tagIds.includes(tag.id)} onclick={() => (cfg.tagIds = toggle(cfg.tagIds, tag.id))}>
+                {tagLabel(tag)} <span class="count">{tagCounts.m.get(tag.id) ?? 0}</span>
+              </button>
+            {/each}
+            {#if showUntagged}
+              <button type="button" class="chip" aria-pressed={cfg.includeUntagged} onclick={() => (cfg.includeUntagged = !cfg.includeUntagged)}>
+                {t('tags.untagged')} <span class="count">{tagCounts.untagged}</span>
+              </button>
+            {/if}
+          </div>
+        </section>
+      {/if}
+    </details>
   {/if}
 </div>
 
@@ -226,10 +274,45 @@
     padding: 48px 0;
     text-align: center;
   }
-  .hint {
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: none;
+  .options {
+    margin-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .options summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 56px;
+    padding: 8px 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  .options summary::-webkit-details-marker {
+    display: none;
+  }
+  .options-text {
+    display: grid;
+    flex: 1;
+    gap: 2px;
+    min-width: 0;
+  }
+  .options-text .section-title {
+    margin-bottom: 0;
+  }
+  .options-text .muted {
+    margin: 0 4px;
+  }
+  .chevron {
+    display: grid;
+    margin-right: 4px;
+    color: var(--muted);
+    transition: transform 0.15s;
+  }
+  .options[open] .chevron {
+    transform: rotate(180deg);
+  }
+  .options > .section:first-of-type {
+    margin-top: 4px;
   }
   .mode-hint {
     margin: 8px 0 0;

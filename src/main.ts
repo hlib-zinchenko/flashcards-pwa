@@ -2,8 +2,10 @@ import { mount } from 'svelte';
 import './app.css';
 import App from './App.svelte';
 import { i18n } from './lib/i18n/index.svelte';
+import { applyTheme } from './lib/theme.svelte';
 
 document.documentElement.lang = i18n.lang;
+applyTheme();
 
 // Ask the browser not to evict our IndexedDB data under storage pressure.
 navigator.storage?.persisted?.().then((ok) => {

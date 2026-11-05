@@ -85,6 +85,27 @@ export function sortCards(
   }
 }
 
+/** Number of cards a session with this config would hold. */
+export function poolSize(cards: readonly Card[], cfg: TestConfig): number {
+  const matching = filterCards(cards, cfg).length;
+  return cfg.limit && cfg.limit > 0 ? Math.min(cfg.limit, matching) : matching;
+}
+
+/** New and Weak: the cards the "Review weak cards" action on the Decks screen studies. */
+export const REVIEW_LEVELS: readonly Level[] = [0, 1];
+
+/**
+ * Config for a one-tap session: the given decks and levels with no tag filter.
+ * Keeps how the user likes to study (direction, mode, order, card count).
+ */
+export function quickConfig(
+  cfg: TestConfig,
+  deckIds: readonly string[],
+  levels: readonly Level[] = DEFAULT_CONFIG.levels,
+): TestConfig {
+  return { ...cfg, deckIds: [...deckIds], levels: [...levels], tagIds: [], includeUntagged: false };
+}
+
 /** Filter, sort, then apply the card limit. */
 export function buildPool(
   cards: readonly Card[],
@@ -94,6 +115,17 @@ export function buildPool(
 ): Card[] {
   const sorted = sortCards(filterCards(cards, cfg), cfg, deckOrder, rng);
   return cfg.limit && cfg.limit > 0 ? sorted.slice(0, cfg.limit) : sorted;
+}
+
+interface SessionSnapshot {
+  queue: string[];
+  current: string | null;
+  answered: number;
+  knownCount: number;
+  learned: string[];
+  missed: string[];
+  firstTry: string[];
+  attempted: string[];
 }
 
 /**
@@ -106,6 +138,8 @@ export class Session {
   private readonly rng: Rng;
   private queue: string[];
   current: string | null = null;
+  /** State before each grade, newest last, for undo. */
+  private history: SessionSnapshot[] = [];
 
   /** Ids answered "know" at least once. */
   readonly learned = new Set<string>();
@@ -134,9 +168,19 @@ export class Session {
     return this.mode === 'cram' ? this.learned.size : this.attempted.size;
   }
 
+  /** Cards still to finish, for a session that ends early. */
+  get remaining(): number {
+    return this.pool.length - this.completed;
+  }
+
+  get canUndo(): boolean {
+    return this.history.length > 0;
+  }
+
   grade(known: boolean): void {
     const id = this.current;
     if (id === null) return;
+    this.history.push(this.snapshot());
     this.answered++;
     if (!this.attempted.has(id)) {
       this.attempted.add(id);
@@ -150,6 +194,38 @@ export class Session {
       if (this.mode === 'cram') this.requeue(id);
     }
     this.advance();
+  }
+
+  /**
+   * Take back the last grade: that card becomes current again and every
+   * counter returns to what it was. Returns the card's id, or null if
+   * there is nothing to undo.
+   */
+  undo(): string | null {
+    const prev = this.history.pop();
+    if (!prev) return null;
+    this.queue = prev.queue;
+    this.current = prev.current;
+    this.answered = prev.answered;
+    this.knownCount = prev.knownCount;
+    for (const key of ['learned', 'missed', 'firstTry', 'attempted'] as const) {
+      this[key].clear();
+      for (const id of prev[key]) this[key].add(id);
+    }
+    return this.current;
+  }
+
+  private snapshot(): SessionSnapshot {
+    return {
+      queue: this.queue.slice(),
+      current: this.current,
+      answered: this.answered,
+      knownCount: this.knownCount,
+      learned: [...this.learned],
+      missed: [...this.missed],
+      firstTry: [...this.firstTry],
+      attempted: [...this.attempted],
+    };
   }
 
   /** Put a missed card back at a random spot, never right next. */

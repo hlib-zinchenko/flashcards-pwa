@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
 import { db, newId } from '../db';
-import { gradeUpdate } from '../learning';
+import { gradeFields, gradeUpdate } from '../learning';
 import type { Card } from '../types';
 
 export interface CardInput {
@@ -71,8 +71,18 @@ export async function updateCard(id: string, input: CardInput & { deckId?: strin
   });
 }
 
-export async function deleteCard(id: string): Promise<void> {
-  await db.cards.delete(id);
+/** Delete a card and return it as it was, so the delete can be undone with restoreCard. */
+export async function deleteCard(id: string): Promise<Card | undefined> {
+  return db.transaction('rw', db.cards, async () => {
+    const card = await db.cards.get(id);
+    await db.cards.delete(id);
+    return card;
+  });
+}
+
+/** Put back a card returned by deleteCard. Pass the plain object from the database, not a $state proxy. */
+export async function restoreCard(card: Card): Promise<void> {
+  await db.cards.put(card);
 }
 
 /** Swap the order of two cards in the same deck. */
@@ -97,6 +107,12 @@ export async function resetDeckProgress(deckId: string): Promise<void> {
 }
 
 /** Apply a grade and return the updated card. */
+/** Undo a grade: write back the grade fields from the card as it was before. */
+export async function restoreGrade(before: Card): Promise<void> {
+  // An undefined lastReviewedAt removes the field, as on a never-reviewed card.
+  await db.cards.update(before.id, gradeFields(before));
+}
+
 export async function gradeCard(id: string, known: boolean): Promise<Card | undefined> {
   return db.transaction('rw', db.cards, async () => {
     const card = await db.cards.get(id);

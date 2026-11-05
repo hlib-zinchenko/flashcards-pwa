@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { backupDue } from '../lib/backup';
+  import { backupStatus } from '../lib/backup.svelte';
   import { t } from '../lib/i18n/index.svelte';
   import { router, href } from '../lib/router.svelte';
   import Icon, { type IconName } from './Icon.svelte';
@@ -9,14 +11,19 @@
     { path: '/settings', name: 'settings', icon: 'settings', label: () => t('nav.settings') },
   ];
 
+  /** Dot on the Settings tab when a backup is overdue; Settings explains it. */
+  const nudge = $derived(backupDue(backupStatus));
   const active = $derived(router.route.name === 'deck' ? 'decks' : router.route.name);
 </script>
 
 <nav class="tabbar">
   {#each tabs as tab (tab.name)}
     <a href={href(tab.path)} class:active={active === tab.name} aria-current={active === tab.name ? 'page' : undefined}>
-      <Icon name={tab.icon} size={22} />
-      <span>{tab.label()}</span>
+      <span class="icon">
+        <Icon name={tab.icon} size={22} />
+        {#if tab.name === 'settings' && nudge}<span class="dot" title={t('nav.backupDue')}></span>{/if}
+      </span>
+      <span>{tab.label()}{#if tab.name === 'settings' && nudge}<span class="sr-only"> · {t('nav.backupDue')}</span>{/if}</span>
     </a>
   {/each}
 </nav>
@@ -50,5 +57,27 @@
   }
   a.active {
     color: var(--accent);
+  }
+  .icon {
+    position: relative;
+    display: grid;
+  }
+  .dot {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    width: 9px;
+    height: 9px;
+    border: 2px solid var(--surface);
+    border-radius: 50%;
+    background: var(--danger);
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 </style>

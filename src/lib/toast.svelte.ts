@@ -1,10 +1,23 @@
-export const toast = $state({ message: '', id: 0 });
+export interface ToastAction {
+  label: string;
+  run: () => void;
+}
+
+export const toast = $state({ message: '', id: 0, action: null as ToastAction | null });
 
 let timer: ReturnType<typeof setTimeout> | undefined;
 
-export function showToast(message: string, ms = 2200): void {
+/** Show a short message, optionally with one button (for example Undo). */
+export function showToast(message: string, ms = 2200, action: ToastAction | null = null): void {
   toast.message = message;
+  toast.action = action;
   toast.id++;
   clearTimeout(timer);
-  timer = setTimeout(() => (toast.message = ''), ms);
+  timer = setTimeout(hideToast, ms);
+}
+
+export function hideToast(): void {
+  clearTimeout(timer);
+  toast.message = '';
+  toast.action = null;
 }

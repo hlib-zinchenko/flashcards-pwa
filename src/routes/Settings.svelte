@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Icon from '../components/Icon.svelte';
+  import Icon, { type IconName } from '../components/Icon.svelte';
   import Modal from '../components/Modal.svelte';
   import NameModal from '../components/NameModal.svelte';
   import TopBar from '../components/TopBar.svelte';
@@ -11,6 +11,11 @@
   import { allTags } from '../lib/live';
   import { importMerge, importReplace, loadLibrary } from '../lib/repo/library';
   import { createTag, deleteTag, renameTag, TagExistsError } from '../lib/repo/tags';
+  import type { ThemePref } from '../lib/theme';
+  import { setTheme, theme } from '../lib/theme.svelte';
+  import { backupDue, daysSince } from '../lib/backup';
+  import { backupStatus, markBackedUp } from '../lib/backup.svelte';
+  import { askConfirm } from '../lib/confirm.svelte';
   import { showToast } from '../lib/toast.svelte';
   import type { Tag } from '../lib/types';
 
@@ -18,6 +23,17 @@
   const languages: [Lang, string][] = [
     ['en', 'English'],
     ['uk', 'Українська'],
+  ];
+  const REPO = 'https://github.com/hlib-zinchenko/flashcards-pwa';
+  const links: { href: string; icon: IconName; label: () => string }[] = [
+    { href: 'https://hzinchenko.com/', icon: 'globe', label: () => t('settings.madeBy', { name: 'Hlib Zinchenko' }) },
+    { href: REPO, icon: 'code', label: () => t('settings.sourceCode') },
+    { href: `${REPO}/issues`, icon: 'message', label: () => t('settings.feedback') },
+  ];
+  const themes: [ThemePref, () => string][] = [
+    ['system', () => t('settings.themeSystem')],
+    ['light', () => t('settings.themeLight')],
+    ['dark', () => t('settings.themeDark')],
   ];
 
   // ---- Tags ----
@@ -45,7 +61,8 @@
   }
 
   async function removeTag(tag: Tag) {
-    if (confirm(t('tags.deleteConfirm', { name: tag.name }))) await deleteTag(tag.id);
+    const ok = await askConfirm({ title: t('tags.delete'), message: t('tags.deleteConfirm', { name: tag.name }), confirmLabel: t('common.delete') });
+    if (ok) await deleteTag(tag.id);
   }
 
   // ---- Backup ----
@@ -56,8 +73,20 @@
   async function exportLibrary() {
     const backup = createBackup(await loadLibrary());
     await saveFile(`flashcards-${dateStamp()}.json`, JSON.stringify(backup), 'application/json');
+    markBackedUp();
     showToast(t('settings.exported'));
   }
+
+  const lastBackup = $derived(
+    backupStatus.lastAt === null
+      ? t('settings.lastBackupNever')
+      : t('settings.lastBackup', {
+          when: new Intl.RelativeTimeFormat(i18n.lang, { numeric: 'auto' }).format(-daysSince(backupStatus.lastAt, Date.now()), 'day'),
+        }),
+  );
+
+  /** Only show the App section when there's an install action to offer. */
+  const showInstall = $derived(!install.standalone && (!!install.prompt || isIos));
 
   async function chooseBackup() {
     const file = await pickFile('.json,application/json');
@@ -73,7 +102,10 @@
 
   async function applyImport(mode: 'merge' | 'replace') {
     if (!pending) return;
-    if (mode === 'replace' && !confirm(t('settings.replaceConfirm'))) return;
+    if (mode === 'replace') {
+      const ok = await askConfirm({ title: t('settings.replace'), message: t('settings.replaceConfirm'), confirmLabel: t('settings.replace') });
+      if (!ok) return;
+    }
     try {
       if (mode === 'merge') await importMerge(pending);
       else await importReplace(pending);
@@ -123,6 +155,15 @@
   </section>
 
   <section class="section">
+    <h2 class="section-title">{t('settings.appearance')}</h2>
+    <div class="seg">
+      {#each themes as [value, label] (value)}
+        <button type="button" aria-pressed={theme.pref === value} onclick={() => setTheme(value)}>{label()}</button>
+      {/each}
+    </div>
+  </section>
+
+  <section class="section">
     <h2 class="section-title">{t('settings.tags')}</h2>
     <div class="panel list">
       {#each tags as tag (tag.id)}
@@ -161,6 +202,11 @@
     <h2 class="section-title">{t('settings.backup')}</h2>
     <div class="panel box">
       <p class="muted small">{t('settings.backupHint')}</p>
+      {#if backupDue(backupStatus)}
+        <p class="nudge small" role="status">{lastBackup}. {t('settings.backupNudge', { n: backupStatus.sessionsSince })}</p>
+      {:else}
+        <p class="small">{lastBackup}</p>
+      {/if}
       <div class="buttons">
         <button class="btn" type="button" onclick={exportLibrary}><Icon name="download" size={18} />{t('settings.export')}</button>
         <button class="btn" type="button" onclick={chooseBackup}><Icon name="upload" size={18} />{t('settings.import')}</button>
@@ -168,23 +214,21 @@
     </div>
   </section>
 
-  <section class="section">
-    <h2 class="section-title">{t('settings.install')}</h2>
-    <div class="panel box">
-      {#if install.standalone}
-        <p>{t('settings.installed')}</p>
-      {:else if install.prompt}
-        <p class="muted small">{t('install.steps')}</p>
-        <button class="btn btn-primary" type="button" onclick={promptInstall}>{t('install.button')}</button>
-      {:else if isIos}
-        <p><strong>{t('install.iosTitle')}</strong></p>
-        <p class="muted small">{t('install.iosSteps')}</p>
-        <p class="muted small">{t('install.storageWarning')}</p>
-      {:else}
-        <p class="muted small">{t('install.steps')}</p>
-      {/if}
-    </div>
-  </section>
+  {#if showInstall}
+    <section class="section">
+      <h2 class="section-title">{t('settings.install')}</h2>
+      <div class="panel box">
+        {#if install.prompt}
+          <p class="muted small">{t('install.steps')}</p>
+          <button class="btn btn-primary" type="button" onclick={promptInstall}>{t('install.button')}</button>
+        {:else}
+          <p><strong>{t('install.iosTitle')}</strong></p>
+          <p class="muted small">{t('install.iosSteps')}</p>
+          <p class="muted small">{t('install.storageWarning')}</p>
+        {/if}
+      </div>
+    </section>
+  {/if}
 
   <section class="section">
     <h2 class="section-title">{t('settings.storage')}</h2>
@@ -203,9 +247,22 @@
 
   <section class="section">
     <h2 class="section-title">{t('settings.about')}</h2>
-    <div class="panel box">
-      <p>{t('settings.offline')}</p>
-      <p class="muted small">{t('settings.version', { v: __APP_VERSION__ })}</p>
+    <div class="panel list">
+      <div class="box">
+        <p>{t('settings.offline')}</p>
+        <p class="muted small">{t('settings.version', { v: __APP_VERSION__ })}</p>
+      </div>
+      <ul class="links">
+        {#each links as link (link.href)}
+          <li>
+            <a href={link.href} target="_blank" rel="noopener">
+              <Icon name={link.icon} size={18} />
+              <span class="grow">{link.label()}</span>
+              <Icon name="external" size={16} />
+            </a>
+          </li>
+        {/each}
+      </ul>
     </div>
   </section>
 </div>
@@ -270,10 +327,34 @@
   .box p:last-child {
     margin-bottom: 0;
   }
+  .nudge {
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--danger) 12%, transparent);
+    color: var(--text);
+  }
   .buttons {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+  }
+  .links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .links a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 4px 16px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .links a:active {
+    background: var(--surface-2);
   }
   .choices {
     display: grid;

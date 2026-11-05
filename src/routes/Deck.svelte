@@ -14,11 +14,12 @@
   import { pickFile, safeFileName, saveFile } from '../lib/io/file';
   import { levelCounts } from '../lib/learning';
   import { allDecks, allTags } from '../lib/live';
-  import { addCard, deckCards, deleteCard, resetDeckProgress, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
+  import { addCard, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
   import { deleteDeck, renameDeck } from '../lib/repo/decks';
   import { href, navigate } from '../lib/router.svelte';
-  import { DEFAULT_CONFIG } from '../lib/session';
+  import { quickConfig } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
+  import { askConfirm } from '../lib/confirm.svelte';
   import { showToast } from '../lib/toast.svelte';
   import type { Card } from '../lib/types';
 
@@ -94,11 +95,12 @@
     editOpen = false;
     showToast(t('card.saved'));
   }
+  // No confirmation: the toast offers Undo instead.
   async function removeEditing() {
-    if (!editing || !confirm(t('card.deleteConfirm'))) return;
-    await deleteCard(editing.id);
+    if (!editing) return;
+    const removed = await deleteCard(editing.id);
     editOpen = false;
-    showToast(t('card.deleted'));
+    if (removed) showToast(t('card.deleted'), 6000, { label: t('common.undo'), run: () => restoreCard(removed) });
   }
 
   // ---- Deck menu ----
@@ -114,17 +116,20 @@
   }
 
   async function remove() {
-    if (!$deck || !confirm(t('deck.deleteConfirm', { name: $deck.name }))) return;
+    if (!$deck) return;
     menuOpen = false;
+    const ok = await askConfirm({ title: t('deck.delete'), message: t('deck.deleteConfirm', { name: $deck.name }), confirmLabel: t('common.delete') });
+    if (!ok) return;
     await deleteDeck(id);
     showToast(t('deck.deleted'));
     navigate('/', { replace: true });
   }
 
   async function reset() {
-    if (!confirm(t('deck.resetConfirm'))) return;
-    await resetDeckProgress(id);
     menuOpen = false;
+    const ok = await askConfirm({ title: t('deck.resetProgress'), message: t('deck.resetConfirm'), confirmLabel: t('deck.reset') });
+    if (!ok) return;
+    await resetDeckProgress(id);
     showToast(t('deck.progressReset'));
   }
 
@@ -149,10 +154,7 @@
   }
 
   function study() {
-    testState.config.deckIds = [id];
-    testState.config.levels = [...DEFAULT_CONFIG.levels];
-    testState.config.tagIds = [];
-    testState.config.includeUntagged = false;
+    Object.assign(testState.config, quickConfig($state.snapshot(testState.config), [id]));
     navigate('/test');
   }
 </script>

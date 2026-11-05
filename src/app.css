@@ -9,9 +9,10 @@
   --accent: #5b5bd6;
   --accent-soft: #e8e8fb;
   --on-accent: #ffffff;
-  --know: #1f9d68;
-  --miss: #e5484d;
-  --danger: #d93f44;
+  --know: #15805a;
+  --miss: #c9333a;
+  --danger: #c4353a;
+  --on-danger: #ffffff;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.06);
   --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.14);
 
@@ -29,8 +30,14 @@
   --tabbar-h: 58px;
 }
 
+/* Theme: Settings → Appearance sets data-theme="light" or "dark" on <html>;
+   without it (System) the device setting decides. The two dark blocks below
+   must stay identical. */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #111113;
     --surface: #1b1b1e;
     --surface-2: #26262a;
@@ -43,11 +50,32 @@
     --know: #34b884;
     --miss: #f06569;
     --danger: #f06569;
+    --on-danger: #1a0b0c;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
     --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.5);
     --lv0: #74777d;
     --lv3: #d6c53a;
   }
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #111113;
+  --surface: #1b1b1e;
+  --surface-2: #26262a;
+  --text: #ececef;
+  --muted: #9b9ba4;
+  --border: #2f2f35;
+  --accent: #8587f2;
+  --accent-soft: #2a2a4a;
+  --on-accent: #0f0f1f;
+  --know: #34b884;
+  --miss: #f06569;
+  --danger: #f06569;
+  --on-danger: #1a0b0c;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.5);
+  --lv0: #74777d;
+  --lv3: #d6c53a;
 }
 
 *,
@@ -161,6 +189,12 @@ h3 {
 .btn-danger {
   color: var(--danger);
 }
+/* Primary action that destroys data (confirm dialogs). */
+.btn-destructive {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--on-danger);
+}
 .btn-ghost {
   background: transparent;
   border-color: transparent;
@@ -182,6 +216,12 @@ h3 {
 }
 .icon-btn:active {
   background: var(--surface-2);
+}
+
+/* Keyboard focus: one ring for buttons, chips, links and other controls. */
+:where(button, a, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ---------- Surfaces ---------- */
@@ -235,7 +275,8 @@ textarea.input {
   line-height: 1.4;
 }
 
-/* ---------- Chips & segmented ---------- */
+/* ---------- Chips & segmented ----------
+   Chips and segments share one selected look: accent tint, accent outline. */
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -291,9 +332,9 @@ textarea.input {
   cursor: pointer;
 }
 .seg button[aria-pressed='true'] {
-  background: var(--surface);
+  background: var(--accent-soft);
   color: var(--text);
-  box-shadow: var(--shadow);
+  box-shadow: inset 0 0 0 1px var(--accent);
 }
 
 .level-dot {

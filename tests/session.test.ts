@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPool, DEFAULT_CONFIG, filterCards, normalizeConfig, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
+import { buildPool, DEFAULT_CONFIG, filterCards, normalizeConfig, poolSize, quickConfig, REVIEW_LEVELS, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
 import type { Level } from '../src/lib/types';
 import { card, seeded } from './helpers';
 
@@ -42,6 +42,30 @@ describe('buildPool', () => {
     const cards = [3, 1, 0, 2].map((level, i) => card({ id: `l${level}`, level: level as Level, position: i }));
     expect(buildPool(cards, cfg({ sort: 'level', limit: 2 }), new Map()).map((c) => c.id)).toEqual(['l0', 'l1']);
     expect(buildPool(cards, cfg({ limit: null }), new Map())).toHaveLength(4);
+  });
+});
+
+describe('poolSize', () => {
+  const cards = [0, 1, 1, 4].map((level, i) => card({ id: `c${i}`, deckId: 'd1', level: level as Level }));
+  it('counts matching cards', () => expect(poolSize(cards, cfg({ levels: [1, 4] }))).toBe(3));
+  it('caps at the limit', () => expect(poolSize(cards, cfg({ limit: 2 }))).toBe(2));
+  it('ignores a limit above the match count', () => expect(poolSize(cards, cfg({ limit: 50 }))).toBe(4));
+});
+
+describe('quickConfig', () => {
+  const saved = cfg({ direction: 'back', mode: 'refresh', sort: 'random', limit: 20, levels: [5], tagIds: ['verb'], includeUntagged: true });
+
+  it('resets the filters to the given decks and levels', () => {
+    expect(quickConfig(saved, ['d2'], REVIEW_LEVELS)).toMatchObject({ deckIds: ['d2'], levels: [0, 1], tagIds: [], includeUntagged: false });
+  });
+  it('keeps direction, mode, order and count', () => {
+    expect(quickConfig(saved, ['d2'])).toMatchObject({ direction: 'back', mode: 'refresh', sort: 'random', limit: 20, levels: DEFAULT_CONFIG.levels });
+  });
+  it('does not share arrays with its inputs', () => {
+    const ids = ['d1'];
+    const next = quickConfig(saved, ids);
+    expect(next.deckIds).not.toBe(ids);
+    expect(next.levels).not.toBe(DEFAULT_CONFIG.levels);
   });
 });
 
@@ -112,6 +136,64 @@ describe('Session (cram)', () => {
     }
     expect(s.done).toBe(true);
     expect(s.learned.size).toBe(4);
+  });
+});
+
+describe('Session undo', () => {
+  const state = (s: Session) => ({
+    current: s.current,
+    answered: s.answered,
+    known: s.knownCount,
+    completed: s.completed,
+    learned: [...s.learned],
+    missed: [...s.missed],
+    firstTry: [...s.firstTry],
+  });
+
+  it('has nothing to undo before the first grade', () => {
+    const s = new Session(['a', 'b'], 'cram');
+    expect(s.canUndo).toBe(false);
+    expect(s.undo()).toBeNull();
+    expect(s.current).toBe('a');
+  });
+
+  it('restores the state before a know', () => {
+    const s = new Session(['a', 'b', 'c'], 'cram');
+    const before = state(s);
+    s.grade(true);
+    expect(s.undo()).toBe('a');
+    expect(state(s)).toEqual(before);
+    expect(s.canUndo).toBe(false);
+  });
+
+  it('takes a missed card back out of the queue', () => {
+    const s = new Session(['a', 'b', 'c'], 'cram', { rng: () => 0.99 });
+    s.grade(false); // queue: c a
+    s.undo();
+    const seen: string[] = [];
+    while (!s.done) { seen.push(s.current!); s.grade(true); }
+    expect(seen).toEqual(['a', 'b', 'c']);
+    expect(s.missed.size).toBe(0);
+    expect(s.firstTry.size).toBe(3);
+  });
+
+  it('undoes several grades in order, including the last one', () => {
+    const s = new Session(['a', 'b'], 'refresh');
+    s.grade(true);
+    s.grade(false);
+    expect(s.done).toBe(true);
+    expect(s.undo()).toBe('b');
+    expect(s.done).toBe(false);
+    expect(s.undo()).toBe('a');
+    expect(state(s)).toEqual(state(new Session(['a', 'b'], 'refresh')));
+  });
+
+  it('counts remaining cards', () => {
+    const s = new Session(['a', 'b', 'c'], 'cram', { rng: () => 0 });
+    s.grade(false);
+    expect(s.remaining).toBe(3);
+    s.grade(true);
+    expect(s.remaining).toBe(2);
   });
 });
 

@@ -7,30 +7,36 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
 **Live app:** https://hlib-zinchenko.github.io/flashcards-pwa/
 
 <p>
-  <img src="docs/screenshots/decks.png" alt="Deck list with learning-level bars" width="220">
-  <img src="docs/screenshots/deck.png" alt="Deck with its cards and tags" width="220">
-  <img src="docs/screenshots/test-setup.png" alt="Test setup: decks, mode, order, level and tag filters" width="220">
+  <img src="docs/screenshots/decks.png" alt="Deck list with a Review weak cards button, a play button per deck and a card-level legend" width="220">
+  <img src="docs/screenshots/test-setup.png" alt="Test setup: decks, number of cards, and a collapsed Options row showing the current settings" width="220">
   <img src="docs/screenshots/test-swipe.png" alt="Swiping a card right to mark it known" width="220">
-  <img src="docs/screenshots/test-back.png" alt="Card back with tags and notes" width="220">
-  <img src="docs/screenshots/test-back-dark.png" alt="Card back in dark theme" width="220">
+  <img src="docs/screenshots/test-back.png" alt="Card back with tags and notes, with undo in the header" width="220">
+  <img src="docs/screenshots/summary.png" alt="Summary after quitting early: 6 of 7 known, missed cards listed, Continue button" width="220">
+  <img src="docs/screenshots/deck.png" alt="Deck with its cards and tags" width="220">
+  <img src="docs/screenshots/settings.png" alt="Settings with language and System, Light, Dark appearance" width="220">
+  <img src="docs/screenshots/decks-dark.png" alt="Deck list in dark theme" width="220">
 </p>
 
 ## Features
 
-- **Decks & cards:** create, rename and delete decks; add, edit, reorder and move cards, with optional notes per card. Quick-add form: Enter moves to the next field, Enter again saves.
+- **One-tap study:** *Review weak cards* on the home screen starts a session with every New and Weak card; the ▶ button on a deck starts that deck. Both keep your usual direction, mode, order and card count.
+- **Decks & cards:** create, rename and delete decks; add, edit, reorder and move cards, with optional notes per card. Quick-add form: Enter moves to the next field, Enter again saves. Deleting a card can be undone from the toast.
 - **Tags:** built-in `verb`, `noun`, `adjective`, `phrase`, plus your own.
-- **Learning levels:** New → Weak → Learning → Confident → Strong → Mastered. *Know* moves a card up one level, *Don't know* moves it down one. There is no scheduling: you choose what to study.
+- **Learning levels:** New → Weak → Learning → Confident → Strong → Mastered. *Know* moves a card up one level, *Don't know* moves it down one. There is no scheduling: you choose what to study. The home screen shows a colored bar per deck and a legend with totals per level.
 - **Test mode**
-  - Pick one or more decks, show the front or back first.
-  - *Cram*: known cards leave the session, missed ones go back at a random spot until you know them all. *Refresh*: one pass, answers only update levels.
-  - Order: deck order, random, level ascending (weakest first).
-  - Filter by level and tag, and limit the number of cards.
+  - Pick one or more decks and how many cards. Everything else sits under **Options**, which shows the current choices when collapsed:
+    - show the front or back first;
+    - *Cram*: known cards leave the session, missed ones go back at a random spot until you know them all. *Refresh*: one pass, answers only update levels;
+    - order: deck order, random, level ascending (weakest first);
+    - filter by level and tag.
   - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card. A **Notes** button on both sides of the card reveals its notes.
-  - Keyboard: Space / ↑ / ↓ flip · → know · ← don't know · E edits · Esc finishes.
+  - **Undo last answer** (header button) puts the card back and restores its level.
+  - Keyboard: Space / ↑ / ↓ flip · → know · ← don't know · Z or Backspace undo · E edits · Esc finishes.
+  - The summary leads with how many cards you knew on the first try and lists the ones you missed. If you stop early, **Continue** picks up where you left off; **Done** goes back to where you started.
 - **Import / export**
   - JSON backup of the whole library (with progress), for moving to another device. Merge or replace on import.
   - CSV/TSV per deck: `front,back,tags,notes` with tags separated by `|` (tags and notes optional). Handy for writing cards in Excel or Google Sheets on a PC.
-- English and Ukrainian UI, light and dark theme, works offline.
+- English and Ukrainian UI. Appearance: System, Light or Dark. Works offline.
 
 ## Install on a phone
 
@@ -53,7 +59,7 @@ The header row is optional. Comma, tab and semicolon separators are all detected
 
 ## Your data
 
-Everything lives in the browser's IndexedDB on your device. Nothing is sent anywhere. The app asks the browser to keep storage persistent (you can also do it in Settings), but the browser can still clear it, so export a backup now and then.
+Everything lives in the browser's IndexedDB on your device. Nothing is sent anywhere. The app asks the browser to keep storage persistent (you can also do it in Settings), but the browser can still clear it, so export a backup now and then. Settings shows when you last exported, and after 10 study sessions without a backup it reminds you (with a dot on the Settings tab).
 
 ## Updates
 
