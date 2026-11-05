@@ -15,14 +15,15 @@ There is no lint or format script. Match the existing style: 2-space indent, sin
 
 ## Layout
 
-- `src/App.svelte`: switches screens on `router.route`. Hash routing in `src/lib/router.svelte.ts` (`#/`, `#/deck/:id`, `#/test`, `#/test/run`, `#/settings`).
+- `src/App.svelte`: switches screens on `router.route`. Hash routing in `src/lib/router.svelte.ts` (`#/` collections home, `#/collection/:id`, `#/deck/:id`, `#/test`, `#/test/run`, `#/settings`). A launch without a hash and the Decks tab open the collection used last (`lastCollection` pref); an explicit `#/` shows the list.
 - `src/routes/`: one component per screen.
 - `src/components/`: shared UI.
-- `src/lib/db.ts`: Dexie schema (`decks`, `cards`, `tags`). `src/lib/types.ts`: data types.
+- `src/lib/db.ts`: Dexie schema (`collections`, `decks`, `cards`, `tags`). Every deck belongs to one collection; version 2 put existing decks into the `default` collection. `src/lib/types.ts`: data types.
+- Reading aloud: a collection lists its languages (each with an optional voiceURI); a deck picks a language per card side (`deck.speech`). `sideSpeech()` in `src/lib/collections.ts` resolves it; Russian is never offered or accepted.
 - `src/lib/repo/`: every database write goes through here. Components don't write to `db` directly.
 - `src/lib/live.ts`: Dexie `liveQuery` stores, used in components as `$allDecks` etc. They're `undefined` until loaded.
 - `src/lib/io/`: CSV (PapaParse) and JSON backup parse/validate/merge, plus file save/pick.
-- `src/lib/{learning,session,gestures}.ts`: pure logic, unit-tested in `tests/`.
+- `src/lib/{learning,session,gestures,collections,speech}.ts`: pure logic, unit-tested in `tests/`.
 - Global state in `*.svelte.ts` modules (`testState`, `toast`, `install`, `i18n`, `router`). `localStorage` only via `loadPref`/`savePref` in `src/lib/prefs.ts`.
 
 ## Rules and gotchas

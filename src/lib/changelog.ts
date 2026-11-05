@@ -7,6 +7,23 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.7.0',
+    en: [
+      'Collections: group decks by language or course. Your decks are now in “My decks”.',
+      'The app opens on the collection you used last. Tap ‹ to see all collections.',
+      'Reading aloud is set up per collection: add its languages and voices with ⚙.',
+      'Then pick the language of the card front and back in each deck’s ⋯ → Reading aloud. Until then, cards aren’t read.',
+      'Speed is a slider in Settings, with an English sample when you let go.',
+    ],
+    uk: [
+      'Колекції: групуйте колоди за мовою чи курсом. Ваші колоди тепер у «Мої колоди».',
+      'Застосунок відкривається на колекції, з якою ви працювали востаннє. Натисніть ‹, щоб побачити всі.',
+      'Читання вголос налаштовується в колекції: додайте мови й голоси через ⚙.',
+      'Потім у кожній колоді (⋯ → Читання вголос) виберіть мову лицьового та зворотного боку. Доти картки не читаються.',
+      'Швидкість у Налаштуваннях тепер повзунок; відпустіть його, щоб почути приклад англійською.',
+    ],
+  },
+  {
     version: '0.6.0',
     en: [
       'Hear a card: tap 🔊 on either side during a test (or press S). Works offline.',

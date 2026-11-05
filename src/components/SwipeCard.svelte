@@ -2,11 +2,14 @@
   import { classifyGesture, lockAxis, type Axis } from '../lib/gestures';
   import { t } from '../lib/i18n/index.svelte';
   import { speak, speechSupported, stopSpeaking } from '../lib/speech.svelte';
+  import type { CollectionLanguage } from '../lib/types';
   import Icon from './Icon.svelte';
 
   let {
     prompt,
     answer,
+    promptSpeech = null,
+    answerSpeech = null,
     notes = '',
     flipped = $bindable(false),
     tagLabels = [],
@@ -17,6 +20,9 @@
   }: {
     prompt: string;
     answer: string;
+    /** Language and voice to read each face in; null = that face has no read-aloud button. */
+    promptSpeech?: CollectionLanguage | null;
+    answerSpeech?: CollectionLanguage | null;
     notes?: string;
     flipped?: boolean;
     tagLabels?: string[];
@@ -43,16 +49,20 @@
   /** Bumped on every start/stop, so a late onend from an interrupted reading is ignored. */
   let speechRun = 0;
 
-  /** Read the visible face aloud, or stop if it's already being read. */
+  const speechFor = (face: 'front' | 'back') => (face === 'front' ? promptSpeech : answerSpeech);
+
+  /** Read the visible face aloud, or stop if it's already being read. Does nothing on a face that isn't read. */
   export function toggleSpeech() {
     const face = flipped ? 'back' : 'front';
     if (speaking === face) {
       stopReading();
       return;
     }
+    const voice = speechFor(face);
+    if (!voice) return;
     const run = ++speechRun;
     speaking = face;
-    speak(face === 'front' ? prompt : answer, () => {
+    speak(face === 'front' ? prompt : answer, voice, () => {
       if (run === speechRun) speaking = null;
     });
   }
@@ -168,7 +178,7 @@
 {/snippet}
 
 {#snippet speakButton(face: 'front' | 'back')}
-  {#if speechSupported}
+  {#if speechSupported && speechFor(face)}
     <button
       class="speak-btn"
       class:on={speaking === face}

@@ -51,3 +51,14 @@ export function sortTags<T extends Pick<Tag, 'id' | 'name' | 'preset'>>(tags: re
     return tagLabel(a).localeCompare(tagLabel(b), i18n.lang);
   });
 }
+
+/** A language tag's name in the UI language, capitalised: "Japanese (Japan)", "Українська (Україна)". */
+export function languageName(tag: string): string {
+  let name = tag;
+  try {
+    name = new Intl.DisplayNames([i18n.lang], { type: 'language' }).of(tag) ?? tag;
+  } catch {
+    // Not a valid tag; show it as is.
+  }
+  return name.charAt(0).toLocaleUpperCase(i18n.lang) + name.slice(1);
+}

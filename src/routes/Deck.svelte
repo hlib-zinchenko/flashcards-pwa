@@ -9,25 +9,27 @@
   import TagPicker from '../components/TagPicker.svelte';
   import TopBar from '../components/TopBar.svelte';
   import { db } from '../lib/db';
-  import { levelLabel, sortTags, t, tagLabel } from '../lib/i18n/index.svelte';
+  import { languageName, levelLabel, sortTags, t, tagLabel } from '../lib/i18n/index.svelte';
   import { toCsv } from '../lib/io/csv';
   import { pickFile, safeFileName, saveFile } from '../lib/io/file';
   import { levelCounts } from '../lib/learning';
-  import { allDecks, allTags } from '../lib/live';
+  import { allCollections, allDecks, allTags } from '../lib/live';
   import { addCard, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
-  import { deleteDeck, renameDeck } from '../lib/repo/decks';
+  import { deleteDeck, moveDeck, renameDeck, setDeckSpeech } from '../lib/repo/decks';
+  import { sideSpeech } from '../lib/collections';
   import { href, navigate } from '../lib/router.svelte';
   import { quickConfig } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
   import { askConfirm } from '../lib/confirm.svelte';
   import { showToast } from '../lib/toast.svelte';
-  import type { Card } from '../lib/types';
+  import type { Card, CardSide } from '../lib/types';
 
   let { id }: { id: string } = $props();
 
   // undefined = still loading, null = missing
   const deck = $derived(liveQuery(async () => (await db.decks.get(id)) ?? null));
   const cards = $derived(liveQuery(() => deckCards(id)));
+  const collection = $derived($deck ? ($allCollections ?? []).find((c) => c.id === $deck.collectionId) : undefined);
   const tags = $derived($allTags ?? []);
   const tagById = $derived(new Map(tags.map((tag) => [tag.id, tag])));
 
@@ -154,13 +156,37 @@
     csvOpen = true;
   }
 
+  // ---- Reading aloud ----
+  let speechOpen = $state(false);
+  const sides: [CardSide, () => string][] = [
+    ['front', () => t('card.front')],
+    ['back', () => t('card.back')],
+  ];
+  /** Language the side is read in, or '' when off (also when the collection dropped that language). */
+  const sideLang = (side: CardSide) => ($deck && sideSpeech($deck, collection, side)?.lang) || '';
+
+  async function chooseSide(side: CardSide, lang: string) {
+    if (!$deck) return;
+    await setDeckSpeech(id, { front: sideLang('front'), back: sideLang('back'), [side]: lang });
+  }
+
+  // ---- Move ----
+  let moveOpen = $state(false);
+  async function moveTo(collectionId: string) {
+    moveOpen = false;
+    if (!$deck || collectionId === $deck.collectionId) return;
+    await moveDeck(id, collectionId);
+    const target = $allCollections?.find((c) => c.id === collectionId);
+    showToast(t('deck.moved', { name: target?.name ?? '' }));
+  }
+
   function study() {
     Object.assign(testState.config, quickConfig($state.snapshot(testState.config), [id]));
     navigate('/test');
   }
 </script>
 
-<TopBar title={$deck?.name ?? ''} back={href('/')}>
+<TopBar title={$deck?.name ?? ''} back={href($deck ? `/collection/${$deck.collectionId}` : '/')}>
   {#snippet actions()}
     {#if $deck}
       <button class="icon-btn" type="button" onclick={() => (menuOpen = true)} aria-label={t('common.more')}>
@@ -339,6 +365,14 @@
     <button class="btn" type="button" onclick={() => { menuOpen = false; renaming = true; }}>
       <Icon name="edit" size={18} />{t('deck.rename')}
     </button>
+    <button class="btn" type="button" onclick={() => { menuOpen = false; speechOpen = true; }}>
+      <Icon name="volume" size={18} />{t('deck.speech')}
+    </button>
+    {#if ($allCollections?.length ?? 0) > 1}
+      <button class="btn" type="button" onclick={() => { menuOpen = false; moveOpen = true; }}>
+        <Icon name="right" size={18} />{t('deck.move')}
+      </button>
+    {/if}
     <button class="btn" type="button" onclick={importCsv}><Icon name="upload" size={18} />{t('deck.importCsv')}</button>
     <button class="btn" type="button" onclick={exportCsv} disabled={!$cards?.length}>
       <Icon name="download" size={18} />{t('deck.exportCsv')}
@@ -347,6 +381,40 @@
       <Icon name="reset" size={18} />{t('deck.resetProgress')}
     </button>
     <button class="btn btn-danger" type="button" onclick={remove}><Icon name="trash" size={18} />{t('deck.delete')}</button>
+  </div>
+</Modal>
+
+<Modal bind:open={speechOpen} title={t('deck.speech')}>
+  {#if $deck && collection}
+    {#if collection.languages.length}
+      <p class="muted small speech-lead">{t('deck.speechHint')}</p>
+      {#each sides as [side, label] (side)}
+        <h3 class="side-title">{label()}</h3>
+        <div class="chips side-chips">
+          <button type="button" class="chip" aria-pressed={sideLang(side) === ''} onclick={() => chooseSide(side, '')}>{t('deck.speechOff')}</button>
+          {#each collection.languages as l (l.lang)}
+            <button type="button" class="chip" aria-pressed={sideLang(side) === l.lang} onclick={() => chooseSide(side, l.lang)}>
+              {languageName(l.lang)}
+            </button>
+          {/each}
+        </div>
+      {/each}
+    {:else}
+      <p class="muted">{t('deck.speechNoLanguages', { name: collection.name })}</p>
+      <a class="btn btn-block" href={href(`/collection/${collection.id}`)} onclick={() => (speechOpen = false)}>
+        <Icon name="settings" size={18} />{collection.name}
+      </a>
+    {/if}
+  {/if}
+</Modal>
+
+<Modal bind:open={moveOpen} title={t('deck.move')}>
+  <div class="menu">
+    {#each $allCollections ?? [] as c (c.id)}
+      <button class="btn" class:btn-primary={c.id === $deck?.collectionId} type="button" onclick={() => moveTo(c.id)}>
+        {#if c.id === $deck?.collectionId}<Icon name="check" size={18} />{/if}{c.name}
+      </button>
+    {/each}
   </div>
 </Modal>
 
@@ -507,6 +575,18 @@
   }
   .menu .btn {
     justify-content: flex-start;
+  }
+  .speech-lead {
+    margin: 0 0 4px;
+  }
+  /* The sheet is paper too; tint unselected chips so they don't vanish into it (as in TagPicker). */
+  .side-chips .chip:not([aria-pressed='true']) {
+    background: var(--accent-soft);
+  }
+  .side-title {
+    margin: 14px 0 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
   }
   .desktop-only {
     display: none;

@@ -21,7 +21,8 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
 
 ## Features
 
-- **One-tap study:** *Review weak cards* on the home screen starts a session with every New and Weak card; the ▶ button on a deck starts that deck. Both keep your usual direction, mode, order and card count.
+- **Collections:** decks are grouped into collections (one language, one course). The home screen lists collections; open one to see its decks. Decks can be moved between collections from the deck's ⋯ menu.
+- **One-tap study:** *Review weak cards* on the home screen starts a session with every New and Weak card; the ▶ button on a collection or deck starts that collection or deck. Both keep your usual direction, mode, order and card count.
 - **Decks & cards:** create, rename and delete decks; add, edit, reorder and move cards, with optional notes per card. Quick-add form: Enter moves to the next field, Enter again saves. Deleting a card can be undone from the toast.
 - **Tags:** built-in `verb`, `noun`, `adjective`, `phrase`, plus your own.
 - **Learning levels:** New → Weak → Learning → Confident → Strong → Mastered. *Know* moves a card up one level, *Don't know* moves it down one. There is no scheduling: you choose what to study. The home screen shows a colored bar per deck and a legend with totals per level.
@@ -31,7 +32,7 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
     - *Cram*: known cards leave the session, missed ones go back at a random spot until you know them all. *Refresh*: one pass, answers only update levels;
     - order: deck order, random, level ascending (weakest first);
     - filter by level and tag.
-  - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card. A **Notes** button on both sides of the card reveals its notes, and a **speaker** button reads that side aloud with the device's built-in voices (works offline; Japanese, Ukrainian or English is picked from the text). Settings → Reading aloud picks the voice per language, with a sample to try each one, and the speed.
+  - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card. A **Notes** button on both sides of the card reveals its notes, and a **speaker** button reads that side aloud with the device's built-in voices (works offline). A collection's settings (⚙) list the languages its cards can be read in, each with a voice to try and pick; then each deck's ⋯ → Reading aloud chooses the language of the card front and back (or off). With no languages, nothing is read. Settings → Reading aloud has a speed slider (0.5× to 1.5×) that reads an English sample when you let go.
   - **Undo last answer** (header button) puts the card back and restores its level.
   - Keyboard: Space / ↑ / ↓ flip · → know · ← don't know · S reads aloud · Z or Backspace undo · E edits · Esc finishes.
   - The summary leads with how many cards you knew on the first try and lists the ones you missed. If you stop early, **Continue** picks up where you left off; **Done** goes back to where you started.
@@ -85,11 +86,11 @@ Stack: Svelte 5 (runes) + TypeScript + Vite, Dexie (IndexedDB), vite-plugin-pwa 
 
 ```
 src/
-  routes/        screens: Decks, Deck, TestSetup, TestRun, Settings
+  routes/        screens: Decks (collections home), Collection, Deck, TestSetup, TestRun, Settings
   components/    shared UI (modals, card editor, swipe card, tag picker…)
   lib/
     db.ts        Dexie schema
-    repo/        database reads and writes (decks, cards, tags, library import)
+    repo/        database reads and writes (collections, decks, cards, tags, library import)
     io/          CSV and JSON backup parsing, file save/pick
     learning.ts  level changes
     session.ts   test filtering, ordering and the cram/refresh session

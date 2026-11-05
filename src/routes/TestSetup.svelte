@@ -2,7 +2,7 @@
   import Icon from '../components/Icon.svelte';
   import TopBar from '../components/TopBar.svelte';
   import { levelLabel, sortTags, t, tagLabel } from '../lib/i18n/index.svelte';
-  import { allCards, allDecks, allTags } from '../lib/live';
+  import { allCards, allCollections, allDecks, allTags } from '../lib/live';
   import { navigate } from '../lib/router.svelte';
   import { matchesTags, poolSize, type Direction, type Mode, type SortMode } from '../lib/session';
   import { saveTestConfig, startSession, testState } from '../lib/testState.svelte';
@@ -12,6 +12,12 @@
   const QUICK_LIMITS = [10, 20, 50];
 
   const decks = $derived($allDecks ?? []);
+  /** Decks under their collection, in collection order; empty collections are left out. */
+  const groups = $derived(
+    ($allCollections ?? [])
+      .map((collection) => ({ collection, decks: decks.filter((d) => d.collectionId === collection.id) }))
+      .filter((g) => g.decks.length > 0),
+  );
   const cards = $derived($allCards ?? []);
   const tags = $derived(sortTags($allTags ?? []));
 
@@ -88,6 +94,11 @@
     return list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
   }
 
+  const groupSelected = (ids: string[]) => ids.every((id) => cfg.deckIds.includes(id));
+  function toggleGroup(ids: string[]) {
+    cfg.deckIds = groupSelected(ids) ? cfg.deckIds.filter((id) => !ids.includes(id)) : [...new Set([...cfg.deckIds, ...ids])];
+  }
+
   const allDecksSelected = $derived(decks.length > 0 && decks.every((d) => cfg.deckIds.includes(d.id)));
 
   function start() {
@@ -117,28 +128,43 @@
   {:else if $allDecks}
     <section class="section">
       <h2 class="section-title">{t('test.decks')}</h2>
-      <div class="chips">
-        {#if decks.length > 1}
-          <button
-            type="button"
-            class="chip"
-            aria-pressed={allDecksSelected}
-            onclick={() => (cfg.deckIds = allDecksSelected ? [] : decks.map((d) => d.id))}
-          >
-            {t('common.all')}
-          </button>
-        {/if}
-        {#each decks as deck (deck.id)}
-          <button
-            type="button"
-            class="chip"
-            aria-pressed={cfg.deckIds.includes(deck.id)}
-            onclick={() => (cfg.deckIds = toggle(cfg.deckIds, deck.id))}
-          >
-            {deck.name} <span class="count">{deckCount.get(deck.id) ?? 0}</span>
-          </button>
-        {/each}
-      </div>
+      {#snippet allChip()}
+        <button
+          type="button"
+          class="chip"
+          aria-pressed={allDecksSelected}
+          onclick={() => (cfg.deckIds = allDecksSelected ? [] : decks.map((d) => d.id))}
+        >
+          {t('common.all')}
+        </button>
+      {/snippet}
+      {#if groups.length > 1}
+        <div class="chips">{@render allChip()}</div>
+      {/if}
+      {#each groups as group (group.collection.id)}
+        {@const ids = group.decks.map((d) => d.id)}
+        <div class="group">
+          {#if groups.length > 1}
+            <button type="button" class="group-title" aria-pressed={groupSelected(ids)} onclick={() => toggleGroup(ids)}>
+              <span class="box" aria-hidden="true">{#if groupSelected(ids)}<Icon name="check" size={14} />{/if}</span>
+              {group.collection.name}
+            </button>
+          {/if}
+          <div class="chips">
+            {#if groups.length === 1 && decks.length > 1}{@render allChip()}{/if}
+            {#each group.decks as deck (deck.id)}
+              <button
+                type="button"
+                class="chip"
+                aria-pressed={cfg.deckIds.includes(deck.id)}
+                onclick={() => (cfg.deckIds = toggle(cfg.deckIds, deck.id))}
+              >
+                {deck.name} <span class="count">{deckCount.get(deck.id) ?? 0}</span>
+              </button>
+            {/each}
+          </div>
+        </div>
+      {/each}
     </section>
 
     <section class="section">
@@ -241,6 +267,36 @@
 {/if}
 
 <style>
+  .group + .group,
+  .chips + .group {
+    margin-top: 12px;
+  }
+  .group-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+    padding: 4px 2px;
+    border: 0;
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .group-title .box {
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text);
+    border-radius: 6px;
+  }
+  .group-title[aria-pressed='true'] .box {
+    background: var(--text);
+    color: var(--bg);
+  }
   .page {
     padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 96px);
   }

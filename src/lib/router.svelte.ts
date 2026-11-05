@@ -1,5 +1,9 @@
+import { decksHome } from './collections';
+import { loadPref, savePref } from './prefs';
+
 export type Route =
   | { name: 'decks' }
+  | { name: 'collection'; id: string }
   | { name: 'deck'; id: string }
   | { name: 'test' }
   | { name: 'run' }
@@ -7,6 +11,8 @@ export type Route =
 
 function parse(hash: string): Route {
   const path = hash.replace(/^#/, '') || '/';
+  const collection = path.match(/^\/collection\/([^/]+)$/);
+  if (collection) return { name: 'collection', id: decodeURIComponent(collection[1]) };
   const deck = path.match(/^\/deck\/([^/]+)$/);
   if (deck) return { name: 'deck', id: decodeURIComponent(deck[1]) };
   if (path === '/test') return { name: 'test' };
@@ -14,6 +20,19 @@ function parse(hash: string): Route {
   if (path === '/settings') return { name: 'settings' };
   return { name: 'decks' };
 }
+
+/** Collection opened last; the Decks tab and a fresh launch go there. Remembered across launches. */
+export const lastCollection = $state({ id: loadPref<string | null>('lastCollection', null) });
+
+export function rememberCollection(id: string | null): void {
+  if (lastCollection.id === id) return;
+  lastCollection.id = id;
+  savePref('lastCollection', id);
+}
+
+// A fresh launch (no hash: the home-screen icon, or typing the address) opens the last collection.
+// An explicit "#/" (the collection screen's back button) still shows the list.
+if (!location.hash.replace(/^#/, '')) history.replaceState(null, '', `#${decksHome(lastCollection.id)}`);
 
 export const router = $state({ route: parse(location.hash) });
 

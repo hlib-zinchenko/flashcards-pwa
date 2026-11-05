@@ -1,26 +1,31 @@
 <script lang="ts">
-  import CsvImportModal from '../components/CsvImportModal.svelte';
   import Icon from '../components/Icon.svelte';
   import InstallHint from '../components/InstallHint.svelte';
   import LevelBar from '../components/LevelBar.svelte';
   import NameModal from '../components/NameModal.svelte';
   import TopBar from '../components/TopBar.svelte';
   import { levelLabel, t } from '../lib/i18n/index.svelte';
-  import { pickFile } from '../lib/io/file';
   import { levelCounts } from '../lib/learning';
-  import { allCards, allDecks } from '../lib/live';
-  import { createDeck } from '../lib/repo/decks';
+  import { allCards, allCollections, allDecks } from '../lib/live';
+  import { createCollection } from '../lib/repo/collections';
   import { href, navigate } from '../lib/router.svelte';
   import { poolSize, quickConfig, REVIEW_LEVELS } from '../lib/session';
   import { startQuick, testState } from '../lib/testState.svelte';
   import { LEVELS, type Card } from '../lib/types';
 
-  const byDeck = $derived.by(() => {
-    const map = new Map<string, Card[]>();
+  /** Decks and cards of each collection. */
+  const byCollection = $derived.by(() => {
+    const deckCollection = new Map(($allDecks ?? []).map((d) => [d.id, d.collectionId]));
+    const map = new Map<string, { decks: string[]; cards: Card[] }>();
+    const entry = (id: string) => {
+      let e = map.get(id);
+      if (!e) map.set(id, (e = { decks: [], cards: [] }));
+      return e;
+    };
+    for (const d of $allDecks ?? []) entry(d.collectionId).decks.push(d.id);
     for (const c of $allCards ?? []) {
-      const list = map.get(c.deckId);
-      if (list) list.push(c);
-      else map.set(c.deckId, [c]);
+      const collectionId = deckCollection.get(c.deckId);
+      if (collectionId) entry(collectionId).cards.push(c);
     }
     return map;
   });
@@ -31,31 +36,17 @@
   const reviewCount = $derived(poolSize($allCards ?? [], quickConfig(testState.config, allDeckIds, REVIEW_LEVELS)));
 
   let creating = $state(false);
-  let csvOpen = $state(false);
-  let csvText = $state('');
-  let csvName = $state('');
 
   async function create(name: string) {
-    const id = await createDeck(name);
+    const id = await createCollection(name);
     creating = false;
-    navigate(`/deck/${id}`);
-  }
-
-  async function importCsv() {
-    const file = await pickFile('.csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain');
-    if (!file) return;
-    csvText = await file.text();
-    csvName = file.name;
-    csvOpen = true;
+    navigate(`/collection/${id}`);
   }
 </script>
 
-<TopBar title={t('decks.title')}>
+<TopBar title={t('collections.title')}>
   {#snippet actions()}
-    <button class="icon-btn" type="button" onclick={importCsv} aria-label={t('decks.importCsv')} title={t('decks.importCsv')}>
-      <Icon name="upload" size={19} />
-    </button>
-    <button class="icon-btn" type="button" onclick={() => (creating = true)} aria-label={t('decks.new')} title={t('decks.new')}>
+    <button class="icon-btn" type="button" onclick={() => (creating = true)} aria-label={t('collections.new')} title={t('collections.new')}>
       <Icon name="plus" size={21} />
     </button>
   {/snippet}
@@ -64,19 +55,16 @@
 <div class="page">
   <InstallHint />
 
-  {#if $allDecks && $allDecks.length === 0}
+  {#if $allCollections && $allCollections.length === 0}
     <div class="empty">
       <div class="art display" aria-hidden="true">あ</div>
-      <h2 class="display">{t('decks.empty')}</h2>
-      <p class="muted">{t('decks.emptyHint')}</p>
+      <h2 class="display">{t('collections.empty')}</h2>
+      <p class="muted">{t('collections.emptyHint')}</p>
       <button class="btn btn-primary" type="button" onclick={() => (creating = true)}>
-        <Icon name="plus" size={18} />{t('decks.new')}
-      </button>
-      <button class="btn btn-ghost" type="button" onclick={importCsv}>
-        <Icon name="upload" size={18} />{t('decks.importCsv')}
+        <Icon name="plus" size={18} />{t('collections.new')}
       </button>
     </div>
-  {:else if $allDecks}
+  {:else if $allCollections && $allDecks}
     {#if reviewCount > 0}
       <button class="review tile" type="button" onclick={() => startQuick(allDeckIds, REVIEW_LEVELS)}>
         <span class="review-n display">{reviewCount}</span>
@@ -89,21 +77,22 @@
     {/if}
 
     <ul class="grid">
-      {#each $allDecks as deck, i (deck.id)}
-        {@const cards = byDeck.get(deck.id) ?? []}
+      {#each $allCollections as collection, i (collection.id)}
+        {@const group = byCollection.get(collection.id) ?? { decks: [], cards: [] }}
         <li class="deck tile tone-{i % 3}">
-          <a class="link" href={href(`/deck/${deck.id}`)}>
-            <span class="name">{deck.name}</span>
-            <span class="tally"><span class="display">{cards.length}</span><small>{t('decks.cardsWord', { n: cards.length })}</small></span>
-            <LevelBar counts={levelCounts(cards)} />
+          <a class="link" href={href(`/collection/${collection.id}`)}>
+            <span class="name">{collection.name}</span>
+            <small class="decks-n">{t('collection.decks', { n: group.decks.length })}</small>
+            <span class="tally"><span class="display">{group.cards.length}</span><small>{t('decks.cardsWord', { n: group.cards.length })}</small></span>
+            <LevelBar counts={levelCounts(group.cards)} />
           </a>
-          {#if cards.length > 0}
+          {#if group.cards.length > 0}
             <button
               class="play"
               type="button"
-              onclick={() => startQuick([deck.id])}
-              aria-label={t('decks.study', { name: deck.name })}
-              title={t('decks.study', { name: deck.name })}
+              onclick={() => startQuick(group.decks)}
+              aria-label={t('decks.study', { name: collection.name })}
+              title={t('decks.study', { name: collection.name })}
             >
               <Icon name="play" size={14} />
             </button>
@@ -130,14 +119,12 @@
 
 <NameModal
   bind:open={creating}
-  title={t('decks.new')}
-  label={t('deck.name')}
-  placeholder={t('deck.namePlaceholder')}
+  title={t('collections.new')}
+  label={t('collection.name')}
+  placeholder={t('collection.namePlaceholder')}
   submitLabel={t('common.create')}
   onsubmit={create}
 />
-
-<CsvImportModal bind:open={csvOpen} text={csvText} fileName={csvName} onimported={(id) => navigate(`/deck/${id}`)} />
 
 <style>
   .tile {
@@ -238,6 +225,11 @@
     font-size: 0.98rem;
     line-height: 1.22;
     overflow-wrap: anywhere;
+  }
+  .decks-n {
+    margin-top: 4px;
+    font-size: 0.8rem;
+    opacity: 0.75;
   }
   .tally {
     display: flex;

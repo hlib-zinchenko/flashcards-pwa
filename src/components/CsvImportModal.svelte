@@ -12,6 +12,7 @@
     text,
     fileName,
     deckId,
+    collectionId,
     onimported,
   }: {
     open?: boolean;
@@ -19,6 +20,8 @@
     fileName: string;
     /** Import into this deck; when absent a new deck is created. */
     deckId?: string;
+    /** Collection a new deck is created in (needed when deckId is absent). */
+    collectionId?: string;
     onimported?: (deckId: string) => void;
   } = $props();
 
@@ -43,7 +46,7 @@
     if (!parsed.rows.length || busy) return;
     busy = true;
     try {
-      const target = deckId ?? (await createDeck(deckName.trim() || fileName));
+      const target = deckId ?? (await createDeck(deckName.trim() || fileName, collectionId!));
       const tagIds = await resolveTagNames(parsed.rows.flatMap((r) => r.tags));
       await addCards(
         target,

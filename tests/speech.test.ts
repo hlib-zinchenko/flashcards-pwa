@@ -1,29 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { detectLang, isNoveltyVoice, normalizeSpeechPrefs, pickVoice, voicesFor, type VoiceLike } from '../src/lib/speech';
-
-describe('detectLang', () => {
-  it('reads kana and kanji as Japanese', () => {
-    expect(detectLang('食べる')).toBe('ja-JP');
-    expect(detectLang('おはよう')).toBe('ja-JP');
-    expect(detectLang('カタカナ')).toBe('ja-JP');
-    expect(detectLang('ｶﾀｶﾅ')).toBe('ja-JP');
-    expect(detectLang('水')).toBe('ja-JP');
-  });
-
-  it('prefers Japanese when scripts are mixed', () => {
-    expect(detectLang('to eat (食べる)')).toBe('ja-JP');
-  });
-
-  it('reads Cyrillic as Ukrainian', () => {
-    expect(detectLang('їсти')).toBe('uk-UA');
-    expect(detectLang('вода')).toBe('uk-UA');
-  });
-
-  it('falls back to English', () => {
-    expect(detectLang('to eat')).toBe('en-US');
-    expect(detectLang('')).toBe('en-US');
-  });
-});
+import { isNoveltyVoice, normalizeSpeechPrefs, pickVoice, sampleText, voicesFor, type VoiceLike } from '../src/lib/speech';
 
 const v = (lang: string, localService = true, isDefault = false, name = lang): VoiceLike => ({
   voiceURI: `${name}:${lang}:${localService}:${isDefault}`,
@@ -114,15 +90,30 @@ describe('voicesFor', () => {
 });
 
 describe('normalizeSpeechPrefs', () => {
-  it('defaults to automatic voices at normal speed', () => {
-    expect(normalizeSpeechPrefs(undefined)).toEqual({ voices: {}, rate: 'normal' });
-    expect(normalizeSpeechPrefs('junk')).toEqual({ voices: {}, rate: 'normal' });
+  it('defaults to normal speed', () => {
+    expect(normalizeSpeechPrefs(undefined)).toEqual({ rate: 1 });
+    expect(normalizeSpeechPrefs('junk')).toEqual({ rate: 1 });
+    expect(normalizeSpeechPrefs({ rate: 'turbo' })).toEqual({ rate: 1 });
+    expect(normalizeSpeechPrefs({ rate: NaN })).toEqual({ rate: 1 });
   });
 
-  it('keeps valid choices and drops unknown ones', () => {
-    expect(
-      normalizeSpeechPrefs({ voices: { 'ja-JP': 'kyoko', 'fr-FR': 'amelie', 'uk-UA': '', 'en-US': 5 }, rate: 'slow' }),
-    ).toEqual({ voices: { 'ja-JP': 'kyoko' }, rate: 'slow' });
-    expect(normalizeSpeechPrefs({ rate: 'turbo' }).rate).toBe('normal');
+  it('keeps a saved speed, snapped to the slider and within its range', () => {
+    expect(normalizeSpeechPrefs({ rate: 1.3 })).toEqual({ rate: 1.3 });
+    expect(normalizeSpeechPrefs({ rate: 0.7000001 })).toEqual({ rate: 0.7 });
+    expect(normalizeSpeechPrefs({ rate: 0.1 })).toEqual({ rate: 0.5 });
+    expect(normalizeSpeechPrefs({ rate: 4 })).toEqual({ rate: 1.5 });
+  });
+
+  it('carries over the old Slow/Normal choice and drops the old per-language voices', () => {
+    expect(normalizeSpeechPrefs({ voices: { 'ja-JP': 'kyoko' }, rate: 'slow' })).toEqual({ rate: 0.7 });
+    expect(normalizeSpeechPrefs({ rate: 'normal' })).toEqual({ rate: 1 });
+  });
+});
+
+describe('sampleText', () => {
+  it("is the language's own name", () => {
+    expect(sampleText('ja-JP')).toMatch(/日本語/);
+    expect(sampleText('uk-UA')).toMatch(/українська/i);
+    expect(sampleText('es-ES')).toMatch(/español/i);
   });
 });

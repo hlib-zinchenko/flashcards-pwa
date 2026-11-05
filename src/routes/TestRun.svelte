@@ -8,7 +8,8 @@
   import { countSession } from '../lib/backup.svelte';
   import { db } from '../lib/db';
   import { t, tagLabel } from '../lib/i18n/index.svelte';
-  import { allTags } from '../lib/live';
+  import { allCollections, allDecks, allTags } from '../lib/live';
+  import { sideSpeech } from '../lib/collections';
   import { loadPref, savePref } from '../lib/prefs';
   import { gradeFields } from '../lib/learning';
   import { deleteCard, gradeCard, restoreCard, restoreGrade, updateCard, type CardInput } from '../lib/repo/cards';
@@ -17,7 +18,7 @@
   import { testState } from '../lib/testState.svelte';
   import { showToast } from '../lib/toast.svelte';
   import { askConfirm } from '../lib/confirm.svelte';
-  import type { Card, Level } from '../lib/types';
+  import type { Card, CardSide, Level } from '../lib/types';
 
   const cfg = testState.config;
 
@@ -66,6 +67,15 @@
   const missedCards = $derived(missedIds.map((id) => cards.get(id)).filter((c) => !!c));
   const promptOf = (c: Card) => (cfg.direction === 'front' ? c.front : c.back);
   const answerOf = (c: Card) => (cfg.direction === 'front' ? c.back : c.front);
+  const deckById = $derived(new Map(($allDecks ?? []).map((d) => [d.id, d])));
+  const collectionById = $derived(new Map(($allCollections ?? []).map((c) => [c.id, c])));
+  /** How a card field is read aloud: set per deck, from its collection's languages; null = not read. */
+  function speechOf(c: Card, side: CardSide) {
+    const deck = deckById.get(c.deckId);
+    return deck ? sideSpeech(deck, collectionById.get(deck.collectionId), side) : null;
+  }
+  const promptSpeech = $derived(current ? speechOf(current, cfg.direction === 'front' ? 'front' : 'back') : null);
+  const answerSpeech = $derived(current ? speechOf(current, cfg.direction === 'front' ? 'back' : 'front') : null);
   const prompt = $derived(current ? promptOf(current) : '');
   const answer = $derived(current ? answerOf(current) : '');
   const tagLabels = $derived(
@@ -328,6 +338,8 @@
           bind:flipped
           {prompt}
           {answer}
+          {promptSpeech}
+          {answerSpeech}
           notes={current.notes}
           {tagLabels}
           tone={progress.answered % 3}

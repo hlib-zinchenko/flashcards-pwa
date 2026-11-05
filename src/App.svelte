@@ -5,6 +5,7 @@
   import UpdatePrompt from './components/UpdatePrompt.svelte';
   import WhatsNew from './components/WhatsNew.svelte';
   import { router } from './lib/router.svelte';
+  import Collection from './routes/Collection.svelte';
   import Deck from './routes/Deck.svelte';
   import Decks from './routes/Decks.svelte';
   import Settings from './routes/Settings.svelte';
@@ -16,6 +17,8 @@
 
 {#if route.name === 'decks'}
   <Decks />
+{:else if route.name === 'collection'}
+  {#key route.id}<Collection id={route.id} />{/key}
 {:else if route.name === 'deck'}
   {#key route.id}<Deck id={route.id} />{/key}
 {:else if route.name === 'test'}

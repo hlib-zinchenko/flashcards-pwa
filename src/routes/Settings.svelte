@@ -19,8 +19,8 @@
   import { showToast } from '../lib/toast.svelte';
   import { openWhatsNew } from '../lib/whatsNew.svelte';
   import type { Tag } from '../lib/types';
-  import { SAMPLE_TEXT, SPEECH_LANGS, voicesFor, type SpeechLang, type SpeechRate } from '../lib/speech';
-  import { deviceVoices, setRate, setVoice, speak, speechPrefs, speechSupported, stopSpeaking } from '../lib/speech.svelte';
+  import { RATE_SAMPLE, SPEECH_RATE } from '../lib/speech';
+  import { setRate, speak, speechPrefs, speechSupported, stopSpeaking } from '../lib/speech.svelte';
 
   const tags = $derived(sortTags($allTags ?? []));
   const languages: [Lang, string][] = [
@@ -40,61 +40,18 @@
   ];
 
   // ---- Voice ----
-  const rates: [SpeechRate, () => string][] = [
-    ['slow', () => t('settings.speechSlow')],
-    ['normal', () => t('settings.speechNormal')],
-  ];
-  const regionOf = (lang: string) => lang.replace('_', '-').split('-')[1]?.toUpperCase() ?? '';
+  const rateLabel = $derived(`${new Intl.NumberFormat(i18n.lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(speechPrefs.rate)}×`);
+  /** The sample is playing, so leaving the screen stops it. */
+  let sampling = false;
 
-  function langName(lang: SpeechLang): string {
-    const name = new Intl.DisplayNames([i18n.lang], { type: 'language' }).of(lang.split('-')[0]) ?? lang;
-    return name.charAt(0).toLocaleUpperCase(i18n.lang) + name.slice(1);
-  }
-
-  function voiceLabel(voice: SpeechSynthesisVoice, withRegion: boolean): string {
-    const region = regionOf(voice.lang);
-    if (!withRegion || !region) return voice.name;
-    return `${voice.name} · ${new Intl.DisplayNames([i18n.lang], { type: 'region' }).of(region) ?? region}`;
-  }
-
-  const voiceRows = $derived(
-    SPEECH_LANGS.map((lang) => {
-      const voices = voicesFor(deviceVoices(), lang);
-      const chosen = speechPrefs.voices[lang];
-      return {
-        lang,
-        voices,
-        // Region only matters when the list mixes them (English: US, UK, Australia…).
-        withRegion: new Set(voices.map((v) => regionOf(v.lang))).size > 1,
-        value: chosen && voices.some((v) => v.voiceURI === chosen) ? chosen : '',
-      };
-    }),
-  );
-
-  /** Language whose sample is playing. */
-  let trying = $state<SpeechLang | null>(null);
-
-  function tryVoice(lang: SpeechLang) {
-    if (trying === lang) {
-      trying = null;
-      stopSpeaking();
-      return;
-    }
-    trying = lang;
-    speak(SAMPLE_TEXT[lang], () => {
-      if (trying === lang) trying = null;
-    }, lang);
-  }
-
-  function chooseVoice(lang: SpeechLang, voiceURI: string) {
-    setVoice(lang, voiceURI || null);
-    // Let them hear what they picked.
-    trying = null;
-    tryVoice(lang);
+  /** Let them hear the new speed: an English sentence, once the slider is let go. */
+  function playRateSample() {
+    sampling = true;
+    speak(RATE_SAMPLE.text, { lang: RATE_SAMPLE.lang }, () => (sampling = false));
   }
 
   onDestroy(() => {
-    if (trying) stopSpeaking();
+    if (sampling) stopSpeaking();
   });
 
   // ---- Tags ----
@@ -153,7 +110,7 @@
     const file = await pickFile('.json,application/json');
     if (!file) return;
     try {
-      pending = parseBackup(await file.text());
+      pending = parseBackup(await file.text(), Date.now(), { defaultCollectionName: t('collections.defaultName') });
       importOpen = true;
     } catch (err) {
       const msg = err instanceof BackupError ? err.message : String(err);
@@ -227,46 +184,27 @@
   {#if speechSupported}
     <section class="section">
       <h2 class="section-title">{t('settings.voice')}</h2>
-      <div class="panel list">
-        {#each voiceRows as row (row.lang)}
-          <div class="item voice">
-            <label class="voice-lang" for="voice-{row.lang}">{langName(row.lang)}</label>
-            <select
-              id="voice-{row.lang}"
-              class="input"
-              disabled={row.voices.length === 0}
-              value={row.value}
-              onchange={(e) => chooseVoice(row.lang, e.currentTarget.value)}
-            >
-              {#if row.voices.length}
-                <option value="">{t('settings.voiceAuto')}</option>
-                {#each row.voices as voice (voice.voiceURI)}
-                  <option value={voice.voiceURI}>{voiceLabel(voice, row.withRegion)}</option>
-                {/each}
-              {:else}
-                <option value="">{t('settings.voiceNone')}</option>
-              {/if}
-            </select>
-            <button
-              class="icon-btn try"
-              class:on={trying === row.lang}
-              type="button"
-              disabled={row.voices.length === 0}
-              aria-pressed={trying === row.lang}
-              aria-label={t('settings.voiceTry', { lang: langName(row.lang) })}
-              title={t('settings.voiceTry', { lang: langName(row.lang) })}
-              onclick={() => tryVoice(row.lang)}
-            >
-              <Icon name="volume" size={20} />
-            </button>
-          </div>
-        {/each}
+      <p class="muted small lead">{t('settings.voicePerCollection')}</p>
+      <div class="rate-head">
+        <label class="sub-title" for="speech-rate">{t('settings.speechRate')}</label>
+        <span class="rate-value">{rateLabel}</span>
       </div>
-      <h3 class="sub-title">{t('settings.speechRate')}</h3>
-      <div class="seg">
-        {#each rates as [value, label] (value)}
-          <button type="button" aria-pressed={speechPrefs.rate === value} onclick={() => setRate(value)}>{label()}</button>
-        {/each}
+      <div class="panel rate">
+        <input
+          id="speech-rate"
+          type="range"
+          min={SPEECH_RATE.min}
+          max={SPEECH_RATE.max}
+          step={SPEECH_RATE.step}
+          value={speechPrefs.rate}
+          aria-valuetext={rateLabel}
+          oninput={(e) => setRate(e.currentTarget.valueAsNumber)}
+          onchange={playRateSample}
+        />
+        <div class="rate-ends muted small" aria-hidden="true">
+          <span>{t('settings.speechSlow')}</span>
+          <span>{t('settings.speechFast')}</span>
+        </div>
       </div>
       <p class="muted small hint">{t('settings.voiceHint')}</p>
     </section>
@@ -433,25 +371,36 @@
   .danger {
     color: var(--danger);
   }
-  .voice,
-  .voice:last-child {
-    padding: 6px 6px 6px 14px;
+  .lead {
+    margin: 0 4px;
   }
-  .voice-lang {
-    flex: none;
-    width: 6.5em;
-    color: var(--text);
+  .rate-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
   }
-  .voice select {
-    flex: 1;
-    min-width: 0;
+  .rate-head .sub-title {
+    display: block;
   }
-  .try.on {
-    background: var(--primary);
-    color: var(--on-primary);
+  .rate-value {
+    margin: 16px 4px 8px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
   }
-  .try:disabled {
-    opacity: 0.4;
+  .rate {
+    padding: 12px 16px 10px;
+  }
+  .rate input {
+    display: block;
+    width: 100%;
+    height: 32px;
+    margin: 0;
+    accent-color: var(--primary);
+    cursor: pointer;
+  }
+  .rate-ends {
+    display: flex;
+    justify-content: space-between;
   }
   .sub-title {
     margin: 16px 4px 8px;

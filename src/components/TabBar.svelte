@@ -2,18 +2,19 @@
   import { backupDue } from '../lib/backup';
   import { backupStatus } from '../lib/backup.svelte';
   import { t } from '../lib/i18n/index.svelte';
-  import { router, href } from '../lib/router.svelte';
+  import { decksHome } from '../lib/collections';
+  import { lastCollection, router, href } from '../lib/router.svelte';
   import Icon, { type IconName } from './Icon.svelte';
 
-  const tabs: { path: string; name: 'decks' | 'test' | 'settings'; icon: IconName; label: () => string }[] = [
-    { path: '/', name: 'decks', icon: 'decks', label: () => t('nav.decks') },
-    { path: '/test', name: 'test', icon: 'play', label: () => t('nav.test') },
-    { path: '/settings', name: 'settings', icon: 'settings', label: () => t('nav.settings') },
+  const tabs: { path: () => string; name: 'decks' | 'test' | 'settings'; icon: IconName; label: () => string }[] = [
+    { path: () => decksHome(lastCollection.id), name: 'decks', icon: 'decks', label: () => t('nav.decks') },
+    { path: () => '/test', name: 'test', icon: 'play', label: () => t('nav.test') },
+    { path: () => '/settings', name: 'settings', icon: 'settings', label: () => t('nav.settings') },
   ];
 
   /** Dot on the Settings tab when a backup is overdue; Settings explains it. */
   const nudge = $derived(backupDue(backupStatus));
-  const active = $derived(router.route.name === 'deck' ? 'decks' : router.route.name);
+  const active = $derived(router.route.name === 'deck' || router.route.name === 'collection' ? 'decks' : router.route.name);
 </script>
 
 <!-- Floating card-stock pill. Icons only, in equal fixed slots, so nothing moves when the tab changes;
@@ -23,7 +24,7 @@
     {#each tabs as tab (tab.name)}
       {@const on = active === tab.name}
       <a
-        href={href(tab.path)}
+        href={href(tab.path())}
         class:active={on}
         aria-current={on ? 'page' : undefined}
         aria-label={tab.label()}

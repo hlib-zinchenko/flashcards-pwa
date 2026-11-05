@@ -1,21 +1,5 @@
 /** Pure helpers for reading cards aloud. The browser side lives in speech.svelte.ts. */
 
-export type SpeechLang = 'ja-JP' | 'uk-UA' | 'en-US';
-
-// Hiragana, katakana, CJK ideographs (incl. extension A) and half-width katakana.
-const JAPANESE = /[぀-ヿ㐀-䶿一-鿿ｦ-ﾟ]/;
-const CYRILLIC = /[Ѐ-ӿ]/;
-
-/**
- * Guess the language of a card's text from its script, so it is read with a matching voice.
- * Any kana or kanji means Japanese, any Cyrillic means Ukrainian, anything else English.
- */
-export function detectLang(text: string): SpeechLang {
-  if (JAPANESE.test(text)) return 'ja-JP';
-  if (CYRILLIC.test(text)) return 'uk-UA';
-  return 'en-US';
-}
-
 /** The parts of SpeechSynthesisVoice that pickVoice looks at. */
 export interface VoiceLike {
   voiceURI: string;
@@ -26,7 +10,7 @@ export interface VoiceLike {
 }
 
 /** Android reports languages like "ja_JP". */
-const normLang = (lang: string) => lang.replace('_', '-').toLowerCase();
+export const normLang = (lang: string) => lang.replace('_', '-').toLowerCase();
 
 const sameLanguage = (v: VoiceLike, lang: string) => normLang(v.lang).split('-')[0] === normLang(lang).split('-')[0];
 
@@ -72,7 +56,7 @@ export function voicesFor<V extends VoiceLike>(voices: readonly V[], lang: strin
 }
 
 /**
- * Voice to read a language with: the one the user chose in Settings if this device
+ * Voice to read a language with: the one chosen for the collection if this device
  * still has it, otherwise the best fit. Null if no voice speaks the language.
  */
 export function pickVoice<V extends VoiceLike>(voices: readonly V[], lang: string, preferredURI?: string | null): V | null {
@@ -80,37 +64,42 @@ export function pickVoice<V extends VoiceLike>(voices: readonly V[], lang: strin
   return matching.find((v) => v.voiceURI === preferredURI) ?? matching[0] ?? null;
 }
 
-/** Languages the app can read aloud, in the order Settings lists them. */
-export const SPEECH_LANGS: readonly SpeechLang[] = ['ja-JP', 'uk-UA', 'en-US'];
+/** Reading speed (SpeechSynthesisUtterance.rate): the Settings slider's range and step. 1 = the voice's normal speed. */
+export const SPEECH_RATE = { min: 0.5, max: 1.5, step: 0.1, default: 1 } as const;
 
-export const SPEECH_RATES = { slow: 0.7, normal: 1 } as const;
-export type SpeechRate = keyof typeof SPEECH_RATES;
+/** Speeds saved by versions that had a Slow/Normal switch. */
+const LEGACY_RATES: Record<string, number> = { slow: 0.7, normal: 1 };
 
-export interface SpeechPrefs {
-  /** Chosen voiceURI per language; missing = automatic. */
-  voices: Partial<Record<SpeechLang, string>>;
-  rate: SpeechRate;
+/** Clamp to the slider's range and snap to its step, so 0.7000001 is saved as 0.7. */
+export function clampRate(rate: number): number {
+  const { min, max, step } = SPEECH_RATE;
+  const snapped = Math.round(rate / step) * step;
+  return Math.round(Math.min(max, Math.max(min, snapped)) * 100) / 100;
 }
 
-export const DEFAULT_SPEECH_PREFS: SpeechPrefs = { voices: {}, rate: 'normal' };
+/** Device-wide reading preferences; languages and voices are set per collection. */
+export interface SpeechPrefs {
+  rate: number;
+}
+
+export const DEFAULT_SPEECH_PREFS: SpeechPrefs = { rate: SPEECH_RATE.default };
 
 /** Saved prefs merged over the defaults, dropping anything unknown. */
 export function normalizeSpeechPrefs(saved: unknown): SpeechPrefs {
-  const s = (saved && typeof saved === 'object' ? saved : {}) as Partial<SpeechPrefs>;
-  const voices: SpeechPrefs['voices'] = {};
-  if (s.voices && typeof s.voices === 'object') {
-    for (const lang of SPEECH_LANGS) {
-      const uri = s.voices[lang];
-      if (typeof uri === 'string' && uri) voices[lang] = uri;
-    }
-  }
-  const rate = typeof s.rate === 'string' && s.rate in SPEECH_RATES ? s.rate : DEFAULT_SPEECH_PREFS.rate;
-  return { voices, rate };
+  const s = (saved && typeof saved === 'object' ? saved : {}) as Record<string, unknown>;
+  const raw = typeof s.rate === 'string' ? LEGACY_RATES[s.rate] : s.rate;
+  const rate = typeof raw === 'number' && Number.isFinite(raw) ? clampRate(raw) : DEFAULT_SPEECH_PREFS.rate;
+  return { rate };
 }
 
-/** A short phrase per language for the Try button in Settings. */
-export const SAMPLE_TEXT: Record<SpeechLang, string> = {
-  'ja-JP': 'こんにちは。よろしくお願いします。',
-  'uk-UA': 'Привіт! Як справи?',
-  'en-US': 'Hello! Nice to meet you.',
-};
+/** What the speed slider reads, in English, to let you hear the new speed. */
+export const RATE_SAMPLE = { text: 'This is how fast your cards are read.', lang: 'en-US' } as const;
+
+/** What the Try button says: the language's own name ("español", "日本語"), so it works for any language. */
+export function sampleText(lang: string): string {
+  try {
+    return new Intl.DisplayNames([lang], { type: 'language' }).of(lang) ?? lang;
+  } catch {
+    return lang;
+  }
+}

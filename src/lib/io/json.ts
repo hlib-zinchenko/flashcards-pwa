@@ -1,18 +1,19 @@
-import { isPresetTagId, type Card, type Deck, type Level, type Tag } from '../types';
+import { cleanDeckSpeech, cleanLanguages, DEFAULT_COLLECTION_ID, defaultCollection } from '../collections';
+import { isPresetTagId, type Card, type Collection, type Deck, type Level, type Tag } from '../types';
 
 export const BACKUP_APP = 'flashcards-pwa';
-export const SCHEMA_VERSION = 1;
+/** 2: collections (decks belong to one; reading-aloud languages). 1 files are still read. */
+export const SCHEMA_VERSION = 2;
 
-export interface Backup {
+export interface Backup extends Library {
   app: typeof BACKUP_APP;
+  /** Version of the file as written; parseBackup keeps it so merging can treat old files differently. */
   schemaVersion: number;
   exportedAt: number;
-  decks: Deck[];
-  cards: Card[];
-  tags: Tag[];
 }
 
 export interface Library {
+  collections: Collection[];
   decks: Deck[];
   cards: Card[];
   tags: Tag[];
@@ -34,8 +35,13 @@ const str = (o: Obj, k: string, what: string): string => {
 const num = (o: Obj, k: string, fallback: number): number =>
   typeof o[k] === 'number' && Number.isFinite(o[k]) ? (o[k] as number) : fallback;
 
+export interface ParseOptions {
+  /** Name for the collection that decks from a version 1 file (before collections) are put in. */
+  defaultCollectionName?: string;
+}
+
 /** Parse and validate a backup file; missing optional fields get defaults. */
-export function parseBackup(text: string, now = Date.now()): Backup {
+export function parseBackup(text: string, now = Date.now(), opts: ParseOptions = {}): Backup {
   let raw: unknown;
   try {
     raw = JSON.parse(text);
@@ -56,11 +62,37 @@ export function parseBackup(text: string, now = Date.now()): Backup {
   });
   const tagIds = new Set(tags.map((t) => t.id));
 
+  // Before version 2 there were no collections: every deck goes into one, with no reading aloud.
+  const legacy = version < 2 || !Array.isArray(raw.collections);
+  const collections: Collection[] = legacy
+    ? raw.decks.length
+      ? [defaultCollection(opts.defaultCollectionName ?? 'My decks', now)]
+      : []
+    : (raw.collections as unknown[]).map((c, i) => {
+        const what = `Collection #${i + 1}`;
+        if (!isObj(c)) throw new BackupError(`${what} is invalid`);
+        return {
+          id: str(c, 'id', what),
+          name: str(c, 'name', what),
+          position: num(c, 'position', i),
+          languages: cleanLanguages(c.languages),
+          createdAt: num(c, 'createdAt', now),
+          updatedAt: num(c, 'updatedAt', now),
+        };
+      });
+  const collectionIds = new Set(collections.map((c) => c.id));
+
   const decks: Deck[] = raw.decks.map((d, i) => {
-    if (!isObj(d)) throw new BackupError(`Deck #${i + 1} is invalid`);
+    const what = `Deck #${i + 1}`;
+    if (!isObj(d)) throw new BackupError(`${what} is invalid`);
+    const collectionId = legacy ? DEFAULT_COLLECTION_ID : str(d, 'collectionId', what);
+    if (!collectionIds.has(collectionId)) throw new BackupError(`${what} belongs to a collection that is not in the file`);
+    const speech = legacy ? undefined : cleanDeckSpeech(d.speech);
     return {
-      id: str(d, 'id', `Deck #${i + 1}`),
-      name: str(d, 'name', `Deck #${i + 1}`),
+      id: str(d, 'id', what),
+      name: str(d, 'name', what),
+      collectionId,
+      ...(speech ? { speech } : {}),
       position: num(d, 'position', i),
       createdAt: num(d, 'createdAt', now),
       updatedAt: num(d, 'updatedAt', now),
@@ -93,12 +125,14 @@ export function parseBackup(text: string, now = Date.now()): Backup {
     };
   });
 
-  return { app: BACKUP_APP, schemaVersion: version, exportedAt: num(raw, 'exportedAt', now), decks, cards, tags };
+  return { app: BACKUP_APP, schemaVersion: version, exportedAt: num(raw, 'exportedAt', now), collections, decks, cards, tags };
 }
 
 /**
  * Records to write when merging a backup into the local library.
- * Decks and cards: insert if missing, overwrite if the backup copy is newer.
+ * Collections, decks and cards: insert if missing, overwrite if the backup copy is newer.
+ * A version 1 file has no collections: its decks keep the collection (and reading aloud) they have
+ * here, and only decks new to this device go into the default collection.
  * Tags: keep local ones; a backup tag with the same name as a local tag
  * (different id) is mapped onto the local tag.
  */
@@ -131,5 +165,18 @@ export function planMerge(local: Library, incoming: Backup): Library {
     tags: [...new Set(c.tags.map((t) => tagRemap.get(t) ?? t))],
   }));
 
-  return { decks: newer(incoming.decks, local.decks), cards: newer(remapped, local.cards), tags };
+  let decks = newer(incoming.decks, local.decks);
+  let collections = newer(incoming.collections, local.collections);
+  if (incoming.schemaVersion < 2) {
+    const localDecks = new Map(local.decks.map((d) => [d.id, d]));
+    decks = decks.map((d) => {
+      const cur = localDecks.get(d.id);
+      return cur ? { ...d, collectionId: cur.collectionId, ...(cur.speech ? { speech: cur.speech } : {}) } : d;
+    });
+    const hasDefault = local.collections.some((c) => c.id === DEFAULT_COLLECTION_ID);
+    const needsDefault = decks.some((d) => d.collectionId === DEFAULT_COLLECTION_ID);
+    collections = !hasDefault && needsDefault ? incoming.collections : [];
+  }
+
+  return { collections, decks, cards: newer(remapped, local.cards), tags };
 }
