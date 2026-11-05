@@ -338,6 +338,12 @@ h3 {
   box-shadow: 0 3px 0 var(--surface-edge);
 }
 
+/* A plain button on a paper panel or dialog sheet would be paper on paper; give it a tinted tile instead. */
+:is(.panel, dialog) .btn:not(.btn-primary, .btn-mint, .btn-destructive, .btn-ghost) {
+  --tile: var(--accent-soft);
+  --tile-edge: var(--accent-edge);
+}
+
 /* Keyboard focus: one ring for buttons, chips, links and other controls. */
 :where(button, a, summary, [tabindex]):focus-visible {
   outline: 2.5px solid var(--text);
@@ -404,12 +410,10 @@ textarea.input {
   align-items: center;
   gap: 6px;
   min-height: 38px;
-  margin-bottom: 3px;
   padding: 0 14px;
   border: 0;
   border-radius: 999px;
   background: var(--surface);
-  box-shadow: 0 3px 0 var(--surface-edge);
   color: var(--text);
   font-size: 0.9rem;
   font-weight: 600;
@@ -418,7 +422,6 @@ textarea.input {
 }
 .chip[aria-pressed='true'] {
   background: var(--primary);
-  box-shadow: 0 3px 0 var(--primary-edge);
   color: var(--on-primary);
 }
 .chip .count {

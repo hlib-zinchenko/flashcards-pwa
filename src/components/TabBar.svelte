@@ -16,7 +16,8 @@
   const active = $derived(router.route.name === 'deck' ? 'decks' : router.route.name);
 </script>
 
-<!-- Floating card-stock pill. The current tab grows to show its label; the others show only their icon. -->
+<!-- Floating card-stock pill. Icons only, in equal fixed slots, so nothing moves when the tab changes;
+     each screen's heading says where you are. -->
 <nav class="tabbar">
   <div class="pill">
     {#each tabs as tab (tab.name)}
@@ -25,14 +26,13 @@
         href={href(tab.path)}
         class:active={on}
         aria-current={on ? 'page' : undefined}
-        aria-label={on ? undefined : tab.label()}
-        title={on ? undefined : tab.label()}
+        aria-label={tab.label()}
+        title={tab.label()}
       >
         <span class="icon">
-          <Icon name={tab.icon} size={20} />
+          <Icon name={tab.icon} size={22} />
           {#if tab.name === 'settings' && nudge}<span class="dot" title={t('nav.backupDue')}></span>{/if}
         </span>
-        {#if on}<span class="label">{tab.label()}</span>{/if}
         {#if tab.name === 'settings' && nudge}<span class="visually-hidden">{t('nav.backupDue')}</span>{/if}
       </a>
     {/each}
@@ -64,23 +64,17 @@
   }
   a {
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    min-width: 56px;
     height: 44px;
-    padding: 0 16px;
     border-radius: 999px;
     color: var(--on-nav);
-    font-size: 0.9rem;
-    font-weight: 700;
     text-decoration: none;
-    white-space: nowrap;
   }
   a.active {
     background: var(--pill);
     color: var(--on-pill);
-    padding: 0 18px 0 16px;
   }
   .icon {
     position: relative;

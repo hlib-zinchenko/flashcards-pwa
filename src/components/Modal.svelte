@@ -98,6 +98,12 @@
   footer :global(.btn) {
     flex: 1;
   }
+  /* An icon-only delete button stays square beside the labelled ones. */
+  footer :global(.btn.icon-only) {
+    flex: none;
+    width: 52px;
+    padding: 0;
+  }
   :global(html:has(dialog[open])) {
     overflow: hidden;
   }

@@ -11,10 +11,12 @@
   import { allTags } from '../lib/live';
   import { loadPref, savePref } from '../lib/prefs';
   import { gradeFields } from '../lib/learning';
-  import { gradeCard, restoreGrade, updateCard, type CardInput } from '../lib/repo/cards';
+  import { deleteCard, gradeCard, restoreCard, restoreGrade, updateCard, type CardInput } from '../lib/repo/cards';
   import { navigate } from '../lib/router.svelte';
   import { buildPool, Session, sortCards, summarize, type Summary } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
+  import { showToast } from '../lib/toast.svelte';
+  import { askConfirm } from '../lib/confirm.svelte';
   import type { Card, Level } from '../lib/types';
 
   const cfg = testState.config;
@@ -38,6 +40,8 @@
   let editOpen = $state(false);
   let showGestures = $state(!loadPref('gestureHintSeen', false));
   let swipeCard: SwipeCard | undefined = $state();
+  /** The current card is flying off; the cards below move up one place. */
+  let advancing = $state(false);
 
   const tagById = $derived(new Map(($allTags ?? []).map((tag) => [tag.id, tag])));
 
@@ -53,6 +57,11 @@
   const canUndo = $derived.by(() => {
     version;
     return session?.canUndo ?? false;
+  });
+  /** Positions (in answer order) of the blank cards waiting under the current one, deepest first. */
+  const waiting = $derived.by(() => {
+    const n = Math.min(2, progress.total - progress.done - 1);
+    return Array.from({ length: Math.max(0, n) }, (_, i) => progress.answered + n - i);
   });
   const missedCards = $derived(missedIds.map((id) => cards.get(id)).filter((c) => !!c));
   const promptOf = (c: Card) => (cfg.direction === 'front' ? c.front : c.back);
@@ -112,6 +121,7 @@
       version++;
       if (session.done) finish();
     } finally {
+      advancing = false;
       busy = false;
     }
   }
@@ -164,6 +174,23 @@
     const updated = await db.cards.get(current.id);
     if (updated) cards.set(updated.id, updated);
     editOpen = false;
+  }
+
+  /** Delete a card that doesn't belong, here and in its deck. Undo puts it back in the deck, not in this test. */
+  async function removeCurrent() {
+    if (!session || !current || busy) return;
+    const id = current.id;
+    const ok = await askConfirm({ title: t('card.delete'), message: t('card.deleteConfirm', { name: current.front || current.back }), confirmLabel: t('common.delete') });
+    if (!ok || !session || session.current !== id) return;
+    editOpen = false;
+    const removed = await deleteCard(id);
+    session.remove(id);
+    gradedBefore = [];
+    startLevels.delete(id);
+    cards.delete(id);
+    version++;
+    if (removed) showToast(t('card.deleted'), 6000, { label: t('common.undo'), run: () => restoreCard(removed) });
+    if (session.done) finish();
   }
 
   function dismissGestures() {
@@ -285,10 +312,13 @@
     </header>
 
     <main class="stage">
-      <!-- The cards still waiting, peeking out from under the current one. -->
-      {#if progress.total - progress.done > 1}<div class="ghost g1" aria-hidden="true"></div>{/if}
-      {#if progress.total - progress.done > 2}<div class="ghost g2" aria-hidden="true"></div>{/if}
-      {#key progress.answered}
+      <!-- The cards still waiting, peeking out from under the current one. When it flies off,
+           the next one moves into its place and the new card takes over from it. -->
+      {#each waiting as pos (pos)}
+        {@const depth = pos - progress.answered - (advancing ? 1 : 0)}
+        <div class="ghost tone{pos % 3}" class:d0={depth === 0} class:d1={depth === 1} class:d2={depth >= 2} style:--tilt={pos % 2 ? 1 : -1} aria-hidden="true"></div>
+      {/each}
+      {#key `${progress.answered}:${current.id}`}
         <SwipeCard
           bind:this={swipeCard}
           bind:flipped
@@ -296,7 +326,9 @@
           {answer}
           notes={current.notes}
           {tagLabels}
+          tone={progress.answered % 3}
           ongrade={grade}
+          onleave={() => (advancing = true)}
           onedit={() => (editOpen = true)}
         />
       {/key}
@@ -339,6 +371,9 @@
     {/key}
   {/if}
   {#snippet footer()}
+    <button class="btn btn-danger icon-only" type="button" onclick={removeCurrent} aria-label={t('card.delete')} title={t('card.delete')}>
+      <Icon name="trash" size={18} />
+    </button>
     <button class="btn" type="button" onclick={() => (editOpen = false)}>{t('common.cancel')}</button>
     <button class="btn btn-primary" type="submit" form="run-edit">{t('common.save')}</button>
   {/snippet}
@@ -395,21 +430,53 @@
     min-height: 0;
     padding: 18px 6px 22px;
   }
+  /* Same box as the card (the stage's padding), tilted and slightly smaller by depth. */
   .ghost {
     position: absolute;
-    inset: 24px 16px 26px;
+    inset: 18px 6px 22px;
     border-radius: 28px;
+    background: var(--tile);
+    box-shadow: 0 7px 0 var(--tile-edge);
     pointer-events: none;
+    transform: translate(calc(var(--tilt) * var(--shift)), var(--drop)) rotate(calc(var(--tilt) * var(--turn))) scale(var(--scale));
+    transition: transform 220ms ease-out;
+    animation: arrive 0.22s ease-out both;
   }
-  .g1 {
-    background: var(--accent-soft);
-    box-shadow: 0 6px 0 var(--accent-edge);
-    transform: rotate(3.5deg) translate(6px, 4px);
+  @keyframes arrive {
+    from {
+      opacity: 0;
+    }
   }
-  .g2 {
-    background: var(--butter);
-    box-shadow: 0 6px 0 var(--butter-edge);
-    transform: rotate(-3deg) translate(-4px, 2px);
+  .d0 {
+    --shift: 0px;
+    --drop: 0px;
+    --turn: 0deg;
+    --scale: 1;
+  }
+  .d1 {
+    --shift: 6px;
+    --drop: 4px;
+    --turn: 3.5deg;
+    --scale: 0.96;
+  }
+  .d2 {
+    --shift: 4px;
+    --drop: 2px;
+    --turn: 3deg;
+    --scale: 0.94;
+  }
+  /* Matches the tones in SwipeCard. */
+  .tone0 {
+    --tile: var(--surface);
+    --tile-edge: var(--surface-edge);
+  }
+  .tone1 {
+    --tile: var(--accent-soft);
+    --tile-edge: var(--accent-edge);
+  }
+  .tone2 {
+    --tile: var(--butter);
+    --tile-edge: var(--butter-edge);
   }
   footer {
     display: grid;
@@ -647,8 +714,10 @@
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .answer {
+    .answer,
+    .ghost {
       transition: none;
+      animation: none;
     }
   }
 </style>

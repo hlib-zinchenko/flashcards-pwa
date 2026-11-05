@@ -77,6 +77,28 @@ describe('normalizeConfig', () => {
 });
 
 describe('Session (cram)', () => {
+  it('removes a deleted card from the pool, the queue and the counts', () => {
+    const s = new Session(['a', 'b', 'c', 'd'], 'cram', { rng: () => 0 });
+    s.grade(false); // a missed, requeued right after b: b a c d
+    expect(s.current).toBe('b');
+    s.remove('a');
+    expect(s.pool).toEqual(['b', 'c', 'd']);
+    expect(s.missed.has('a')).toBe(false);
+    expect(s.canUndo).toBe(false);
+    const seen: string[] = [];
+    while (!s.done) { seen.push(s.current!); s.grade(true); }
+    expect(seen).toEqual(['b', 'c', 'd']);
+    expect(s.remaining).toBe(0);
+  });
+
+  it('moves on when the current card is removed', () => {
+    const s = new Session(['a', 'b'], 'refresh');
+    s.remove('a');
+    expect(s.current).toBe('b');
+    s.remove('b');
+    expect(s.done).toBe(true);
+  });
+
   it('shows each card once when all known', () => {
     const s = new Session(['a', 'b', 'c'], 'cram');
     const seen: string[] = [];

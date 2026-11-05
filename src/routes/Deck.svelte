@@ -95,9 +95,10 @@
     editOpen = false;
     showToast(t('card.saved'));
   }
-  // No confirmation: the toast offers Undo instead.
   async function removeEditing() {
     if (!editing) return;
+    const ok = await askConfirm({ title: t('card.delete'), message: t('card.deleteConfirm', { name: editing.front || editing.back }), confirmLabel: t('common.delete') });
+    if (!ok || !editing) return;
     const removed = await deleteCard(editing.id);
     editOpen = false;
     if (removed) showToast(t('card.deleted'), 6000, { label: t('common.undo'), run: () => restoreCard(removed) });
@@ -325,7 +326,7 @@
     </p>
   {/if}
   {#snippet footer()}
-    <button class="btn btn-danger" type="button" onclick={removeEditing} aria-label={t('card.delete')}>
+    <button class="btn btn-danger icon-only" type="button" onclick={removeEditing} aria-label={t('card.delete')}>
       <Icon name="trash" size={18} />
     </button>
     <button class="btn btn-primary" type="submit" form="edit-card">{t('common.save')}</button>

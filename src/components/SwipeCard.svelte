@@ -8,7 +8,9 @@
     notes = '',
     flipped = $bindable(false),
     tagLabels = [],
+    tone = 0,
     ongrade,
+    onleave,
     onedit,
   }: {
     prompt: string;
@@ -16,7 +18,11 @@
     notes?: string;
     flipped?: boolean;
     tagLabels?: string[];
+    /** Paper colour, 0–2; the test cycles it so each card in the stack differs from the next. */
+    tone?: number;
     ongrade: (known: boolean) => void;
+    /** Called as the card starts to fly off, so the stack below can move up. */
+    onleave?: () => void;
     onedit: () => void;
   } = $props();
 
@@ -100,6 +106,7 @@
   export function fly(known: boolean) {
     if (leaving) return;
     leaving = true;
+    onleave?.();
     dy = 0;
     dx = (known ? 1 : -1) * (window.innerWidth + width);
     setTimeout(() => ongrade(known), FLY_MS);
@@ -147,7 +154,7 @@
     if (e.key === 'Enter' && e.target === e.currentTarget) flipped = !flipped;
   }}
 >
-  <div class="flipper" class:flipped>
+  <div class="flipper tone{tone}" class:flipped>
     <div class="face front">
       <p class="text {sizeClass(prompt)}">{prompt}</p>
       {@render notesBlock()}
@@ -208,11 +215,33 @@
     padding: 28px 22px;
     overflow: hidden;
     border-radius: 28px;
-    background: var(--surface);
-    box-shadow: 0 7px 0 var(--surface-edge);
+    background: var(--tile);
+    box-shadow: 0 7px 0 var(--tile-edge);
     text-align: center;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+  }
+  /* The same tones as the waiting cards in TestRun, so the one below can take this one's place. */
+  .tone0 {
+    --tile: var(--surface);
+    --tile-edge: var(--surface-edge);
+  }
+  .tone1 {
+    --tile: var(--accent-soft);
+    --tile-edge: var(--accent-edge);
+  }
+  .tone2 {
+    --tile: var(--butter);
+    --tile-edge: var(--butter-edge);
+  }
+  /* The blank card below moved up into place; its words settle in. */
+  .face > * {
+    animation: settle 0.18s ease-out both;
+  }
+  @keyframes settle {
+    from {
+      opacity: 0;
+    }
   }
   .card:focus-visible .face {
     outline: 3px solid var(--text);
@@ -273,6 +302,9 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  .tags :global(.tag-pill) {
+    background: color-mix(in srgb, var(--text) 10%, transparent);
+  }
   .tags {
     display: flex;
     flex-wrap: wrap;
@@ -287,7 +319,7 @@
     padding: 12px 14px;
     overflow-y: auto;
     border-radius: 14px;
-    background: var(--surface-2);
+    background: color-mix(in srgb, var(--text) 7%, transparent);
     font-family: var(--font-card);
     font-size: 1rem;
     line-height: 1.5;
@@ -303,7 +335,7 @@
     padding: 7px 16px;
     border: 0;
     border-radius: 999px;
-    background: var(--accent-soft);
+    background: color-mix(in srgb, var(--text) 10%, transparent);
     color: var(--text);
     font-size: 0.875rem;
     font-weight: 700;
@@ -330,6 +362,11 @@
     background: var(--rose);
     color: var(--on-rose);
     transform: rotate(12deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .face > * {
+      animation: none;
+    }
   }
   .stamp.edit {
     left: 50%;

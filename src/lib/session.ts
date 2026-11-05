@@ -133,7 +133,7 @@ interface SessionSnapshot {
  * during a session don't need to touch it.
  */
 export class Session {
-  readonly pool: readonly string[];
+  pool: readonly string[];
   readonly mode: Mode;
   private readonly rng: Rng;
   private queue: string[];
@@ -213,6 +213,18 @@ export class Session {
       for (const id of prev[key]) this[key].add(id);
     }
     return this.current;
+  }
+
+  /**
+   * Drop a card that was deleted mid-session, as if it had never been in the pool.
+   * Answers already given still count. Undo history is cleared, since it may lead back to the card.
+   */
+  remove(id: string): void {
+    this.pool = this.pool.filter((x) => x !== id);
+    this.queue = this.queue.filter((x) => x !== id);
+    for (const set of [this.learned, this.missed, this.firstTry, this.attempted]) set.delete(id);
+    this.history = [];
+    if (this.current === id) this.advance();
   }
 
   private snapshot(): SessionSnapshot {

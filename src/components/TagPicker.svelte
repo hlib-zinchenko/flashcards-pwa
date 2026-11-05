@@ -65,6 +65,10 @@
 </div>
 
 <style>
+  /* The editor sheet is paper too; tint unselected chips so they don't vanish into it. */
+  .chip:not([aria-pressed='true'], .add) {
+    background: var(--accent-soft);
+  }
   .add {
     background: transparent;
     box-shadow: inset 0 0 0 1.5px var(--border);
