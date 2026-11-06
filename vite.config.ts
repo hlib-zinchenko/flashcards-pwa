@@ -57,6 +57,8 @@ export default defineConfig({
           },
         ],
         navigateFallback: 'index.html',
+        // Opening a file directly (sitemap.xml, robots.txt, og-image.png) must reach the network, not the app.
+        navigateFallbackDenylist: [/^[^?]*\.[a-z0-9]+(?:\?.*)?$/i],
         cleanupOutdatedCaches: true,
       },
     }),
