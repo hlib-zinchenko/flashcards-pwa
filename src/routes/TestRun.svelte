@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { SvelteMap } from 'svelte/reactivity';
   import CardEditor from '../components/CardEditor.svelte';
   import Icon from '../components/Icon.svelte';
@@ -16,7 +16,7 @@
   import { navigate } from '../lib/router.svelte';
   import { buildPool, Session, sortCards, summarize, type Summary } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
-  import { showToast } from '../lib/toast.svelte';
+  import { hideToast, showToast } from '../lib/toast.svelte';
   import { askConfirm } from '../lib/confirm.svelte';
   import type { Card, CardSide, Level } from '../lib/types';
 
@@ -34,6 +34,10 @@
   let endedEarly = $state(false);
   let remaining = $state(0);
   let missedIds = $state<string[]>([]);
+  /** The missed list on the summary starts folded so the buttons stay in view. */
+  let missedOpen = $state(false);
+  /** The summary offers Undo in a toast; it must not outlive this session. */
+  let undoToast = false;
   /** Each graded card as it was before its grade, newest last; parallel to the Session's undo history. */
   let gradedBefore: (Card | undefined)[] = [];
   /** This session already counts toward the backup reminder. */
@@ -94,7 +98,13 @@
     version++;
   }
 
+  function dropUndoToast() {
+    if (undoToast) hideToast();
+    undoToast = false;
+  }
+
   async function load(onlyIds: string[] | null = null) {
+    dropUndoToast();
     const [decks, all] = await Promise.all([db.decks.toArray(), db.cards.toArray()]);
     const deckOrder = new Map(decks.map((d) => [d.id, d.position]));
     let pool: Card[];
@@ -116,6 +126,7 @@
     testState.onlyCardIds = null;
     load(only);
   });
+  onDestroy(dropUndoToast);
 
   async function grade(known: boolean) {
     if (!session || busy || session.current === null) return;
@@ -148,6 +159,7 @@
         if (now) cards.set(before.id, { ...now, ...gradeFields(before) });
       }
       session.undo();
+      dropUndoToast();
       summary = null;
       flipped = false;
       version++;
@@ -171,6 +183,11 @@
       countSession();
     }
     missedIds = [...session.missed];
+    missedOpen = false;
+    if (!endedEarly && session.canUndo) {
+      showToast(t('summary.title'), 6000, { label: t('common.undo'), run: undo });
+      undoToast = true;
+    }
   }
 
   function resume() {
@@ -270,17 +287,6 @@
           <div><dd class="display">{summary.answered}</dd><dt>{t('summary.answered')}</dt></div>
         </dl>
 
-        {#if missedCards.length > 0}
-          <section class="missed">
-            <h2 class="section-title">{t('summary.missedCards')}</h2>
-            <ul class="panel">
-              {#each missedCards as c (c.id)}
-                <li><span class="q">{promptOf(c)}</span><span class="a">{answerOf(c)}</span></li>
-              {/each}
-            </ul>
-          </section>
-        {/if}
-
         <div class="summary-actions">
           {#if endedEarly}
             <button class="btn btn-primary btn-block" type="button" onclick={resume}>
@@ -293,19 +299,31 @@
             </button>
           {/if}
           {#if !endedEarly}
-            <button class="btn btn-block" type="button" onclick={() => load()}>
+            <button class="btn btn-block" type="button" onclick={() => session && load([...session.pool])}>
               <Icon name="reset" size={18} />{t('summary.again')}
             </button>
           {/if}
           <button class="btn btn-block" class:btn-primary={!endedEarly} type="button" onclick={() => navigate(testState.origin)}>
             {t('summary.done')}
           </button>
-          {#if !endedEarly && canUndo}
-            <button class="btn btn-ghost btn-block" type="button" onclick={undo}>
-              <Icon name="undo" size={18} />{t('run.undo')}
-            </button>
-          {/if}
         </div>
+
+        {#if missedCards.length > 0}
+          <section class="missed">
+            <button class="missed-toggle panel" type="button" aria-expanded={missedOpen} onclick={() => (missedOpen = !missedOpen)}>
+              <span>{t('summary.missedCards')}</span>
+              <span class="missed-count">{missedCards.length}</span>
+              <span class="chevron" class:open={missedOpen}><Icon name="down" size={18} /></span>
+            </button>
+            {#if missedOpen}
+              <ul class="panel">
+                {#each missedCards as c (c.id)}
+                  <li><span class="q">{promptOf(c)}</span><span class="a">{answerOf(c)}</span></li>
+                {/each}
+              </ul>
+            {/if}
+          </section>
+        {/if}
       </div>
     </div>
   {:else if current}
@@ -630,6 +648,37 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
+  .missed {
+    display: grid;
+    gap: 10px;
+  }
+  .missed-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 50px;
+    padding: 0 16px;
+    border: 0;
+    color: var(--text);
+    font: inherit;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+  }
+  .missed-count {
+    margin-left: auto;
+    color: var(--muted-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .chevron {
+    display: inline-flex;
+    color: var(--muted-2);
+    transition: transform 0.15s;
+  }
+  .chevron.open {
+    transform: rotate(180deg);
+  }
   .missed ul {
     margin: 0;
     padding: 0;
@@ -649,7 +698,9 @@
   .missed .q {
     font-family: var(--font-card);
     font-size: 1.15rem;
-    font-weight: 700;
+    /* BIZ UDPGothic Bold (the only Japanese weight loaded) looks about as heavy as Onest 500;
+       a bolder weight made Cyrillic prompts stand out next to Japanese ones. */
+    font-weight: 500;
   }
   .missed .a {
     color: var(--muted-2);

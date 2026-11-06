@@ -28,6 +28,8 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    /* Centred with left: 50%, so without this it shrinks to half the screen and wraps short messages. */
+    width: max-content;
     max-width: calc(100% - 32px);
     padding: 10px 16px;
     border-radius: 999px;

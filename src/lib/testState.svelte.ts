@@ -23,6 +23,13 @@ export function startSession(origin: string): void {
   navigate('/test/run');
 }
 
+/** Open the test setup with these decks selected, keeping the other saved settings. */
+export function openSetup(deckIds: readonly string[]): void {
+  testState.config.deckIds = [...deckIds];
+  saveTestConfig();
+  navigate('/test');
+}
+
 /** Start a session right away on these decks and levels, keeping the other saved settings. */
 export function startQuick(deckIds: readonly string[], levels?: readonly Level[], origin = '/'): void {
   Object.assign(testState.config, quickConfig($state.snapshot(testState.config), deckIds, levels));

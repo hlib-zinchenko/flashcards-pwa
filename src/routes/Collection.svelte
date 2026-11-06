@@ -16,7 +16,7 @@
   import { deleteCollection, renameCollection } from '../lib/repo/collections';
   import { createDeck } from '../lib/repo/decks';
   import { href, lastCollection, navigate, rememberCollection } from '../lib/router.svelte';
-  import { startQuick } from '../lib/testState.svelte';
+  import { openSetup, startQuick } from '../lib/testState.svelte';
   import { showToast } from '../lib/toast.svelte';
   import type { Card } from '../lib/types';
 
@@ -118,7 +118,7 @@
         <LevelBar counts={levelCounts(cards)} />
         <span class="muted small">{t('collection.decks', { n: decks.length })} · {t('decks.cards', { n: cards.length })}</span>
       </div>
-      <button class="btn btn-primary" type="button" onclick={() => startQuick(deckIds, undefined, origin)} disabled={cards.length === 0}>
+      <button class="btn btn-primary" type="button" onclick={() => openSetup(deckIds)} disabled={cards.length === 0}>
         <Icon name="play" size={18} />{t('deck.study')}
       </button>
     </div>

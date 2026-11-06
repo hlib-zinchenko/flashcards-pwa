@@ -15,7 +15,7 @@
   import { levelCounts } from '../lib/learning';
   import { allCollections, allDecks, allTags } from '../lib/live';
   import { addCard, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
-  import { deleteDeck, moveDeck, renameDeck, setDeckSpeech } from '../lib/repo/decks';
+  import { deleteDeck, moveDeck, renameDeck, setDeckSpeech, swapDeckSides } from '../lib/repo/decks';
   import { sideSpeech } from '../lib/collections';
   import { href, navigate } from '../lib/router.svelte';
   import { quickConfig } from '../lib/session';
@@ -134,6 +134,14 @@
     if (!ok) return;
     await resetDeckProgress(id);
     showToast(t('deck.progressReset'));
+  }
+
+  async function swapSides() {
+    menuOpen = false;
+    const ok = await askConfirm({ title: t('deck.swapSides'), message: t('deck.swapConfirm'), confirmLabel: t('deck.swap') });
+    if (!ok) return;
+    await swapDeckSides(id);
+    showToast(t('deck.swapped'));
   }
 
   async function exportCsv() {
@@ -373,6 +381,9 @@
         <Icon name="right" size={18} />{t('deck.move')}
       </button>
     {/if}
+    <button class="btn" type="button" onclick={swapSides} disabled={!$cards?.length}>
+      <Icon name="flip" size={18} />{t('deck.swapSides')}
+    </button>
     <button class="btn" type="button" onclick={importCsv}><Icon name="upload" size={18} />{t('deck.importCsv')}</button>
     <button class="btn" type="button" onclick={exportCsv} disabled={!$cards?.length}>
       <Icon name="download" size={18} />{t('deck.exportCsv')}

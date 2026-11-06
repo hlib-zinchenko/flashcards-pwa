@@ -1,6 +1,6 @@
 /** Pure helpers for collections and the languages their decks are read aloud in. */
 import { normLang, type VoiceLike } from './speech';
-import type { CardSide, Collection, CollectionLanguage, Deck } from './types';
+import type { CardSide, Collection, CollectionLanguage, Deck, DeckSpeech } from './types';
 
 /** Id of the collection that decks from before collections existed are put in. */
 export const DEFAULT_COLLECTION_ID = 'default';
@@ -30,6 +30,14 @@ export function canonicalLang(lang: string): string {
  * How a card side of this deck is read aloud: the side's language with the collection's voice for it,
  * or null when the side is off or its language is no longer one of the collection's.
  */
+/** A deck's reading-aloud languages after its card sides are swapped: each language follows its words. */
+export function swappedSpeech(speech: DeckSpeech | undefined): DeckSpeech {
+  const out: DeckSpeech = {};
+  if (speech?.back) out.front = speech.back;
+  if (speech?.front) out.back = speech.front;
+  return out;
+}
+
 export function sideSpeech(deck: Pick<Deck, 'speech'>, collection: Pick<Collection, 'languages'> | undefined, side: CardSide): CollectionLanguage | null {
   const lang = deck.speech?.[side];
   if (!lang || !collection) return null;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canonicalLang, cleanDeckSpeech, decksHome, languageOptions, sideSpeech } from '../src/lib/collections';
+import { canonicalLang, cleanDeckSpeech, decksHome, languageOptions, sideSpeech, swappedSpeech } from '../src/lib/collections';
 import type { VoiceLike } from '../src/lib/speech';
 
 const collection = { languages: [{ lang: 'ja-JP', voiceURI: 'Kyoko' }, { lang: 'uk-UA' }] };
@@ -65,4 +65,10 @@ describe('decksHome', () => {
     expect(decksHome(null)).toBe('/');
     expect(decksHome('gone', new Set(['k1']))).toBe('/');
   });
+});
+
+describe('swappedSpeech', () => {
+  it('moves each language to the other side', () => expect(swappedSpeech({ front: 'ja', back: 'uk' })).toEqual({ front: 'uk', back: 'ja' }));
+  it('keeps an unread side unread', () => expect(swappedSpeech({ front: 'ja' })).toEqual({ back: 'ja' }));
+  it('handles a deck that never set it', () => expect(swappedSpeech(undefined)).toEqual({}));
 });

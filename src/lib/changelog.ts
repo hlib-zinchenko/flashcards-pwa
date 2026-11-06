@@ -10,6 +10,23 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.9.0',
+    en: [
+      'After a test, the buttons come first; tap “Missed cards” to see the list.',
+      '“Same cards again” repeats exactly the cards you just studied.',
+      'Undo the last answer from the message that appears when a test ends.',
+      'Study in a collection opens the test setup with its decks selected.',
+      'Swap front and back for a whole deck: ⋯ → Swap front and back. Progress is kept.',
+    ],
+    uk: [
+      'Після тесту кнопки йдуть першими; натисніть «Картки з помилками», щоб побачити список.',
+      '«Ці ж картки ще раз» повторює саме ті картки, які ви щойно вчили.',
+      'Скасувати останню відповідь можна в повідомленні, що з’являється в кінці тесту.',
+      '«Вчити» в колекції відкриває налаштування тесту з її колодами.',
+      'Лицьову і зворотну сторону можна поміняти для всієї колоди: ⋯ → Поміняти сторони. Прогрес зберігається.',
+    ],
+  },
+  {
     version: '0.8.0',
     en: [
       'The app now speaks 11 languages: English, Ukrainian, Spanish, German, French, Japanese, Portuguese, Italian, Turkish, Dutch and Chinese.',
@@ -37,17 +54,6 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Читання вголос налаштовується в колекції: додайте мови й голоси через ⚙.',
       'Потім у кожній колоді (⋯ → Читання вголос) виберіть мову лицьового та зворотного боку. Доти картки не читаються.',
       'Швидкість у Налаштуваннях тепер повзунок; відпустіть його, щоб почути приклад англійською.',
-    ],
-  },
-  {
-    version: '0.6.0',
-    en: [
-      'Hear a card: tap 🔊 on either side during a test (or press S). Works offline.',
-      'Pick a voice for each language and the speed in Settings → Reading aloud.',
-    ],
-    uk: [
-      'Картку можна послухати: натисніть 🔊 на будь-якому боці під час тесту (або S). Працює офлайн.',
-      'Голос для кожної мови та швидкість можна вибрати в Налаштування → Читання вголос.',
     ],
   },
 ];

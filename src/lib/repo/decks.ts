@@ -1,3 +1,4 @@
+import { swappedSpeech } from '../collections';
 import { db, newId } from '../db';
 import type { DeckSpeech } from '../types';
 
@@ -24,6 +25,20 @@ export async function setDeckSpeech(id: string, speech: DeckSpeech): Promise<voi
   if (speech.front) clean.front = speech.front;
   if (speech.back) clean.back = speech.back;
   await db.decks.update(id, { speech: clean, updatedAt: Date.now() });
+}
+
+/** Swap front and back on every card in the deck, with the side languages; progress is kept. */
+export async function swapDeckSides(id: string): Promise<void> {
+  const now = Date.now();
+  await db.transaction('rw', db.decks, db.cards, async () => {
+    const deck = await db.decks.get(id);
+    if (!deck) return;
+    await db.cards.where('deckId').equals(id).modify((c) => {
+      [c.front, c.back] = [c.back, c.front];
+      c.updatedAt = now;
+    });
+    await db.decks.update(id, { speech: swappedSpeech(deck.speech), updatedAt: now });
+  });
 }
 
 export async function deleteDeck(id: string): Promise<void> {
