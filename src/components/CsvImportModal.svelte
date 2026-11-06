@@ -1,6 +1,6 @@
 <script lang="ts">
   import { t } from '../lib/i18n/index.svelte';
-  import { parseCsv } from '../lib/io/csv';
+  import { groupByDeck, parseCsv } from '../lib/io/csv';
   import { addCards } from '../lib/repo/cards';
   import { createDeck } from '../lib/repo/decks';
   import { normalizeTagName, resolveTagNames } from '../lib/repo/tags';
@@ -18,7 +18,7 @@
     open?: boolean;
     text: string;
     fileName: string;
-    /** Import into this deck; when absent a new deck is created. */
+    /** Import into this deck; when absent new decks are created (one per `deck` column value). */
     deckId?: string;
     /** Collection a new deck is created in (needed when deckId is absent). */
     collectionId?: string;
@@ -38,6 +38,9 @@
   });
 
   const parsed = $derived(parseCsv(text, { header }));
+  // A collection file names a deck per row; importing into a deck ignores those names.
+  const groups = $derived(deckId ? null : groupByDeck(parsed.rows, deckName.trim() || fileName));
+  const multi = $derived(!!groups && parsed.rows.some((r) => r.deck));
   const separator = $derived(
     parsed.delimiter === '\t' ? t('csv.tab') : parsed.delimiter === ';' ? t('csv.semicolon') : t('csv.comma'),
   );
@@ -46,20 +49,24 @@
     if (!parsed.rows.length || busy) return;
     busy = true;
     try {
-      const target = deckId ?? (await createDeck(deckName.trim() || fileName, collectionId!));
       const tagIds = await resolveTagNames(parsed.rows.flatMap((r) => r.tags));
-      await addCards(
-        target,
-        parsed.rows.map((r) => ({
-          front: r.front,
-          back: r.back,
-          notes: r.notes,
-          tags: r.tags.map((name) => tagIds.get(normalizeTagName(name))!).filter(Boolean),
-        })),
-      );
+      const targets = deckId ? [{ id: deckId, rows: parsed.rows }] : [];
+      for (const group of groups ?? []) targets.push({ id: await createDeck(group.name, collectionId!), rows: group.rows });
+      for (const target of targets) {
+        await addCards(
+          target.id,
+          target.rows.map((r) => ({
+            front: r.front,
+            back: r.back,
+            notes: r.notes,
+            tags: r.tags.map((name) => tagIds.get(normalizeTagName(name))!).filter(Boolean),
+          })),
+        );
+      }
       showToast(t('csv.imported', { n: parsed.rows.length }));
       open = false;
-      onimported?.(target);
+      // Several decks: stay where the user is, so they see them all.
+      if (targets.length === 1) onimported?.(targets[0].id);
     } finally {
       busy = false;
     }
@@ -68,7 +75,7 @@
 
 <Modal bind:open title={t('csv.title')}>
   <p class="muted small hint">{t('csv.formatHint')}</p>
-  {#if !deckId}
+  {#if !deckId && !multi}
     <label class="field">
       <span>{t('deck.name')}</span>
       <input class="input" bind:value={deckName} maxlength="120" />
@@ -80,6 +87,7 @@
   </label>
   <p class="meta">
     <strong>{t('csv.found', { n: parsed.rows.length })}</strong>
+    {#if multi && groups}<span class="muted"> · {t('collection.decks', { n: groups.length })}</span>{/if}
     <span class="muted"> · {t('csv.separator')}: {separator}</span>
     {#if parsed.skipped}<span class="muted"> · {t('csv.skipped', { n: parsed.skipped })}</span>{/if}
   </p>
@@ -89,6 +97,7 @@
         <div class="row">
           <span>{row.front}</span>
           <span>{row.back}</span>
+          {#if multi}<span class="deck muted small">{row.deck ?? deckName}</span>{/if}
           {#if row.tags.length}<span class="tags">{#each row.tags as tag (tag)}<span class="tag-pill">{tag}</span> {/each}</span>{/if}
         </div>
       {/each}
@@ -142,7 +151,8 @@
   .row:last-child {
     border-bottom: 0;
   }
-  .tags {
+  .tags,
+  .deck {
     grid-column: 1 / -1;
   }
   .more {

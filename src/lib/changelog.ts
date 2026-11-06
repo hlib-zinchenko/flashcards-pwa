@@ -10,6 +10,17 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.11.0',
+    en: [
+      'Share a deck or a whole collection as a CSV file, straight to Telegram or any other app: tap the share button at the top.',
+      'Importing a shared collection file into a collection recreates its decks.',
+    ],
+    uk: [
+      'Колодою чи цілою колекцією можна поділитися CSV-файлом, одразу в Telegram чи будь-який інший застосунок: кнопка «Поділитися» вгорі.',
+      'Імпорт файлу колекції в колекцію відтворює всі її колоди.',
+    ],
+  },
+  {
     version: '0.10.0',
     en: [
       'Clearer colours: what you pick is violet, and the main button stands out.',
@@ -39,19 +50,6 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Скасувати останню відповідь можна в повідомленні, що з’являється в кінці тесту.',
       '«Вчити» в колекції відкриває налаштування тесту з її колодами.',
       'Лицьову і зворотну сторону можна поміняти для всієї колоди: ⋯ → Поміняти сторони. Прогрес зберігається.',
-    ],
-  },
-  {
-    version: '0.8.0',
-    en: [
-      'The app now speaks 11 languages: English, Ukrainian, Spanish, German, French, Japanese, Portuguese, Italian, Turkish, Dutch and Chinese.',
-      'Pick yours in Settings → Language, now a drop-down list.',
-      'This sheet keeps the latest releases and links to the full history.',
-    ],
-    uk: [
-      'Застосунок тепер 11 мовами: англійська, українська, іспанська, німецька, французька, японська, португальська, італійська, турецька, нідерландська та китайська.',
-      'Обирайте мову в Налаштування → Мова, тепер це випадний список.',
-      'Це вікно зберігає останні випуски й має посилання на повну історію.',
     ],
   },
 ];

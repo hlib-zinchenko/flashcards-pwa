@@ -10,8 +10,8 @@
   import TopBar from '../components/TopBar.svelte';
   import { db } from '../lib/db';
   import { languageName, levelLabel, sortTags, t, tagLabel } from '../lib/i18n/index.svelte';
-  import { toCsv } from '../lib/io/csv';
-  import { pickFile, safeFileName, saveFile } from '../lib/io/file';
+  import { cardRows, toCsv } from '../lib/io/csv';
+  import { pickFile, safeFileName, shareFile } from '../lib/io/file';
   import { levelCounts } from '../lib/learning';
   import { allCollections, allDecks, allTags } from '../lib/live';
   import { addCard, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
@@ -144,15 +144,11 @@
     showToast(t('deck.swapped'));
   }
 
-  async function exportCsv() {
+  async function shareCsv() {
     menuOpen = false;
-    const rows = ($cards ?? []).map((c) => ({
-      front: c.front,
-      back: c.back,
-      tags: c.tags.map((tid) => tagById.get(tid)).filter((tag) => !!tag).map((tag) => tag.name),
-      notes: c.notes ?? '',
-    }));
-    await saveFile(`${safeFileName($deck?.name ?? 'deck')}.csv`, toCsv(rows), 'text/csv');
+    if (!$deck || !$cards?.length) return;
+    const result = await shareFile(`${safeFileName($deck.name)}.csv`, toCsv(cardRows($cards, tagById)), 'text/csv', $deck.name);
+    if (result === 'downloaded') showToast(t('share.downloaded'));
   }
 
   async function importCsv() {
@@ -197,6 +193,11 @@
 <TopBar title={$deck?.name ?? ''} back={href($deck ? `/collection/${$deck.collectionId}` : '/')}>
   {#snippet actions()}
     {#if $deck}
+      {#if $cards?.length}
+        <button class="icon-btn" type="button" onclick={shareCsv} aria-label={t('deck.share')} title={t('deck.share')}>
+          <Icon name="share" size={19} />
+        </button>
+      {/if}
       <button class="icon-btn" type="button" onclick={() => (menuOpen = true)} aria-label={t('common.more')}>
         <Icon name="more" />
       </button>
@@ -384,9 +385,9 @@
     <button class="btn" type="button" onclick={swapSides} disabled={!$cards?.length}>
       <Icon name="flip" size={18} />{t('deck.swapSides')}
     </button>
-    <button class="btn" type="button" onclick={importCsv}><Icon name="upload" size={18} />{t('deck.importCsv')}</button>
-    <button class="btn" type="button" onclick={exportCsv} disabled={!$cards?.length}>
-      <Icon name="download" size={18} />{t('deck.exportCsv')}
+    <button class="btn" type="button" onclick={importCsv}><Icon name="fileImport" size={18} />{t('deck.importCsv')}</button>
+    <button class="btn" type="button" onclick={shareCsv} disabled={!$cards?.length}>
+      <Icon name="share" size={18} />{t('deck.share')}
     </button>
     <button class="btn" type="button" onclick={reset} disabled={!$cards?.length}>
       <Icon name="reset" size={18} />{t('deck.resetProgress')}

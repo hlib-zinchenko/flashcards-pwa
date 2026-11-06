@@ -10,7 +10,8 @@
   import { askConfirm } from '../lib/confirm.svelte';
   import { db } from '../lib/db';
   import { languageName, t } from '../lib/i18n/index.svelte';
-  import { pickFile } from '../lib/io/file';
+  import { cardRows, toCsv } from '../lib/io/csv';
+  import { pickFile, safeFileName, shareFile } from '../lib/io/file';
   import { levelCounts } from '../lib/learning';
   import { allCards, allDecks } from '../lib/live';
   import { deleteCollection, renameCollection } from '../lib/repo/collections';
@@ -72,6 +73,15 @@
     csvOpen = true;
   }
 
+  async function share() {
+    if (!$collection || !cards.length) return;
+    // Read tags here: a store first touched in a click handler is still empty.
+    const tagById = new Map((await db.tags.toArray()).map((tag) => [tag.id, tag]));
+    const rows = decks.flatMap((d) => cardRows([...(byDeck.get(d.id) ?? [])].sort((a, b) => a.position - b.position), tagById, d.name));
+    const result = await shareFile(`${safeFileName($collection.name)}.csv`, toCsv(rows, { withDeck: true }), 'text/csv', $collection.name);
+    if (result === 'downloaded') showToast(t('share.downloaded'));
+  }
+
   async function rename(name: string) {
     await renameCollection(id, name);
     renaming = false;
@@ -96,8 +106,13 @@
 <TopBar title={$collection?.name ?? ''} back={href('/')}>
   {#snippet actions()}
     {#if $collection}
+      {#if cards.length}
+        <button class="icon-btn" type="button" onclick={share} aria-label={t('collection.share')} title={t('collection.share')}>
+          <Icon name="share" size={19} />
+        </button>
+      {/if}
       <button class="icon-btn" type="button" onclick={importCsv} aria-label={t('decks.importCsv')} title={t('decks.importCsv')}>
-        <Icon name="upload" size={19} />
+        <Icon name="fileImport" size={19} />
       </button>
       <button class="icon-btn" type="button" onclick={() => (creating = true)} aria-label={t('decks.new')} title={t('decks.new')}>
         <Icon name="plus" size={21} />
@@ -140,7 +155,7 @@
           <Icon name="plus" size={18} />{t('decks.new')}
         </button>
         <button class="btn btn-ghost" type="button" onclick={importCsv}>
-          <Icon name="upload" size={18} />{t('decks.importCsv')}
+          <Icon name="fileImport" size={18} />{t('decks.importCsv')}
         </button>
       </div>
     {:else}

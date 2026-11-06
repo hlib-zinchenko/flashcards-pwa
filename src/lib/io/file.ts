@@ -11,10 +11,35 @@ export async function saveFile(filename: string, content: string, mime: string):
       // fall through to a regular download
     }
   }
+  download(file);
+}
+
+export type ShareResult = 'shared' | 'cancelled' | 'downloaded';
+
+/**
+ * Hand a file to another app (Telegram, mail…) through the system share sheet, on any device that
+ * supports sharing files. Where it doesn't, the file is downloaded instead so it can be sent from there.
+ */
+export async function shareFile(filename: string, content: string, mime: string, title?: string): Promise<ShareResult> {
+  const file = new File([content], filename, { type: mime });
+  if (navigator.canShare?.({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title });
+      return 'shared';
+    } catch (e) {
+      if ((e as DOMException).name === 'AbortError') return 'cancelled';
+      // fall through to a regular download
+    }
+  }
+  download(file);
+  return 'downloaded';
+}
+
+function download(file: File): void {
   const url = URL.createObjectURL(file);
   const a = document.createElement('a');
   a.href = url;
-  a.download = filename;
+  a.download = file.name;
   document.body.append(a);
   a.click();
   a.remove();

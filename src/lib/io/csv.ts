@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import type { Card, Tag } from '../types';
 
 export interface CsvRow {
   front: string;
@@ -6,6 +7,8 @@ export interface CsvRow {
   /** Tag names (not ids) */
   tags: string[];
   notes: string;
+  /** Deck name from the optional fifth column (collection files). */
+  deck?: string;
 }
 
 export interface CsvParseResult {
@@ -57,18 +60,62 @@ export function parseCsv(text: string, opts: { header?: boolean } = {}): CsvPars
       skipped++;
       continue;
     }
-    rows.push({ front, back, tags: splitTags(cells[2] ?? ''), notes: (cells[3] ?? '').trim() });
+    const row: CsvRow = { front, back, tags: splitTags(cells[2] ?? ''), notes: (cells[3] ?? '').trim() };
+    const deck = (cells[4] ?? '').trim();
+    if (deck) row.deck = deck;
+    rows.push(row);
   }
   return { rows, delimiter: result.meta.delimiter, header, skipped };
 }
 
-/** CSV with a UTF-8 BOM so Excel detects the encoding (needed for Japanese, Cyrillic…). */
-export function toCsv(rows: readonly CsvRow[]): string {
+/**
+ * CSV with a UTF-8 BOM so Excel detects the encoding (needed for Japanese, Cyrillic…).
+ * `withDeck` adds a fifth `deck` column, used when a whole collection is exported.
+ */
+export function toCsv(rows: readonly CsvRow[], opts: { withDeck?: boolean } = {}): string {
+  const fields = ['front', 'back', 'tags', 'notes'];
+  if (opts.withDeck) fields.push('deck');
   return (
     '﻿' +
     Papa.unparse({
-      fields: ['front', 'back', 'tags', 'notes'],
-      data: rows.map((r) => [r.front, r.back, r.tags.join(TAG_SEPARATOR), r.notes]),
+      fields,
+      data: rows.map((r) => {
+        const cells = [r.front, r.back, r.tags.join(TAG_SEPARATOR), r.notes];
+        if (opts.withDeck) cells.push(r.deck ?? '');
+        return cells;
+      }),
     })
   );
+}
+
+/** Cards as CSV rows; tag ids become names (unknown ids are dropped). */
+export function cardRows(cards: readonly Card[], tagById: ReadonlyMap<string, Tag>, deck?: string): CsvRow[] {
+  return cards.map((c) => {
+    const row: CsvRow = {
+      front: c.front,
+      back: c.back,
+      tags: c.tags.flatMap((tid) => tagById.get(tid)?.name ?? []),
+      notes: c.notes ?? '',
+    };
+    if (deck) row.deck = deck;
+    return row;
+  });
+}
+
+export interface DeckGroup {
+  name: string;
+  rows: CsvRow[];
+}
+
+/** Split rows into decks by their `deck` name, in first-seen order. Rows without one go to `fallback`. */
+export function groupByDeck(rows: readonly CsvRow[], fallback: string): DeckGroup[] {
+  const groups = new Map<string, DeckGroup>();
+  for (const row of rows) {
+    const name = row.deck ?? fallback;
+    const key = name.toLowerCase();
+    const group = groups.get(key);
+    if (group) group.rows.push(row);
+    else groups.set(key, { name, rows: [row] });
+  }
+  return [...groups.values()];
 }

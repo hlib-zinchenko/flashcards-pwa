@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseCsv, splitTags, toCsv } from '../src/lib/io/csv';
+import { groupByDeck, parseCsv, splitTags, toCsv } from '../src/lib/io/csv';
 
 describe('parseCsv', () => {
   it('parses comma separated with auto header and tags', () => {
@@ -44,5 +44,33 @@ describe('toCsv', () => {
     const text = toCsv(rows);
     expect(text.startsWith('﻿')).toBe(true);
     expect(parseCsv(text).rows).toEqual(rows);
+  });
+});
+
+describe('collection CSV', () => {
+  it('round-trips the deck column', () => {
+    const rows = [
+      { front: '水', back: 'вода', tags: ['N5'], notes: '', deck: 'Слова, базові' },
+      { front: 'a', back: 'b', tags: [], notes: 'n', deck: 'Verbs "go"' },
+    ];
+    const text = toCsv(rows, { withDeck: true });
+    expect(text.split('\r\n')[0]).toBe('﻿front,back,tags,notes,deck');
+    expect(parseCsv(text).rows).toEqual(rows);
+  });
+  it('leaves deck out of four-column files', () => {
+    expect(parseCsv('x,y,,').rows[0]).not.toHaveProperty('deck');
+    expect(toCsv([{ front: 'x', back: 'y', tags: [], notes: '', deck: 'D' }])).not.toContain('deck');
+  });
+});
+
+describe('groupByDeck', () => {
+  it('groups in first-seen order, case-insensitively, with a fallback', () => {
+    const r = (front: string, deck?: string) => ({ front, back: '', tags: [], notes: '', ...(deck ? { deck } : {}) });
+    const groups = groupByDeck([r('1', 'B'), r('2'), r('3', 'A'), r('4', 'b')], 'File');
+    expect(groups.map((g) => [g.name, g.rows.map((x) => x.front)])).toEqual([
+      ['B', ['1', '4']],
+      ['File', ['2']],
+      ['A', ['3']],
+    ]);
   });
 });
