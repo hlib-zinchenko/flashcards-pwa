@@ -419,14 +419,14 @@
     inset: 0;
     display: flex;
     flex-direction: column;
-    max-width: 640px;
-    margin: 0 auto;
-    padding: calc(var(--safe-top) + 8px) 16px calc(var(--safe-bottom) + 16px);
+    /* Full width so the top bar can reach both edges; the gutter keeps the content 640px wide at most. */
+    --gutter: max(16px, calc((100vw - 608px) / 2));
+    padding: calc(var(--safe-top) + 8px) var(--gutter) calc(var(--safe-bottom) + 16px);
     overflow: hidden;
     overscroll-behavior: none;
     touch-action: none;
   }
-  /* A solid bar at the top edge, like TopBar: without one, iOS 26 fades the controls into its status-bar edge effect. */
+  /* A solid bar across the top edge, like TopBar: without one, iOS 26 fades the controls into its status-bar edge effect. */
   header {
     position: sticky;
     /* Sticky measures from inside .run's padding, so this keeps it at the screen edge. */
@@ -434,8 +434,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: calc(-8px - var(--safe-top)) -16px 0;
-    padding: calc(var(--safe-top) + 8px) 16px 0;
+    margin: calc(-8px - var(--safe-top)) calc(-1 * var(--gutter)) 0;
+    padding: calc(var(--safe-top) + 8px) var(--gutter) 0;
     background: var(--bg);
   }
   .progress {

@@ -10,6 +10,11 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.11.5',
+    en: ['Buttons at the top of a test are no longer dimmed on iPad.'],
+    uk: ['Кнопки вгорі тесту більше не затінені на iPad.'],
+  },
+  {
     version: '0.11.3',
     en: [
       'Browsers that cannot read aloud now say so, instead of asking you to set up languages.',
@@ -29,17 +34,6 @@ export const CHANGELOG: ChangelogEntry[] = [
     uk: [
       'Нижня панель більше не затінює кнопку «Старт» у Тесті.',
       'Кнопки вгорі тесту більше не затінені на iPhone.',
-    ],
-  },
-  {
-    version: '0.11.1',
-    en: [
-      'Drop-down arrows have more room on computers.',
-      'Fields and buttons in collection settings stand out from the dialog in both themes.',
-    ],
-    uk: [
-      'Стрілки випадних списків мають більше місця на комп’ютері.',
-      'Поля й кнопки в налаштуваннях колекції виділяються на тлі вікна в обох темах.',
     ],
   },
 ];
