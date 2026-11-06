@@ -149,6 +149,8 @@ export const ja: Messages = {
   'test.start': '開始・{n}枚',
   'test.noCards': '一致するカードはありません',
   'test.noDecks': 'まずカードのあるデッキを作ってください。',
+  'test.noCollection': '先にコレクションを開いてください。テストは最後に開いたコレクションのデッキを使います。',
+  'test.openCollection': 'コレクションを開く',
 
   'run.know': 'わかる',
   'run.dontKnow': 'わからない',

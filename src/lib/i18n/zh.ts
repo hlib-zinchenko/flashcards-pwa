@@ -149,6 +149,8 @@ export const zh: Messages = {
   'test.start': '开始 · {n} 张卡片',
   'test.noCards': '没有匹配的卡片',
   'test.noDecks': '请先创建一个包含卡片的卡组。',
+  'test.noCollection': '请先打开一个合集。测试使用你最后打开的合集中的卡组。',
+  'test.openCollection': '打开合集',
 
   'run.know': '会',
   'run.dontKnow': '不会',

@@ -3,22 +3,22 @@
   import TopBar from '../components/TopBar.svelte';
   import { levelLabel, sortTags, t, tagLabel } from '../lib/i18n/index.svelte';
   import { allCards, allCollections, allDecks, allTags } from '../lib/live';
-  import { navigate } from '../lib/router.svelte';
-  import { matchesTags, poolSize, type Direction, type Mode, type SortMode } from '../lib/session';
+  import { href, lastCollection } from '../lib/router.svelte';
+  import { matchesTags, poolSize, scopeDeckIds, type Direction, type Mode, type SortMode } from '../lib/session';
   import { saveTestConfig, startSession, testState } from '../lib/testState.svelte';
   import { LEVELS, type Level } from '../lib/types';
 
   const cfg = testState.config;
   const QUICK_LIMITS = [10, 20, 50];
 
-  const decks = $derived($allDecks ?? []);
-  /** Decks under their collection, in collection order; empty collections are left out. */
-  const groups = $derived(
-    ($allCollections ?? [])
-      .map((collection) => ({ collection, decks: decks.filter((d) => d.collectionId === collection.id) }))
-      .filter((g) => g.decks.length > 0),
-  );
-  const cards = $derived($allCards ?? []);
+  // A test only ever uses the decks of one collection: the one opened last.
+  // undefined = still loading, null = none opened yet, or it was deleted.
+  const collection = $derived($allCollections && (($allCollections.find((c) => c.id === lastCollection.id)) ?? null));
+  const decks = $derived(collection ? ($allDecks ?? []).filter((d) => d.collectionId === collection.id) : []);
+  const cards = $derived.by(() => {
+    const ids = new Set(decks.map((d) => d.id));
+    return ($allCards ?? []).filter((c) => ids.has(c.deckId));
+  });
   const tags = $derived(sortTags($allTags ?? []));
 
   // Persist the configuration whenever it changes.
@@ -27,19 +27,18 @@
     saveTestConfig();
   });
 
-  // Drop deleted decks/tags; on first use select every deck.
+  // Drop deleted tags. On opening, keep only this collection's decks (all of them if none were chosen),
+  // once, so unticking every deck afterwards doesn't tick them all again.
   let initialized = false;
   $effect(() => {
-    if (!$allDecks || !$allTags) return;
-    const deckIds = new Set($allDecks.map((d) => d.id));
+    if (!$allDecks || !$allTags || !collection) return;
     const tagIds = new Set($allTags.map((tag) => tag.id));
-    const keptDecks = cfg.deckIds.filter((id) => deckIds.has(id));
-    if (keptDecks.length !== cfg.deckIds.length) cfg.deckIds = keptDecks;
     const keptTags = cfg.tagIds.filter((id) => tagIds.has(id));
     if (keptTags.length !== cfg.tagIds.length) cfg.tagIds = keptTags;
     if (!initialized) {
       initialized = true;
-      if (cfg.deckIds.length === 0) cfg.deckIds = $allDecks.map((d) => d.id);
+      const scoped = scopeDeckIds(cfg.deckIds, decks.map((d) => d.id));
+      if (scoped.length !== cfg.deckIds.length || scoped.some((id, i) => id !== cfg.deckIds[i])) cfg.deckIds = scoped;
     }
   });
 
@@ -94,11 +93,6 @@
     return list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
   }
 
-  const groupSelected = (ids: string[]) => ids.every((id) => cfg.deckIds.includes(id));
-  function toggleGroup(ids: string[]) {
-    cfg.deckIds = groupSelected(ids) ? cfg.deckIds.filter((id) => !ids.includes(id)) : [...new Set([...cfg.deckIds, ...ids])];
-  }
-
   const allDecksSelected = $derived(decks.length > 0 && decks.every((d) => cfg.deckIds.includes(d.id)));
 
   function start() {
@@ -123,48 +117,38 @@
 <TopBar title={t('test.title')} />
 
 <div class="page">
-  {#if $allDecks && cards.length === 0}
+  {#if collection === null}
+    <div class="empty">
+      <p class="muted">{t('test.noCollection')}</p>
+      <a class="btn btn-primary" href={href('/')}><Icon name="decks" size={18} />{t('test.openCollection')}</a>
+    </div>
+  {:else if collection && $allDecks && cards.length === 0}
     <p class="muted empty">{t('test.noDecks')}</p>
-  {:else if $allDecks}
+  {:else if collection && $allDecks}
     <section class="section">
-      <h2 class="section-title">{t('test.decks')}</h2>
-      {#snippet allChip()}
-        <button
-          type="button"
-          class="chip"
-          aria-pressed={allDecksSelected}
-          onclick={() => (cfg.deckIds = allDecksSelected ? [] : decks.map((d) => d.id))}
-        >
-          {t('common.all')}
-        </button>
-      {/snippet}
-      {#if groups.length > 1}
-        <div class="chips">{@render allChip()}</div>
-      {/if}
-      {#each groups as group (group.collection.id)}
-        {@const ids = group.decks.map((d) => d.id)}
-        <div class="group">
-          {#if groups.length > 1}
-            <button type="button" class="group-title" aria-pressed={groupSelected(ids)} onclick={() => toggleGroup(ids)}>
-              <span class="box" aria-hidden="true">{#if groupSelected(ids)}<Icon name="check" size={14} />{/if}</span>
-              {group.collection.name}
-            </button>
-          {/if}
-          <div class="chips">
-            {#if groups.length === 1 && decks.length > 1}{@render allChip()}{/if}
-            {#each group.decks as deck (deck.id)}
-              <button
-                type="button"
-                class="chip"
-                aria-pressed={cfg.deckIds.includes(deck.id)}
-                onclick={() => (cfg.deckIds = toggle(cfg.deckIds, deck.id))}
-              >
-                {deck.name} <span class="count">{deckCount.get(deck.id) ?? 0}</span>
-              </button>
-            {/each}
-          </div>
-        </div>
-      {/each}
+      <h2 class="section-title">{collection.name}</h2>
+      <div class="chips">
+        {#if decks.length > 1}
+          <button
+            type="button"
+            class="chip"
+            aria-pressed={allDecksSelected}
+            onclick={() => (cfg.deckIds = allDecksSelected ? [] : decks.map((d) => d.id))}
+          >
+            {t('common.all')}
+          </button>
+        {/if}
+        {#each decks as deck (deck.id)}
+          <button
+            type="button"
+            class="chip"
+            aria-pressed={cfg.deckIds.includes(deck.id)}
+            onclick={() => (cfg.deckIds = toggle(cfg.deckIds, deck.id))}
+          >
+            {deck.name} <span class="count">{deckCount.get(deck.id) ?? 0}</span>
+          </button>
+        {/each}
+      </div>
     </section>
 
     <section class="section">
@@ -259,7 +243,7 @@
 
 {#if $allDecks && cards.length > 0}
   <div class="start start-bar">
-    <button class="btn btn-primary btn-block" type="button" disabled={total === 0} onclick={start}>
+    <button class="btn btn-mint btn-block" type="button" disabled={total === 0} onclick={start}>
       <Icon name="play" size={18} />
       {total === 0 ? t('test.noCards') : t('test.start', { n: total })}
     </button>
@@ -267,43 +251,19 @@
 {/if}
 
 <style>
-  .group + .group,
-  .chips + .group {
-    margin-top: 12px;
-  }
-  .group-title {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0 0 8px;
-    padding: 4px 2px;
-    border: 0;
-    background: none;
-    color: var(--text);
-    font: inherit;
-    font-weight: 700;
-    font-size: 0.95rem;
-    cursor: pointer;
-  }
-  .group-title .box {
-    display: grid;
-    place-items: center;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--text);
-    border-radius: 6px;
-  }
-  .group-title[aria-pressed='true'] .box {
-    border-color: var(--selected);
-    background: var(--selected);
-    color: var(--on-selected);
-  }
   .page {
     padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 96px);
   }
   .empty {
+    display: grid;
+    justify-items: center;
+    gap: 16px;
     padding: 48px 0;
     text-align: center;
+  }
+  .empty p {
+    max-width: 32ch;
+    margin: 0;
   }
   .mode-hint {
     margin: 8px 0 0;

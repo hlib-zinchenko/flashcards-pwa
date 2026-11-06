@@ -149,6 +149,8 @@ export const tr: Messages = {
   'test.start': 'Başla · {n} kart|Başla · {n} kart',
   'test.noCards': 'Eşleşen kart yok',
   'test.noDecks': 'Önce birkaç kartlı bir deste oluşturun.',
+  'test.noCollection': 'Önce bir koleksiyon açın. Test, en son açtığınız koleksiyonun destelerini kullanır.',
+  'test.openCollection': 'Koleksiyon aç',
 
   'run.know': 'Biliyorum',
   'run.dontKnow': 'Bilmiyorum',

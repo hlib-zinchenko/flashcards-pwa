@@ -149,6 +149,8 @@ export const it: Messages = {
   'test.start': 'Inizia · {n} carta|Inizia · {n} carte',
   'test.noCards': 'Nessuna carta corrisponde',
   'test.noDecks': 'Crea prima un mazzo con qualche carta.',
+  'test.noCollection': 'Apri prima una raccolta. Un test usa i mazzi dell’ultima raccolta che hai aperto.',
+  'test.openCollection': 'Apri una raccolta',
 
   'run.know': 'So',
   'run.dontKnow': 'Non so',

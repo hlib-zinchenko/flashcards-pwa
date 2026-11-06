@@ -17,7 +17,7 @@
   import { addCard, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
   import { deleteDeck, moveDeck, renameDeck, setDeckSpeech, swapDeckSides } from '../lib/repo/decks';
   import { sideSpeech } from '../lib/collections';
-  import { href, navigate } from '../lib/router.svelte';
+  import { href, navigate, rememberCollection } from '../lib/router.svelte';
   import { quickConfig } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
   import { askConfirm } from '../lib/confirm.svelte';
@@ -186,6 +186,7 @@
   }
 
   function study() {
+    if ($deck) rememberCollection($deck.collectionId);
     Object.assign(testState.config, quickConfig($state.snapshot(testState.config), [id]));
     navigate('/test');
   }
@@ -215,7 +216,7 @@
         <LevelBar counts={levelCounts($cards)} />
         <span class="muted small">{t('decks.cards', { n: $cards.length })}</span>
       </div>
-      <button class="btn btn-primary" type="button" onclick={study} disabled={$cards.length === 0}>
+      <button class="btn btn-mint" type="button" onclick={study} disabled={$cards.length === 0}>
         <Icon name="play" size={18} />{t('deck.study')}
       </button>
     </div>

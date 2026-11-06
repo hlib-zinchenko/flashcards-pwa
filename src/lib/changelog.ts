@@ -10,6 +10,19 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.12.0',
+    en: [
+      'Test now uses the decks of the collection you opened last, never mixing collections.',
+      'The Study button on a collection is gone: use the Test tab instead.',
+      'Study, Start and Done buttons are now mint green.',
+    ],
+    uk: [
+      'Тест тепер бере колоди з колекції, яку ви відкривали останньою, і ніколи не змішує колекції.',
+      'Кнопки «Вчити» на колекції більше немає: відкрийте вкладку «Тест».',
+      'Кнопки «Вчити», «Почати» і «Готово» тепер м’ятно-зелені.',
+    ],
+  },
+  {
     version: '0.11.5',
     en: ['Buttons at the top of a test are no longer dimmed on iPad.'],
     uk: ['Кнопки вгорі тесту більше не затінені на iPad.'],
@@ -23,17 +36,6 @@ export const CHANGELOG: ChangelogEntry[] = [
     uk: [
       'Браузери, які не вміють читати вголос, тепер так і кажуть, а не пропонують налаштувати мови.',
       'Якщо браузер не дозволяє зробити сховище постійним, застосунок про це скаже.',
-    ],
-  },
-  {
-    version: '0.11.2',
-    en: [
-      'The Start button in Test is no longer dimmed by the bottom bar.',
-      'Buttons at the top of a test are no longer dimmed on iPhone.',
-    ],
-    uk: [
-      'Нижня панель більше не затінює кнопку «Старт» у Тесті.',
-      'Кнопки вгорі тесту більше не затінені на iPhone.',
     ],
   },
 ];

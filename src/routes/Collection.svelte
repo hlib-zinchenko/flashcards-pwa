@@ -17,7 +17,7 @@
   import { deleteCollection, renameCollection } from '../lib/repo/collections';
   import { createDeck } from '../lib/repo/decks';
   import { href, lastCollection, navigate, rememberCollection } from '../lib/router.svelte';
-  import { openSetup, startQuick } from '../lib/testState.svelte';
+  import { startQuick } from '../lib/testState.svelte';
   import { speechSupported } from '../lib/speech.svelte';
   import { showToast } from '../lib/toast.svelte';
   import type { Card } from '../lib/types';
@@ -134,9 +134,6 @@
         <LevelBar counts={levelCounts(cards)} />
         <span class="muted small">{t('collection.decks', { n: decks.length })} · {t('decks.cards', { n: cards.length })}</span>
       </div>
-      <button class="btn btn-primary" type="button" onclick={() => openSetup(deckIds)} disabled={cards.length === 0}>
-        <Icon name="play" size={18} />{t('deck.study')}
-      </button>
     </div>
     <button class="speech-line" type="button" onclick={() => (settingsOpen = true)}>
       <Icon name="volume" size={16} />

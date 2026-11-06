@@ -303,7 +303,7 @@
               <Icon name="reset" size={18} />{t('summary.again')}
             </button>
           {/if}
-          <button class="btn btn-block" class:btn-primary={!endedEarly} type="button" onclick={() => navigate(testState.origin)}>
+          <button class="btn btn-block" class:btn-mint={!endedEarly} type="button" onclick={() => navigate(testState.origin)}>
             {t('summary.done')}
           </button>
         </div>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPool, DEFAULT_CONFIG, filterCards, normalizeConfig, poolSize, quickConfig, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
+import { buildPool, DEFAULT_CONFIG, filterCards, normalizeConfig, poolSize, quickConfig, scopeDeckIds, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
 import type { Level } from '../src/lib/types';
 import { card, seeded } from './helpers';
 
@@ -241,4 +241,11 @@ describe('summarize', () => {
       answered: 4, known: 3, missed: 1, firstTry: 2, uniqueCards: 3, levelUps: 1, levelDowns: 1,
     });
   });
+});
+
+describe('scopeDeckIds', () => {
+  it('drops decks from other collections', () => expect(scopeDeckIds(['a1', 'b1', 'a2'], ['a1', 'a2', 'a3'])).toEqual(['a1', 'a2']));
+  it('selects the whole collection when none of its decks were chosen', () => expect(scopeDeckIds(['b1'], ['a1', 'a2'])).toEqual(['a1', 'a2']));
+  it('selects the whole collection when nothing was chosen', () => expect(scopeDeckIds([], ['a1'])).toEqual(['a1']));
+  it('keeps the selection for an empty collection', () => expect(scopeDeckIds(['b1'], [])).toEqual(['b1']));
 });

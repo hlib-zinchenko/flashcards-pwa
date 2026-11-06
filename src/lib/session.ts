@@ -103,6 +103,13 @@ export function quickConfig(
   return { ...cfg, deckIds: [...deckIds], levels: [...levels], tagIds: [], includeUntagged: false };
 }
 
+/** Narrow a deck selection to one collection's decks; select all of them when none were chosen. */
+export function scopeDeckIds(selected: readonly string[], collectionDeckIds: readonly string[]): string[] {
+  if (collectionDeckIds.length === 0) return [...selected];
+  const kept = selected.filter((id) => collectionDeckIds.includes(id));
+  return kept.length > 0 ? kept : [...collectionDeckIds];
+}
+
 /** Filter, sort, then apply the card limit. */
 export function buildPool(
   cards: readonly Card[],

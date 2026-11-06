@@ -151,6 +151,8 @@ export const en = {
   'test.start': 'Start · {n} card|Start · {n} cards',
   'test.noCards': 'No cards match',
   'test.noDecks': 'Create a deck with some cards first.',
+  'test.noCollection': 'Open a collection first. A test uses the decks of the collection you opened last.',
+  'test.openCollection': 'Open a collection',
 
   'run.know': 'Know',
   'run.dontKnow': 'Don’t know',

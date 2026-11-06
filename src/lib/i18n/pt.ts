@@ -149,6 +149,8 @@ export const pt: Messages = {
   'test.start': 'Começar · {n} cartão|Começar · {n} cartões',
   'test.noCards': 'Nenhum cartão corresponde',
   'test.noDecks': 'Primeiro crie um baralho com alguns cartões.',
+  'test.noCollection': 'Primeiro abra uma coleção. Um teste usa os baralhos da última coleção que você abriu.',
+  'test.openCollection': 'Abrir uma coleção',
 
   'run.know': 'Sei',
   'run.dontKnow': 'Não sei',

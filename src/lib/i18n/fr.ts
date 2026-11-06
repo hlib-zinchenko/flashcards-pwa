@@ -149,6 +149,8 @@ export const fr: Messages = {
   'test.start': 'Commencer · {n} carte|Commencer · {n} cartes',
   'test.noCards': 'Aucune carte ne correspond',
   'test.noDecks': 'Créez d’abord un paquet avec quelques cartes.',
+  'test.noCollection': 'Ouvrez d’abord une collection. Un test utilise les paquets de la dernière collection ouverte.',
+  'test.openCollection': 'Ouvrir une collection',
 
   'run.know': 'Je sais',
   'run.dontKnow': 'Je ne sais pas',

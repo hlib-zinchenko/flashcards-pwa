@@ -149,6 +149,8 @@ export const nl: Messages = {
   'test.start': 'Start · {n} kaart|Start · {n} kaarten',
   'test.noCards': 'Geen kaarten gevonden',
   'test.noDecks': 'Maak eerst een stapel met een paar kaarten.',
+  'test.noCollection': 'Open eerst een collectie. Een test gebruikt de stapels van de collectie die je het laatst opende.',
+  'test.openCollection': 'Collectie openen',
 
   'run.know': 'Ik weet het',
   'run.dontKnow': 'Ik weet het niet',

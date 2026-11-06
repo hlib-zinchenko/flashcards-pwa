@@ -149,6 +149,8 @@ export const de: Messages = {
   'test.start': 'Start · {n} Karte|Start · {n} Karten',
   'test.noCards': 'Keine Karte passt',
   'test.noDecks': 'Erstelle zuerst einen Stapel mit ein paar Karten.',
+  'test.noCollection': 'Öffne zuerst eine Sammlung. Ein Test nutzt die Stapel der zuletzt geöffneten Sammlung.',
+  'test.openCollection': 'Sammlung öffnen',
 
   'run.know': 'Gewusst',
   'run.dontKnow': 'Nicht gewusst',
