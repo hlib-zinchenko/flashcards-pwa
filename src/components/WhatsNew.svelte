@@ -2,7 +2,7 @@
   import { i18n, t } from '../lib/i18n/index.svelte';
   import { router } from '../lib/router.svelte';
   import { checkWhatsNew, whatsNew } from '../lib/whatsNew.svelte';
-  import type { ChangelogEntry } from '../lib/changelog';
+  import { RELEASES_URL, type ChangelogEntry } from '../lib/changelog';
   import Modal from './Modal.svelte';
 
   let open = $state(false);
@@ -29,10 +29,11 @@
     <section>
       <h3>{t('settings.version', { v: entry.version })}</h3>
       <ul>
-        {#each entry[i18n.lang] as line, i (i)}<li>{line}</li>{/each}
+        {#each ((entry as unknown as Record<string, string[] | undefined>)[i18n.lang] ?? entry.en) as line, i (i)}<li>{line}</li>{/each}
       </ul>
     </section>
   {/each}
+  <p class="history"><a href={RELEASES_URL} target="_blank" rel="noopener noreferrer">{t('whatsNew.history')}</a></p>
   {#snippet footer()}
     <button class="btn btn-primary" type="button" onclick={() => (open = false)}>{t('whatsNew.ok')}</button>
   {/snippet}
@@ -52,6 +53,10 @@
     display: grid;
     gap: 8px;
     padding-left: 1.2em;
+  }
+  .history {
+    margin-top: 16px;
+    font-size: 0.9rem;
   }
   li {
     line-height: 1.4;

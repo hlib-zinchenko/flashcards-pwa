@@ -1,11 +1,27 @@
 /**
  * In-app release notes, newest first. Shipped inside the build so they work offline and always match
  * the running version. Add an entry for each release with user-visible changes (skip ones without);
- * keep each line short, one change per line, in both languages.
+ * keep each line short, one change per line, in en and uk (other languages show the English lines).
+ * Keep only the latest MAX_ENTRIES releases: older ones live on the GitHub releases page, which the dialog links to.
  */
+export const MAX_ENTRIES = 3;
+export const RELEASES_URL = 'https://github.com/hlib-zinchenko/flashcards-pwa/releases';
 export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '0.8.0',
+    en: [
+      'The app now speaks 11 languages: English, Ukrainian, Spanish, German, French, Japanese, Portuguese, Italian, Turkish, Dutch and Chinese.',
+      'Pick yours in Settings → Language, now a drop-down list.',
+      'This sheet keeps the latest releases and links to the full history.',
+    ],
+    uk: [
+      'Застосунок тепер 11 мовами: англійська, українська, іспанська, німецька, французька, японська, португальська, італійська, турецька, нідерландська та китайська.',
+      'Обирайте мову в Налаштування → Мова, тепер це випадний список.',
+      'Це вікно зберігає останні випуски й має посилання на повну історію.',
+    ],
+  },
   {
     version: '0.7.0',
     en: [
@@ -32,30 +48,6 @@ export const CHANGELOG: ChangelogEntry[] = [
     uk: [
       'Картку можна послухати: натисніть 🔊 на будь-якому боці під час тесту (або S). Працює офлайн.',
       'Голос для кожної мови та швидкість можна вибрати в Налаштування → Читання вголос.',
-    ],
-  },
-  {
-    version: '0.5.0',
-    en: [
-      'After an update, this sheet shows what changed. You can open it again from Settings → About.',
-    ],
-    uk: [
-      'Після оновлення це вікно показує, що змінилося. Відкрити його знову можна в Налаштування → Про застосунок.',
-    ],
-  },
-  {
-    version: '0.4.0',
-    en: [
-      'Delete a card during a test: tap ✏️ (or swipe down) and use 🗑.',
-      'When you swipe a card away, the one underneath slides into its place.',
-      'All test options are always visible on the Test screen.',
-      'The bottom bar shows icons only, each in a fixed place.',
-    ],
-    uk: [
-      'Картку можна видалити під час тесту: натисніть ✏️ (або змахніть вниз) і 🗑.',
-      'Коли ви змахуєте картку, та, що під нею, плавно стає на її місце.',
-      'Усі налаштування тесту завжди видно на екрані «Тест».',
-      'Нижня панель показує лише іконки, кожну на сталому місці.',
     ],
   },
 ];

@@ -254,4 +254,5 @@ export const uk: Messages = {
 
   'whatsNew.title': 'Що нового',
   'whatsNew.ok': 'Зрозуміло',
+  'whatsNew.history': 'Повна історія змін',
 };

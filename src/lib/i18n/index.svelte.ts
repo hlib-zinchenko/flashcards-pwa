@@ -2,18 +2,53 @@ import { loadPref, savePref } from '../prefs';
 import { isPresetTagId, LEVEL_KEYS, PRESET_TAG_IDS, type Level, type PresetTagId, type Tag } from '../types';
 import { en, type MessageKey, type Messages } from './en';
 import { uk } from './uk';
+import { es } from './es';
+import { de } from './de';
+import { fr } from './fr';
+import { ja } from './ja';
+import { pt } from './pt';
+import { it } from './it';
+import { tr } from './tr';
+import { nl } from './nl';
+import { zh } from './zh';
 
-export type Lang = 'en' | 'uk';
+/** UI languages with their own names, in the order the picker lists them. */
+export const LANGUAGES = [
+  { code: 'en', name: 'English' },
+  { code: 'uk', name: 'Українська' },
+  { code: 'es', name: 'Español' },
+  { code: 'de', name: 'Deutsch' },
+  { code: 'fr', name: 'Français' },
+  { code: 'ja', name: '日本語' },
+  { code: 'pt', name: 'Português' },
+  { code: 'it', name: 'Italiano' },
+  { code: 'tr', name: 'Türkçe' },
+  { code: 'nl', name: 'Nederlands' },
+  { code: 'zh', name: '简体中文' },
+] as const;
 
-const dictionaries: Record<Lang, Messages> = { en, uk };
+export type Lang = (typeof LANGUAGES)[number]['code'];
+
+const dictionaries: Record<Lang, Messages> = { en, uk, es, de, fr, ja, pt, it, tr, nl, zh };
+const one_other: Intl.LDMLPluralRule[] = ['one', 'other'];
+/** The order of the `|`-separated plural forms in each language's strings. */
 const pluralOrder: Record<Lang, Intl.LDMLPluralRule[]> = {
-  en: ['one', 'other'],
+  en: one_other,
   uk: ['one', 'few', 'many', 'other'],
+  es: one_other,
+  de: one_other,
+  fr: one_other,
+  ja: ['other'],
+  pt: one_other,
+  it: one_other,
+  tr: one_other,
+  nl: one_other,
+  zh: ['other'],
 };
 
 function detectLang(): Lang {
-  const nav = typeof navigator !== 'undefined' ? navigator.language : 'en';
-  return nav.toLowerCase().startsWith('uk') ? 'uk' : 'en';
+  const nav = typeof navigator !== 'undefined' ? navigator.language.toLowerCase() : 'en';
+  return LANGUAGES.find((l) => nav === l.code || nav.startsWith(`${l.code}-`))?.code ?? 'en';
 }
 
 export const i18n = $state({ lang: loadPref<Lang>('lang', detectLang()) });
@@ -29,8 +64,10 @@ export function t(key: MessageKey, params: Record<string, string | number> = {})
   let msg: string = dictionaries[lang][key] ?? en[key];
   if (msg.includes('|') && typeof params.n === 'number') {
     const forms = msg.split('|');
-    const idx = pluralOrder[lang].indexOf(new Intl.PluralRules(lang).select(params.n));
-    msg = forms[Math.min(Math.max(idx, 0), forms.length - 1)];
+    const order = pluralOrder[lang];
+    // Categories a language only uses for huge numbers (es, fr, pt, it: "many") read as "other".
+    const idx = order.indexOf(new Intl.PluralRules(lang).select(params.n));
+    msg = forms[Math.min(idx === -1 ? order.length - 1 : idx, forms.length - 1)];
   }
   return msg.replace(/\{(\w+)\}/g, (_, k: string) => (k in params ? String(params[k]) : `{${k}}`));
 }

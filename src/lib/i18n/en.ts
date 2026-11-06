@@ -256,6 +256,7 @@ export const en = {
 
   'whatsNew.title': "What's new",
   'whatsNew.ok': 'Got it',
+  'whatsNew.history': 'Full release history',
 } as const;
 
 export type MessageKey = keyof typeof en;

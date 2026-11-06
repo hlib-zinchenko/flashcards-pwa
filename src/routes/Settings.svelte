@@ -4,7 +4,7 @@
   import Modal from '../components/Modal.svelte';
   import NameModal from '../components/NameModal.svelte';
   import TopBar from '../components/TopBar.svelte';
-  import { i18n, setLang, sortTags, t, tagLabel, type Lang } from '../lib/i18n/index.svelte';
+  import { i18n, LANGUAGES, setLang, sortTags, t, tagLabel, type Lang } from '../lib/i18n/index.svelte';
   import { install, isIos, promptInstall } from '../lib/install.svelte';
   import { dateStamp, pickFile, saveFile } from '../lib/io/file';
   import { BackupError, createBackup, parseBackup, type Backup } from '../lib/io/json';
@@ -23,10 +23,6 @@
   import { setRate, speak, speechPrefs, speechSupported, stopSpeaking } from '../lib/speech.svelte';
 
   const tags = $derived(sortTags($allTags ?? []));
-  const languages: [Lang, string][] = [
-    ['en', 'English'],
-    ['uk', 'Українська'],
-  ];
   const REPO = 'https://github.com/hlib-zinchenko/flashcards-pwa';
   const links: { href: string; icon: IconName; label: () => string }[] = [
     { href: 'https://hzinchenko.com/', icon: 'globe', label: () => t('settings.madeBy', { name: 'Hlib Zinchenko' }) },
@@ -165,11 +161,11 @@
 <div class="page">
   <section class="section">
     <h2 class="section-title">{t('settings.language')}</h2>
-    <div class="seg">
-      {#each languages as [code, name] (code)}
-        <button type="button" aria-pressed={i18n.lang === code} onclick={() => setLang(code)}>{name}</button>
+    <select class="input" aria-label={t('settings.language')} value={i18n.lang} onchange={(e) => setLang(e.currentTarget.value as Lang)}>
+      {#each LANGUAGES as { code, name } (code)}
+        <option value={code}>{name}</option>
       {/each}
-    </div>
+    </select>
   </section>
 
   <section class="section">
