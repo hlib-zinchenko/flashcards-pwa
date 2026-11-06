@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPool, DEFAULT_CONFIG, filterCards, normalizeConfig, poolSize, quickConfig, REVIEW_LEVELS, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
+import { buildPool, DEFAULT_CONFIG, filterCards, normalizeConfig, poolSize, quickConfig, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
 import type { Level } from '../src/lib/types';
 import { card, seeded } from './helpers';
 
@@ -56,7 +56,7 @@ describe('quickConfig', () => {
   const saved = cfg({ direction: 'back', mode: 'refresh', sort: 'random', limit: 20, levels: [5], tagIds: ['verb'], includeUntagged: true });
 
   it('resets the filters to the given decks and levels', () => {
-    expect(quickConfig(saved, ['d2'], REVIEW_LEVELS)).toMatchObject({ deckIds: ['d2'], levels: [0, 1], tagIds: [], includeUntagged: false });
+    expect(quickConfig(saved, ['d2'], [0, 1])).toMatchObject({ deckIds: ['d2'], levels: [0, 1], tagIds: [], includeUntagged: false });
   });
   it('keeps direction, mode, order and count', () => {
     expect(quickConfig(saved, ['d2'])).toMatchObject({ direction: 'back', mode: 'refresh', sort: 'random', limit: 20, levels: DEFAULT_CONFIG.levels });

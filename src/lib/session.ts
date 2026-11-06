@@ -91,9 +91,6 @@ export function poolSize(cards: readonly Card[], cfg: TestConfig): number {
   return cfg.limit && cfg.limit > 0 ? Math.min(cfg.limit, matching) : matching;
 }
 
-/** New and Weak: the cards the "Review weak cards" action on the Decks screen studies. */
-export const REVIEW_LEVELS: readonly Level[] = [0, 1];
-
 /**
  * Config for a one-tap session: the given decks and levels with no tag filter.
  * Keeps how the user likes to study (direction, mode, order, card count).

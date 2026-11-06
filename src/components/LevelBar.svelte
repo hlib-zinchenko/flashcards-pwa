@@ -7,6 +7,7 @@
   const title = $derived(LEVELS.filter((l) => counts[l]).map((l) => `${levelLabel(l)}: ${counts[l]}`).join(' · '));
 </script>
 
+<!-- The segments sit in a paper track, so on the lavender ground they never touch a colour like their own. -->
 <div class="bar" {title} role="img" aria-label={title}>
   {#if total > 0}
     {#each LEVELS as level (level)}
@@ -21,13 +22,16 @@
   .bar {
     display: flex;
     gap: 2px;
-    height: 6px;
+    height: 10px;
+    padding: 2px;
     overflow: hidden;
     border-radius: 999px;
-    background: var(--surface-2);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--border);
   }
   span {
     flex-basis: 0;
     min-width: 3px;
+    border-radius: 999px;
   }
 </style>

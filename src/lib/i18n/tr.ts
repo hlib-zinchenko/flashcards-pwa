@@ -40,8 +40,6 @@ export const tr: Messages = {
   'decks.cards': '{n} kart|{n} kart',
   'decks.cardsWord': 'kart|kart',
   'decks.importCsv': 'CSV içe aktar',
-  'decks.reviewTitle': 'Zayıf kartları tekrar et',
-  'decks.reviewHint': 'Tüm destelerdeki Yeni ve Zayıf kartlar',
   'decks.study': '{name} çalış',
   'decks.legend': 'Kart seviyeleri',
 

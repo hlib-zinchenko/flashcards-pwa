@@ -40,8 +40,6 @@ export const uk: Messages = {
   'decks.cards': '{n} картка|{n} картки|{n} карток|{n} картки',
   'decks.cardsWord': 'картка|картки|карток|картки',
   'decks.importCsv': 'Імпорт CSV',
-  'decks.reviewTitle': 'Повторити слабкі картки',
-  'decks.reviewHint': 'Нові та слабкі картки з усіх колод',
   'decks.study': 'Вчити «{name}»',
   'decks.legend': 'Рівні карток',
 

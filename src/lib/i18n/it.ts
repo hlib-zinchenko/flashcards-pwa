@@ -40,8 +40,6 @@ export const it: Messages = {
   'decks.cards': '{n} carta|{n} carte',
   'decks.cardsWord': 'carta|carte',
   'decks.importCsv': 'Importa CSV',
-  'decks.reviewTitle': 'Ripassa le carte deboli',
-  'decks.reviewHint': 'Carte nuove e deboli di tutti i mazzi',
   'decks.study': 'Studia {name}',
   'decks.legend': 'Livelli delle carte',
 

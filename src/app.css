@@ -5,7 +5,8 @@
   color-scheme: light dark;
   --bg: #b0a3ce;
   --surface: oklch(98.5% 0.006 300);
-  --surface-edge: oklch(80% 0.04 300);
+  /* Edges sit below the lavender ground, so tiles keep a visible ledge on it. */
+  --surface-edge: oklch(62% 0.05 300);
   --surface-2: oklch(94% 0.022 300);
   --text: oklch(21% 0.05 300);
   --muted: oklch(36% 0.05 300);
@@ -14,25 +15,27 @@
   --border: oklch(87% 0.025 300);
   --accent: oklch(42% 0.1 300);
   --accent-soft: oklch(91% 0.04 300);
-  --accent-edge: oklch(72% 0.07 300);
+  --accent-edge: oklch(60% 0.09 300);
   --on-accent: oklch(98.5% 0.006 300);
   /* Primary buttons: ink on light, paper on dark. */
   --primary: oklch(21% 0.05 300);
   --primary-edge: oklch(8% 0.03 300);
   --on-primary: oklch(96% 0.012 300);
   --butter: oklch(94% 0.07 98);
-  --butter-edge: oklch(78% 0.1 90);
+  --butter-edge: oklch(68% 0.11 85);
   --mint: #a8e4cb;
-  --mint-edge: oklch(68% 0.1 166);
+  --mint-edge: oklch(58% 0.1 166);
   --on-mint: #143b2d;
   --rose: oklch(84% 0.08 10);
-  --rose-edge: oklch(66% 0.13 10);
+  --rose-edge: oklch(58% 0.14 10);
   --on-rose: #3d1019;
   --nav: oklch(98.5% 0.006 300);
-  --nav-edge: oklch(80% 0.04 300);
+  --nav-edge: oklch(62% 0.05 300);
   --on-nav: oklch(34% 0.05 300);
-  --pill: #b0a3ce;
-  --on-pill: #231a36;
+  /* Chosen chips, segments and the active tab: a mid violet in both themes, so a screen
+     full of choices doesn't turn ink (light) or paper (dark); ink stays for the main action. */
+  --selected: oklch(50% 0.15 300);
+  --on-selected: #ffffff;
   --know: oklch(45% 0.1 166);
   --miss: oklch(50% 0.16 10);
   --danger: oklch(50% 0.16 10);
@@ -40,13 +43,14 @@
   --scrim: rgb(20 12 36 / 0.45);
   --shadow-lg: 0 18px 40px -18px rgb(20 12 36 / 0.45);
 
-  /* Card levels: cool from lavender into mint as cards are learned; weak stays rose. */
-  --lv0: oklch(86% 0.014 300);
-  --lv1: oklch(67% 0.15 10);
-  --lv2: oklch(72% 0.085 300);
-  --lv3: oklch(67% 0.09 262);
-  --lv4: oklch(72% 0.09 214);
-  --lv5: oklch(80% 0.12 166);
+  /* Card levels: violet into mint as cards are learned; weak stays rose. Darker and more
+     saturated than the lavender ground so none of them melts into it or into a paper tile. */
+  --lv0: oklch(72% 0.02 300);
+  --lv1: oklch(62% 0.17 10);
+  --lv2: oklch(55% 0.16 300);
+  --lv3: oklch(62% 0.12 250);
+  --lv4: oklch(66% 0.1 210);
+  --lv5: oklch(70% 0.13 166);
 
   /* Onest covers Latin and Cyrillic; Japanese falls through to BIZ UDPGothic
      (Japanese subsets only, so its full-width Cyrillic is never used). */
@@ -73,22 +77,22 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     --bg: oklch(21.5% 0.04 298);
-    --surface: oklch(31% 0.035 298);
-    --surface-edge: oklch(16% 0.03 298);
-    --surface-2: oklch(26% 0.035 298);
+    --surface: oklch(35% 0.035 298);
+    --surface-edge: oklch(13% 0.03 298);
+    --surface-2: oklch(30% 0.035 298);
     --text: oklch(95% 0.015 300);
     --muted: oklch(76% 0.04 300);
     --muted-2: oklch(76% 0.04 300);
-    --border: oklch(38% 0.035 298);
+    --border: oklch(43% 0.035 298);
     --accent: oklch(82% 0.07 300);
     --accent-soft: oklch(38% 0.07 300);
-    --accent-edge: oklch(24% 0.05 300);
+    --accent-edge: oklch(18% 0.05 300);
     --on-accent: oklch(21% 0.05 300);
     --primary: oklch(95% 0.015 300);
     --primary-edge: oklch(70% 0.04 300);
     --on-primary: oklch(21% 0.05 300);
-    --butter: oklch(42% 0.06 95);
-    --butter-edge: oklch(27% 0.04 90);
+    --butter: oklch(38% 0.06 95);
+    --butter-edge: oklch(22% 0.04 90);
     --mint: oklch(80% 0.1 166);
     --mint-edge: oklch(55% 0.09 166);
     --rose: oklch(76% 0.11 10);
@@ -96,38 +100,40 @@
     --nav: oklch(15.5% 0.03 298);
     --nav-edge: oklch(10% 0.025 298);
     --on-nav: oklch(82% 0.03 300);
+    --selected: oklch(55% 0.13 300);
     --know: oklch(82% 0.1 166);
     --miss: oklch(78% 0.12 10);
     --danger: oklch(78% 0.12 10);
     --on-danger: #2a0a10;
     --scrim: rgb(0 0 0 / 0.55);
     --shadow-lg: 0 18px 40px -18px rgb(0 0 0 / 0.7);
-    --lv0: oklch(46% 0.02 300);
+    --lv0: oklch(60% 0.02 300);
     --lv1: oklch(70% 0.14 10);
-    --lv3: oklch(70% 0.09 262);
-    --lv4: oklch(74% 0.09 214);
-    --lv5: oklch(81% 0.12 166);
+    --lv2: oklch(72% 0.13 300);
+    --lv3: oklch(68% 0.11 250);
+    --lv4: oklch(76% 0.09 210);
+    --lv5: oklch(82% 0.12 166);
   }
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
   --bg: oklch(21.5% 0.04 298);
-  --surface: oklch(31% 0.035 298);
-  --surface-edge: oklch(16% 0.03 298);
-  --surface-2: oklch(26% 0.035 298);
+  --surface: oklch(35% 0.035 298);
+  --surface-edge: oklch(13% 0.03 298);
+  --surface-2: oklch(30% 0.035 298);
   --text: oklch(95% 0.015 300);
   --muted: oklch(76% 0.04 300);
   --muted-2: oklch(76% 0.04 300);
-  --border: oklch(38% 0.035 298);
+  --border: oklch(43% 0.035 298);
   --accent: oklch(82% 0.07 300);
   --accent-soft: oklch(38% 0.07 300);
-  --accent-edge: oklch(24% 0.05 300);
+  --accent-edge: oklch(18% 0.05 300);
   --on-accent: oklch(21% 0.05 300);
   --primary: oklch(95% 0.015 300);
   --primary-edge: oklch(70% 0.04 300);
   --on-primary: oklch(21% 0.05 300);
-  --butter: oklch(42% 0.06 95);
-  --butter-edge: oklch(27% 0.04 90);
+  --butter: oklch(38% 0.06 95);
+  --butter-edge: oklch(22% 0.04 90);
   --mint: oklch(80% 0.1 166);
   --mint-edge: oklch(55% 0.09 166);
   --rose: oklch(76% 0.11 10);
@@ -135,17 +141,19 @@
   --nav: oklch(15.5% 0.03 298);
   --nav-edge: oklch(10% 0.025 298);
   --on-nav: oklch(82% 0.03 300);
+  --selected: oklch(55% 0.13 300);
   --know: oklch(82% 0.1 166);
   --miss: oklch(78% 0.12 10);
   --danger: oklch(78% 0.12 10);
   --on-danger: #2a0a10;
   --scrim: rgb(0 0 0 / 0.55);
   --shadow-lg: 0 18px 40px -18px rgb(0 0 0 / 0.7);
-  --lv0: oklch(46% 0.02 300);
+  --lv0: oklch(60% 0.02 300);
   --lv1: oklch(70% 0.14 10);
-  --lv3: oklch(70% 0.09 262);
-  --lv4: oklch(74% 0.09 214);
-  --lv5: oklch(81% 0.12 166);
+  --lv2: oklch(72% 0.13 300);
+  --lv3: oklch(68% 0.11 250);
+  --lv4: oklch(76% 0.09 210);
+  --lv5: oklch(82% 0.12 166);
 }
 
 *,
@@ -399,7 +407,7 @@ textarea.input {
 }
 
 /* ---------- Chips & segmented ----------
-   Chips and segments share one selected look: an ink tile with paper text. */
+   Chips and segments share one selected look: a violet tile with white text. */
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -421,8 +429,12 @@ textarea.input {
   user-select: none;
 }
 .chip[aria-pressed='true'] {
-  background: var(--primary);
-  color: var(--on-primary);
+  background: var(--selected);
+  color: var(--on-selected);
+}
+/* Level colours can be close to the selected violet; a white ring keeps the dot readable. */
+.chip[aria-pressed='true'] .level-dot {
+  box-shadow: 0 0 0 1.5px var(--on-selected);
 }
 .chip .count {
   font-size: 0.8rem;
@@ -459,8 +471,8 @@ textarea.input {
   cursor: pointer;
 }
 .seg button[aria-pressed='true'] {
-  background: var(--primary);
-  color: var(--on-primary);
+  background: var(--selected);
+  color: var(--on-selected);
 }
 
 .level-dot {

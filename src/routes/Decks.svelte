@@ -9,8 +9,7 @@
   import { allCards, allCollections, allDecks } from '../lib/live';
   import { createCollection } from '../lib/repo/collections';
   import { href, navigate } from '../lib/router.svelte';
-  import { poolSize, quickConfig, REVIEW_LEVELS } from '../lib/session';
-  import { startQuick, testState } from '../lib/testState.svelte';
+  import { startQuick } from '../lib/testState.svelte';
   import { LEVELS, type Card } from '../lib/types';
 
   /** Decks and cards of each collection. */
@@ -30,10 +29,7 @@
     return map;
   });
 
-  const allDeckIds = $derived(($allDecks ?? []).map((d) => d.id));
   const totals = $derived(levelCounts($allCards ?? []));
-  /** Size of the "Review weak cards" session, using the saved card limit. */
-  const reviewCount = $derived(poolSize($allCards ?? [], quickConfig(testState.config, allDeckIds, REVIEW_LEVELS)));
 
   let creating = $state(false);
 
@@ -65,17 +61,6 @@
       </button>
     </div>
   {:else if $allCollections && $allDecks}
-    {#if reviewCount > 0}
-      <button class="review tile" type="button" onclick={() => startQuick(allDeckIds, REVIEW_LEVELS)}>
-        <span class="review-n display">{reviewCount}</span>
-        <span class="review-text">
-          <b>{t('decks.reviewTitle')}</b>
-          <small>{t('decks.reviewHint')}</small>
-        </span>
-        <span class="go"><Icon name="play" size={16} /></span>
-      </button>
-    {/if}
-
     <ul class="grid">
       {#each $allCollections as collection, i (collection.id)}
         {@const group = byCollection.get(collection.id) ?? { decks: [], cards: [] }}
@@ -141,50 +126,6 @@
     transform: translateY(4px);
     box-shadow: 0 1px 0 var(--tile-edge);
   }
-  .review {
-    --tile: var(--mint);
-    --tile-edge: var(--mint-edge);
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    margin-top: 8px;
-    padding: 16px;
-    color: var(--on-mint);
-    text-align: left;
-    cursor: pointer;
-  }
-  .review-n {
-    font-size: 2.9rem;
-    line-height: 0.9;
-    font-variant-numeric: tabular-nums;
-  }
-  .review-text {
-    display: grid;
-    flex: 1;
-    gap: 2px;
-    min-width: 0;
-  }
-  .review-text b {
-    font-size: 1.05rem;
-    line-height: 1.2;
-  }
-  .review-text small {
-    font-size: 0.85rem;
-    opacity: 0.85;
-  }
-  .go {
-    display: grid;
-    flex: none;
-    place-items: center;
-    width: 42px;
-    height: 42px;
-    padding-left: 2px;
-    border-radius: 50%;
-    background: var(--on-mint);
-    color: var(--mint);
-  }
-  .go :global(path),
   .play :global(path) {
     fill: currentColor;
   }
@@ -282,7 +223,7 @@
     align-items: center;
     gap: 6px;
   }
-  /* A ring keeps the lavender "Learning" dot visible on the lavender ground. */
+  /* A ring keeps the level dots crisp on the lavender ground. */
   .legend .level-dot {
     box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--text) 25%, transparent);
   }

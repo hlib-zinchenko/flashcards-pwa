@@ -294,8 +294,9 @@
     border-radius: 6px;
   }
   .group-title[aria-pressed='true'] .box {
-    background: var(--text);
-    color: var(--bg);
+    border-color: var(--selected);
+    background: var(--selected);
+    color: var(--on-selected);
   }
   .page {
     padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 96px);
@@ -315,10 +316,11 @@
     position: fixed;
     left: 0;
     right: 0;
-    bottom: calc(var(--tabbar-h) + var(--safe-bottom));
+    bottom: 0;
     z-index: 15;
-    padding: 12px 16px;
-    background: linear-gradient(transparent, var(--bg) 35%);
+    /* Reaches down behind the tab bar, so no chip shows between the button and the bar. */
+    padding: 20px 16px calc(var(--tabbar-h) + var(--safe-bottom) + 4px);
+    background: linear-gradient(transparent, var(--bg) 20px);
   }
   .start .btn {
     display: flex;

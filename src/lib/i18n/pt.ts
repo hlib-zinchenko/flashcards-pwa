@@ -40,8 +40,6 @@ export const pt: Messages = {
   'decks.cards': '{n} cartão|{n} cartões',
   'decks.cardsWord': 'cartão|cartões',
   'decks.importCsv': 'Importar CSV',
-  'decks.reviewTitle': 'Rever cartões fracos',
-  'decks.reviewHint': 'Cartões novos e fracos de todos os baralhos',
   'decks.study': 'Estudar {name}',
   'decks.legend': 'Níveis dos cartões',
 

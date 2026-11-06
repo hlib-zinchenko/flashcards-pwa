@@ -214,7 +214,7 @@
           <Icon name="tag" size={18} />
           <span class="grow">{tagLabel(tag)}</span>
           {#if tag.preset}
-            <span class="muted small">{t('tags.preset')}</span>
+            <span class="preset muted small">{t('tags.preset')}</span>
           {:else}
             <button
               class="icon-btn"
@@ -358,6 +358,10 @@
   .item:last-child {
     border-bottom: 0;
     padding: 10px;
+  }
+  /* Ends where the Add button below does. */
+  .preset {
+    padding-right: 4px;
   }
   .grow {
     flex: 1;

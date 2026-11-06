@@ -40,8 +40,6 @@ export const ja: Messages = {
   'decks.cards': '{n}枚',
   'decks.cardsWord': '枚',
   'decks.importCsv': 'CSVを読み込む',
-  'decks.reviewTitle': '苦手なカードを復習',
-  'decks.reviewHint': 'すべてのデッキの新規カードと苦手カード',
   'decks.study': '{name}を学習',
   'decks.legend': 'カードのレベル',
 

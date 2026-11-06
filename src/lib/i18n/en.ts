@@ -42,8 +42,6 @@ export const en = {
   'decks.cards': '{n} card|{n} cards',
   'decks.cardsWord': 'card|cards',
   'decks.importCsv': 'Import CSV',
-  'decks.reviewTitle': 'Review weak cards',
-  'decks.reviewHint': 'New and Weak cards from all decks',
   'decks.study': 'Study {name}',
   'decks.legend': 'Card levels',
 

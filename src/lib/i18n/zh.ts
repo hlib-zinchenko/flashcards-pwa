@@ -40,8 +40,6 @@ export const zh: Messages = {
   'decks.cards': '{n} 张卡片',
   'decks.cardsWord': '张卡片',
   'decks.importCsv': '导入 CSV',
-  'decks.reviewTitle': '复习薄弱卡片',
-  'decks.reviewHint': '所有卡组中的新卡和薄弱卡片',
   'decks.study': '学习 {name}',
   'decks.legend': '卡片等级',
 

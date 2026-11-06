@@ -182,8 +182,8 @@
     min-width: 0;
   }
   .try.on {
-    background: var(--primary);
-    color: var(--on-primary);
+    background: var(--selected);
+    color: var(--on-selected);
   }
   .try:disabled {
     opacity: 0.4;

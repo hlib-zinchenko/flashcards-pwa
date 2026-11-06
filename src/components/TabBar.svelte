@@ -47,7 +47,9 @@
     z-index: 20;
     display: flex;
     justify-content: center;
-    padding: 0 16px calc(var(--safe-bottom) + 14px);
+    padding: 24px 16px calc(var(--safe-bottom) + 14px);
+    /* Content scrolling under the bar fades into the ground first, so paper never runs into the paper bar. */
+    background: linear-gradient(transparent, var(--bg) 24px);
     pointer-events: none;
   }
   .pill {
@@ -74,8 +76,8 @@
     text-decoration: none;
   }
   a.active {
-    background: var(--pill);
-    color: var(--on-pill);
+    background: var(--selected);
+    color: var(--on-selected);
   }
   .icon {
     position: relative;

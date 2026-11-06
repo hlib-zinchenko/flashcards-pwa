@@ -40,8 +40,6 @@ export const nl: Messages = {
   'decks.cards': '{n} kaart|{n} kaarten',
   'decks.cardsWord': 'kaart|kaarten',
   'decks.importCsv': 'Csv importeren',
-  'decks.reviewTitle': 'Zwakke kaarten herhalen',
-  'decks.reviewHint': 'Nieuwe en zwakke kaarten uit alle stapels',
   'decks.study': '{name} leren',
   'decks.legend': 'Kaartniveaus',
 

@@ -417,8 +417,8 @@
     cursor: pointer;
   }
   .speak-btn.on {
-    background: var(--primary);
-    color: var(--on-primary);
+    background: var(--selected);
+    color: var(--on-selected);
   }
   .stamp {
     position: absolute;

@@ -40,8 +40,6 @@ export const de: Messages = {
   'decks.cards': '{n} Karte|{n} Karten',
   'decks.cardsWord': 'Karte|Karten',
   'decks.importCsv': 'CSV importieren',
-  'decks.reviewTitle': 'Schwache Karten wiederholen',
-  'decks.reviewHint': 'Neue und schwache Karten aus allen Stapeln',
   'decks.study': '{name} lernen',
   'decks.legend': 'Kartenstufen',
 
