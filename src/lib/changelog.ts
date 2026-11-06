@@ -10,6 +10,17 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.11.1',
+    en: [
+      'Drop-down arrows have more room on computers.',
+      'Fields and buttons in collection settings stand out from the dialog in both themes.',
+    ],
+    uk: [
+      'Стрілки випадних списків мають більше місця на комп’ютері.',
+      'Поля й кнопки в налаштуваннях колекції виділяються на тлі вікна в обох темах.',
+    ],
+  },
+  {
     version: '0.11.0',
     en: [
       'Share a deck or a whole collection as a CSV file, straight to Telegram or any other app: tap the share button at the top.',
@@ -33,23 +44,6 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Списки м’яко зникають перед нижньою панеллю, а не заходять під неї.',
       'Рівні карток легше розрізнити на смузі рівнів.',
       'Банера «Повторити слабкі картки» більше немає. Рівні можна вибрати в Тесті.',
-    ],
-  },
-  {
-    version: '0.9.0',
-    en: [
-      'After a test, the buttons come first; tap “Missed cards” to see the list.',
-      '“Same cards again” repeats exactly the cards you just studied.',
-      'Undo the last answer from the message that appears when a test ends.',
-      'Study in a collection opens the test setup with its decks selected.',
-      'Swap front and back for a whole deck: ⋯ → Swap front and back. Progress is kept.',
-    ],
-    uk: [
-      'Після тесту кнопки йдуть першими; натисніть «Картки з помилками», щоб побачити список.',
-      '«Ці ж картки ще раз» повторює саме ті картки, які ви щойно вчили.',
-      'Скасувати останню відповідь можна в повідомленні, що з’являється в кінці тесту.',
-      '«Вчити» в колекції відкриває налаштування тесту з її колодами.',
-      'Лицьову і зворотну сторону можна поміняти для всієї колоди: ⋯ → Поміняти сторони. Прогрес зберігається.',
     ],
   },
 ];
