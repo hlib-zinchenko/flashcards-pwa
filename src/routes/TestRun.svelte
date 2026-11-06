@@ -426,10 +426,17 @@
     overscroll-behavior: none;
     touch-action: none;
   }
+  /* A solid bar at the top edge, like TopBar: without one, iOS 26 fades the controls into its status-bar edge effect. */
   header {
+    position: sticky;
+    /* Sticky measures from inside .run's padding, so this keeps it at the screen edge. */
+    top: calc(-8px - var(--safe-top));
     display: flex;
     align-items: center;
     gap: 8px;
+    margin: calc(-8px - var(--safe-top)) -16px 0;
+    padding: calc(var(--safe-top) + 8px) 16px 0;
+    background: var(--bg);
   }
   .progress {
     display: flex;

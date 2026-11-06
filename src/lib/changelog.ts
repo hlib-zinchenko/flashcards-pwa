@@ -10,6 +10,17 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.11.2',
+    en: [
+      'The Start button in Test is no longer dimmed by the bottom bar.',
+      'Buttons at the top of a test are no longer dimmed on iPhone.',
+    ],
+    uk: [
+      'Нижня панель більше не затінює кнопку «Старт» у Тесті.',
+      'Кнопки вгорі тесту більше не затінені на iPhone.',
+    ],
+  },
+  {
     version: '0.11.1',
     en: [
       'Drop-down arrows have more room on computers.',
@@ -29,21 +40,6 @@ export const CHANGELOG: ChangelogEntry[] = [
     uk: [
       'Колодою чи цілою колекцією можна поділитися CSV-файлом, одразу в Telegram чи будь-який інший застосунок: кнопка «Поділитися» вгорі.',
       'Імпорт файлу колекції в колекцію відтворює всі її колоди.',
-    ],
-  },
-  {
-    version: '0.10.0',
-    en: [
-      'Clearer colours: what you pick is violet, and the main button stands out.',
-      'Lists fade out before the bottom bar instead of running into it.',
-      'Card levels are easier to tell apart in the level bar.',
-      'The “Review weak cards” banner is gone. Choose levels in Test instead.',
-    ],
-    uk: [
-      'Чіткіші кольори: вибране тепер фіолетове, а головна кнопка виділяється.',
-      'Списки м’яко зникають перед нижньою панеллю, а не заходять під неї.',
-      'Рівні карток легше розрізнити на смузі рівнів.',
-      'Банера «Повторити слабкі картки» більше немає. Рівні можна вибрати в Тесті.',
     ],
   },
 ];

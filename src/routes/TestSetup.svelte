@@ -258,7 +258,7 @@
 </div>
 
 {#if $allDecks && cards.length > 0}
-  <div class="start">
+  <div class="start start-bar">
     <button class="btn btn-primary btn-block" type="button" disabled={total === 0} onclick={start}>
       <Icon name="play" size={18} />
       {total === 0 ? t('test.noCards') : t('test.start', { n: total })}
@@ -321,6 +321,10 @@
     /* Reaches down behind the tab bar, so no chip shows between the button and the bar. */
     padding: 20px 16px calc(var(--tabbar-h) + var(--safe-bottom) + 4px);
     background: linear-gradient(transparent, var(--bg) 20px);
+  }
+  /* The bar above already fades the page out; the tab bar's own fade would fall on the button. */
+  :global(body:has(.start-bar)) :global(.tabbar) {
+    background: none;
   }
   .start .btn {
     display: flex;
