@@ -235,6 +235,7 @@ export const nl: Messages = {
   'settings.persisted': 'Gegevens worden permanent op dit apparaat bewaard.',
   'settings.notPersisted': 'De browser kan gegevens wissen als het apparaat weinig ruimte heeft. Installeer de app en exporteer af en toe een back-up.',
   'settings.persist': 'Opslag permanent maken',
+  'settings.persistDenied': 'De browser stond het niet toe. Installeer de app op het beginscherm en probeer het opnieuw; exporteer tot die tijd back-ups.',
   'settings.usage': '{used} gebruikt',
   'settings.install': 'App',
   'settings.about': 'Over',

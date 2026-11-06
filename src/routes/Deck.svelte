@@ -21,6 +21,7 @@
   import { quickConfig } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
   import { askConfirm } from '../lib/confirm.svelte';
+  import { speechSupported } from '../lib/speech.svelte';
   import { showToast } from '../lib/toast.svelte';
   import type { Card, CardSide } from '../lib/types';
 
@@ -374,9 +375,11 @@
     <button class="btn" type="button" onclick={() => { menuOpen = false; renaming = true; }}>
       <Icon name="edit" size={18} />{t('deck.rename')}
     </button>
-    <button class="btn" type="button" onclick={() => { menuOpen = false; speechOpen = true; }}>
-      <Icon name="volume" size={18} />{t('deck.speech')}
-    </button>
+    {#if speechSupported}
+      <button class="btn" type="button" onclick={() => { menuOpen = false; speechOpen = true; }}>
+        <Icon name="volume" size={18} />{t('deck.speech')}
+      </button>
+    {/if}
     {#if ($allCollections?.length ?? 0) > 1}
       <button class="btn" type="button" onclick={() => { menuOpen = false; moveOpen = true; }}>
         <Icon name="right" size={18} />{t('deck.move')}

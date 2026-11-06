@@ -235,6 +235,7 @@ export const de: Messages = {
   'settings.persisted': 'Die Daten werden dauerhaft auf diesem Gerät gespeichert.',
   'settings.notPersisted': 'Der Browser kann Daten löschen, wenn dem Gerät der Speicherplatz ausgeht. Installiere die App und exportiere ab und zu Backups.',
   'settings.persist': 'Speicher dauerhaft machen',
+  'settings.persistDenied': 'Der Browser hat es nicht erlaubt. Installiere die App auf dem Startbildschirm und versuche es erneut; exportiere bis dahin Sicherungen.',
   'settings.usage': '{used} belegt',
   'settings.install': 'App',
   'settings.about': 'Über',

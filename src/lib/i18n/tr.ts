@@ -235,6 +235,7 @@ export const tr: Messages = {
   'settings.persisted': 'Veriler bu cihazda kalıcı olarak saklanıyor.',
   'settings.notPersisted': 'Cihazın alanı azaldığında tarayıcı verileri silebilir. Uygulamayı yükleyin ve ara sıra yedek alın.',
   'settings.persist': 'Depolamayı kalıcı yap',
+  'settings.persistDenied': 'Tarayıcı izin vermedi. Uygulamayı ana ekrana yükleyip tekrar deneyin; o zamana kadar yedek dışa aktarın.',
   'settings.usage': '{used} kullanılıyor',
   'settings.install': 'Uygulama',
   'settings.about': 'Hakkında',

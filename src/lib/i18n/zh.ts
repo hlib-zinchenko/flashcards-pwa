@@ -235,6 +235,7 @@ export const zh: Messages = {
   'settings.persisted': '数据已持久保存在此设备上。',
   'settings.notPersisted': '设备空间不足时，浏览器可能会清除数据。请安装应用，并不时导出备份。',
   'settings.persist': '启用持久存储',
+  'settings.persistDenied': '浏览器未允许。请将应用安装到主屏幕后重试，在此之前请导出备份。',
   'settings.usage': '已用 {used}',
   'settings.install': '应用',
   'settings.about': '关于',

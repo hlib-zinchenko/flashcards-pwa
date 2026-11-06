@@ -235,6 +235,7 @@ export const pt: Messages = {
   'settings.persisted': 'Os dados são guardados de forma persistente neste dispositivo.',
   'settings.notPersisted': 'O navegador pode apagar os dados quando o dispositivo tem pouco espaço. Instale a app e exporte cópias de segurança de vez em quando.',
   'settings.persist': 'Tornar o armazenamento persistente',
+  'settings.persistDenied': 'O navegador não permitiu. Instale a app no ecrã principal e tente de novo; até lá, exporte cópias de segurança.',
   'settings.usage': '{used} usados',
   'settings.install': 'App',
   'settings.about': 'Acerca',

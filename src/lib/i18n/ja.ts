@@ -235,6 +235,7 @@ export const ja: Messages = {
   'settings.persisted': 'データはこのデバイスに永続的に保存されています。',
   'settings.notPersisted': 'デバイスの空き容量が少ないと、ブラウザがデータを消去することがあります。アプリをインストールし、ときどきバックアップを書き出してください。',
   'settings.persist': 'ストレージを永続化する',
+  'settings.persistDenied': 'ブラウザが許可しませんでした。アプリをホーム画面にインストールしてもう一度お試しください。それまではバックアップを書き出してください。',
   'settings.usage': '{used}使用中',
   'settings.install': 'アプリ',
   'settings.about': 'このアプリについて',

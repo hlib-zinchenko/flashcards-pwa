@@ -149,8 +149,10 @@
   }
 
   async function requestPersist() {
-    await navigator.storage?.persist?.();
+    const granted = await navigator.storage?.persist?.();
     await refreshStorage();
+    // Chrome grants it silently or not at all (it decides by install and engagement), so say when it didn't.
+    if (!granted && !persisted) showToast(t('settings.persistDenied'), 5000);
   }
 
   onMount(refreshStorage);
@@ -177,9 +179,11 @@
     </div>
   </section>
 
-  {#if speechSupported}
-    <section class="section">
-      <h2 class="section-title">{t('settings.voice')}</h2>
+  <section class="section">
+    <h2 class="section-title">{t('settings.voice')}</h2>
+    {#if !speechSupported}
+      <p class="muted small">{t('collection.speechUnsupported')}</p>
+    {:else}
       <p class="muted small lead">{t('settings.voicePerCollection')}</p>
       <div class="rate-head">
         <label class="sub-title" for="speech-rate">{t('settings.speechRate')}</label>
@@ -203,8 +207,8 @@
         </div>
       </div>
       <p class="muted small hint">{t('settings.voiceHint')}</p>
-    </section>
-  {/if}
+    {/if}
+  </section>
 
   <section class="section">
     <h2 class="section-title">{t('settings.tags')}</h2>

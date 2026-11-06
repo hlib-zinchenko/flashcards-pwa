@@ -235,6 +235,7 @@ export const fr: Messages = {
   'settings.persisted': 'Les données sont stockées de façon persistante sur cet appareil.',
   'settings.notPersisted': 'Le navigateur peut effacer les données si l’appareil manque d’espace. Installez l’application et exportez des sauvegardes de temps en temps.',
   'settings.persist': 'Rendre le stockage persistant',
+  'settings.persistDenied': 'Le navigateur ne l’a pas autorisé. Installez l’app sur l’écran d’accueil et réessayez ; d’ici là, exportez des sauvegardes.',
   'settings.usage': '{used} utilisés',
   'settings.install': 'Application',
   'settings.about': 'À propos',

@@ -18,6 +18,7 @@
   import { createDeck } from '../lib/repo/decks';
   import { href, lastCollection, navigate, rememberCollection } from '../lib/router.svelte';
   import { openSetup, startQuick } from '../lib/testState.svelte';
+  import { speechSupported } from '../lib/speech.svelte';
   import { showToast } from '../lib/toast.svelte';
   import type { Card } from '../lib/types';
 
@@ -139,7 +140,9 @@
     </div>
     <button class="speech-line" type="button" onclick={() => (settingsOpen = true)}>
       <Icon name="volume" size={16} />
-      {#if $collection.languages.length}
+      {#if !speechSupported}
+        {t('collection.speechUnsupported')}
+      {:else if $collection.languages.length}
         {$collection.languages.map((l) => languageName(l.lang)).join(' · ')}
       {:else}
         {t('collection.speechOff')}

@@ -10,6 +10,17 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.11.3',
+    en: [
+      'Browsers that cannot read aloud now say so, instead of asking you to set up languages.',
+      'Making storage persistent tells you when the browser declines.',
+    ],
+    uk: [
+      'Браузери, які не вміють читати вголос, тепер так і кажуть, а не пропонують налаштувати мови.',
+      'Якщо браузер не дозволяє зробити сховище постійним, застосунок про це скаже.',
+    ],
+  },
+  {
     version: '0.11.2',
     en: [
       'The Start button in Test is no longer dimmed by the bottom bar.',
@@ -29,17 +40,6 @@ export const CHANGELOG: ChangelogEntry[] = [
     uk: [
       'Стрілки випадних списків мають більше місця на комп’ютері.',
       'Поля й кнопки в налаштуваннях колекції виділяються на тлі вікна в обох темах.',
-    ],
-  },
-  {
-    version: '0.11.0',
-    en: [
-      'Share a deck or a whole collection as a CSV file, straight to Telegram or any other app: tap the share button at the top.',
-      'Importing a shared collection file into a collection recreates its decks.',
-    ],
-    uk: [
-      'Колодою чи цілою колекцією можна поділитися CSV-файлом, одразу в Telegram чи будь-який інший застосунок: кнопка «Поділитися» вгорі.',
-      'Імпорт файлу колекції в колекцію відтворює всі її колоди.',
     ],
   },
 ];

@@ -237,6 +237,7 @@ export const en = {
   'settings.persisted': 'Data is stored persistently on this device.',
   'settings.notPersisted': 'The browser may clear data when the device is low on space. Install the app and export backups from time to time.',
   'settings.persist': 'Make storage persistent',
+  'settings.persistDenied': 'The browser didn’t allow it. Install the app on the home screen and try again, and export backups until then.',
   'settings.usage': '{used} used',
   'settings.install': 'App',
   'settings.about': 'About',
