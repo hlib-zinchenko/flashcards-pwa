@@ -24,3 +24,22 @@ export async function seedV1(data: { decks?: object[]; cards?: object[]; tags?: 
   await old.table('tags').bulkAdd(data.tags ?? []);
   old.close();
 }
+
+/** Write a database as app versions with collections but before "Recently deleted" (v2) left it, then close it. */
+export async function seedV2(data: { collections?: object[]; decks?: object[]; cards?: object[]; tags?: object[] }): Promise<void> {
+  db.close();
+  await Dexie.delete(db.name);
+  const old = new Dexie(db.name);
+  old.version(1).stores({
+    decks: 'id, position',
+    cards: 'id, deckId, [deckId+position], level, *tags',
+    tags: 'id, name',
+  });
+  old.version(2).stores({ decks: 'id, position, collectionId', collections: 'id, position' });
+  await old.open();
+  await old.table('collections').bulkAdd(data.collections ?? []);
+  await old.table('decks').bulkAdd(data.decks ?? []);
+  await old.table('cards').bulkAdd(data.cards ?? []);
+  await old.table('tags').bulkAdd(data.tags ?? []);
+  old.close();
+}

@@ -13,7 +13,7 @@
   ];
 
   /** Dot on the Settings tab when a backup is overdue; Settings explains it. */
-  const nudge = $derived(backupDue(backupStatus));
+  const nudge = $derived(backupDue(backupStatus, Date.now()) !== null);
   const active = $derived(router.route.name === 'deck' || router.route.name === 'collection' ? 'decks' : router.route.name);
 </script>
 

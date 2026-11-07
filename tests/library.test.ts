@@ -8,7 +8,7 @@ import { createDeck, setDeckSpeech } from '../src/lib/repo/decks';
 import { importMerge, importReplace, loadLibrary } from '../src/lib/repo/library';
 import { createTag } from '../src/lib/repo/tags';
 import { PRESET_TAG_IDS } from '../src/lib/types';
-import { resetDb, seedV1 } from './dbHelpers';
+import { resetDb, seedV1, seedV2 } from './dbHelpers';
 
 beforeEach(resetDb);
 
@@ -125,5 +125,19 @@ describe('database upgrade', () => {
     await db.open();
     expect(await db.collections.count()).toBe(0);
     expect(await db.tags.count()).toBe(1);
+  });
+
+  it('v2 → v3 keeps the library and starts with nothing in "Recently deleted"', async () => {
+    await seedV2({
+      collections: [{ id: 'k1', name: 'K', position: 0, languages: [], createdAt: 1, updatedAt: 1 }],
+      decks: [{ id: 'd1', name: 'A', collectionId: 'k1', position: 0, createdAt: 1, updatedAt: 1 }],
+      cards: [{ id: 'c1', deckId: 'd1', front: 'a', back: 'b', tags: [], position: 0, level: 2, timesSeen: 1, timesKnown: 1, timesMissed: 0, createdAt: 1, updatedAt: 1 }],
+      tags: [{ id: 'verb', name: 'verb', preset: true, createdAt: 1 }],
+    });
+    await db.open();
+    expect(db.verno).toBe(3);
+    expect(await db.cards.get('c1')).toMatchObject({ deckId: 'd1', level: 2 });
+    expect(await db.decks.get('d1')).toMatchObject({ collectionId: 'k1' });
+    expect(await db.trash.count()).toBe(0);
   });
 });

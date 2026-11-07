@@ -169,6 +169,37 @@ test('export a backup, wipe the library, import it back', async ({ page }) => {
   await expect(page.getByText('猫')).toBeVisible();
 });
 
+test('a deleted deck can be undone right away or restored from Recently deleted', async ({ page }) => {
+  await createDeck(page, 'Japanese', 'Verbs');
+  await addCards(page, [['食べる', 'to eat']]);
+  const deleteDeck = async () => {
+    await page.getByRole('button', { name: 'More' }).click();
+    await page.getByRole('button', { name: 'Delete deck' }).click();
+    await expect(page.getByText('You can restore it in Settings → Recently deleted.')).toBeVisible();
+    await page.getByRole('button', { name: 'Delete', exact: true }).click();
+  };
+
+  await deleteDeck();
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await page.goto('#/');
+  await page.getByText('Japanese').click();
+  await page.getByText('Verbs').click();
+  await deleteDeck();
+
+  await page.getByRole('link', { name: 'Settings' }).click();
+  await page.getByRole('button', { name: /Recently deleted/ }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByText('Verbs')).toBeVisible();
+  await expect(dialog.getByText('Deck · 1 card · Deleted today')).toBeVisible();
+  await dialog.getByRole('button', { name: 'Restore' }).click();
+  await expect(dialog.getByText('Nothing deleted recently.')).toBeVisible();
+
+  await page.goto('#/');
+  await page.getByText('Japanese').click();
+  await page.getByText('Verbs').click();
+  await expect(page.getByText('食べる')).toBeVisible();
+});
+
 test('works offline after the first visit', async ({ page, context }) => {
   await page.goto('./');
   await page.evaluate(() => navigator.serviceWorker.ready);

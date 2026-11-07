@@ -12,12 +12,13 @@
   import { sideSpeech } from '../lib/collections';
   import { loadPref, savePref } from '../lib/prefs';
   import { gradeFields } from '../lib/learning';
-  import { DeckFullError, deleteCard, gradeCard, restoreCard, restoreGrade, updateCard, type CardInput } from '../lib/repo/cards';
+  import { DeckFullError, deleteCard, gradeCard, restoreGrade, updateCard, type CardInput } from '../lib/repo/cards';
   import { navigate } from '../lib/router.svelte';
   import type { SavedRun } from '../lib/savedRun';
   import { buildPool, Session, sortCards, summarize, type Direction, type Mode, type Summary } from '../lib/session';
   import { clearSavedRun, savedRun, saveRun, testState } from '../lib/testState.svelte';
   import { hideToast, showToast } from '../lib/toast.svelte';
+  import { restoreTrash } from '../lib/repo/trash';
   import { askConfirm } from '../lib/confirm.svelte';
   import { MAX_DECK_CARDS, type Card, type CardSide, type Level } from '../lib/types';
 
@@ -290,7 +291,7 @@
     startLevels.delete(id);
     cards.delete(id);
     version++;
-    if (removed) showToast(t('card.deleted'), 6000, { label: t('common.undo'), run: () => restoreCard(removed) });
+    if (removed) showToast(t('card.deleted'), 6000, { label: t('common.undo'), run: () => restoreTrash(removed.id) });
     if (session.done) finish();
   }
 

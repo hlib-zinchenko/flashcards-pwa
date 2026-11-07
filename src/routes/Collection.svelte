@@ -22,6 +22,7 @@
   import { startQuick } from '../lib/testState.svelte';
   import { speechSupported } from '../lib/speech.svelte';
   import { showToast } from '../lib/toast.svelte';
+  import { restoreTrash } from '../lib/repo/trash';
   import type { Card } from '../lib/types';
 
   let { id }: { id: string } = $props();
@@ -119,9 +120,10 @@
       confirmLabel: t('common.delete'),
     });
     if (!ok) return;
-    await deleteCollection(id);
+    const collectionId = id; // the Undo closure outlives this screen and its props
+    await deleteCollection(collectionId);
     rememberCollection(null);
-    showToast(t('collection.deleted'));
+    showToast(t('collection.deleted'), 6000, { label: t('common.undo'), run: () => restoreTrash(collectionId) });
     navigate('/', { replace: true });
   }
 </script>

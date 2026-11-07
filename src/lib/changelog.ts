@@ -10,6 +10,21 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.17.0',
+    en: [
+      'Deleted cards, decks and collections can be restored for 30 days: Settings → Recently deleted.',
+      '“Replace everything” on import keeps your old library there too, so you can switch back.',
+      'Deleting a deck or a collection can be undone right away.',
+      'The app reminds you to export a backup after a week of studying without one.',
+    ],
+    uk: [
+      'Видалені картки, колоди й колекції можна відновити протягом 30 днів: Налаштування → Нещодавно видалені.',
+      '«Замінити все» під час імпорту теж зберігає там стару бібліотеку, тож до неї можна повернутися.',
+      'Видалення колоди чи колекції можна одразу скасувати.',
+      'Застосунок нагадає зробити резервну копію, якщо ви навчаєтеся понад тиждень без неї.',
+    ],
+  },
+  {
     version: '0.16.0',
     en: [
       'Search words across a whole collection: tap the magnifier on the collection screen.',
@@ -35,17 +50,6 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Якщо телефон закрив застосунок посеред тесту, можна продовжити з того ж місця: натисніть «Продовжити».',
       'Коли щось іде не так, застосунок про це каже. У Налаштування → Про застосунок можна скопіювати деталі для звіту про помилку.',
       'Тепер можна написати відгук на hello@hzinchenko.com з Налаштування → Про застосунок.',
-    ],
-  },
-  {
-    version: '0.14.0',
-    en: [
-      'A deck holds up to 999 cards, so it opens and searches quickly. Bigger decks from older backups still work.',
-      'A CSV file with more than 999 cards is split into several decks: “Name”, “Name 2”…',
-    ],
-    uk: [
-      'У колоді може бути до 999 карток, тому вона швидко відкривається і шукає. Більші колоди зі старих бекапів працюють як і раніше.',
-      'CSV-файл, у якому понад 999 карток, ділиться на кілька колод: «Назва», «Назва 2»…',
     ],
   },
 ];

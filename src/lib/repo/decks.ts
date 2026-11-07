@@ -41,8 +41,14 @@ export async function swapDeckSides(id: string): Promise<void> {
   });
 }
 
-export async function deleteDeck(id: string): Promise<void> {
-  await db.transaction('rw', db.decks, db.cards, async () => {
+/** Move a deck and its cards to "Recently deleted"; undo with restoreTrash(id). */
+export async function deleteDeck(id: string, now = Date.now()): Promise<void> {
+  await db.transaction('rw', [db.decks, db.cards, db.collections, db.trash], async () => {
+    const deck = await db.decks.get(id);
+    if (!deck) return;
+    const collection = await db.collections.get(deck.collectionId);
+    const cards = await db.cards.where('deckId').equals(id).toArray();
+    await db.trash.put({ id, kind: 'deck', name: deck.name, deletedAt: now, collections: collection ? [collection] : [], decks: [deck], cards, tags: [] });
     await db.cards.where('deckId').equals(id).delete();
     await db.decks.delete(id);
   });

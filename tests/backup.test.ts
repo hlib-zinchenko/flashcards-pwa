@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BACKUP_NUDGE_SESSIONS, backupDue, daysSince } from '../src/lib/backup';
+import { BACKUP_NUDGE_DAYS, BACKUP_NUDGE_SESSIONS, backupDue, daysSince } from '../src/lib/backup';
 
 const at = (y: number, m: number, d: number, h = 12) => new Date(y, m - 1, d, h).getTime();
 
@@ -11,9 +11,21 @@ describe('daysSince', () => {
 });
 
 describe('backupDue', () => {
+  const now = at(2026, 11, 20);
+
   it('waits for enough sessions', () => {
-    expect(backupDue({ lastAt: null, sessionsSince: BACKUP_NUDGE_SESSIONS - 1 })).toBe(false);
-    expect(backupDue({ lastAt: null, sessionsSince: BACKUP_NUDGE_SESSIONS })).toBe(true);
-    expect(backupDue({ lastAt: at(2026, 1, 1), sessionsSince: 0 })).toBe(false);
+    expect(backupDue({ lastAt: null, sessionsSince: BACKUP_NUDGE_SESSIONS - 1, firstSessionAt: at(2026, 11, 19) }, now)).toBeNull();
+    expect(backupDue({ lastAt: null, sessionsSince: BACKUP_NUDGE_SESSIONS, firstSessionAt: at(2026, 11, 19) }, now)).toBe('sessions');
+    expect(backupDue({ lastAt: at(2026, 1, 1), sessionsSince: 0, firstSessionAt: null }, now)).toBeNull();
+  });
+
+  it(`reminds about progress ${BACKUP_NUDGE_DAYS} days without a backup`, () => {
+    expect(backupDue({ lastAt: at(2026, 10, 1), sessionsSince: 1, firstSessionAt: at(2026, 11, 14) }, now)).toBeNull();
+    expect(backupDue({ lastAt: at(2026, 10, 1), sessionsSince: 1, firstSessionAt: at(2026, 11, 13) }, now)).toBe('days');
+    expect(backupDue({ lastAt: null, sessionsSince: 2, firstSessionAt: at(2026, 11, 1) }, now)).toBe('days');
+  });
+
+  it('never reminds when nothing was studied since the last backup', () => {
+    expect(backupDue({ lastAt: at(2026, 1, 1), sessionsSince: 0, firstSessionAt: null }, now)).toBeNull();
   });
 });

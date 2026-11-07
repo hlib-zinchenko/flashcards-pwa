@@ -95,18 +95,26 @@ export async function updateCard(id: string, input: CardInput & { deckId?: strin
   });
 }
 
-/** Delete a card and return it as it was, so the delete can be undone with restoreCard. */
-export async function deleteCard(id: string): Promise<Card | undefined> {
-  return db.transaction('rw', db.cards, async () => {
+/** Move a card to "Recently deleted" and return it as it was; undo with restoreTrash(card.id). */
+export async function deleteCard(id: string, now = Date.now()): Promise<Card | undefined> {
+  return db.transaction('rw', [db.cards, db.decks, db.collections, db.trash], async () => {
     const card = await db.cards.get(id);
+    if (!card) return undefined;
+    const deck = await db.decks.get(card.deckId);
+    const collection = deck && (await db.collections.get(deck.collectionId));
+    await db.trash.put({
+      id: card.id,
+      kind: 'card',
+      name: card.front || card.back,
+      deletedAt: now,
+      collections: collection ? [collection] : [],
+      decks: deck ? [deck] : [],
+      cards: [card],
+      tags: [],
+    });
     await db.cards.delete(id);
     return card;
   });
-}
-
-/** Put back a card returned by deleteCard. Pass the plain object from the database, not a $state proxy. */
-export async function restoreCard(card: Card): Promise<void> {
-  await db.cards.put(card);
 }
 
 /** Swap the order of two cards in the same deck. */

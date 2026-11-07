@@ -80,3 +80,27 @@ export type PresetTagId = (typeof PRESET_TAG_IDS)[number];
 export function isPresetTagId(id: string): id is PresetTagId {
   return (PRESET_TAG_IDS as readonly string[]).includes(id);
 }
+
+/** Days a deleted item stays in "Recently deleted" before it's removed for good. */
+export const TRASH_DAYS = 30;
+
+export type TrashKind = 'card' | 'deck' | 'collection' | 'library';
+
+/**
+ * Something deleted, kept whole so it can be restored: a card, a deck with its cards, a collection with
+ * its decks and cards, or the whole library as it was before a "Replace everything" import. Cards and
+ * decks also keep their collection (and deck) so they can come back after those are deleted too.
+ */
+export interface TrashItem {
+  /** The deleted card's, deck's or collection's id; a new id for a library. */
+  id: string;
+  kind: TrashKind;
+  /** What it was called (card front, deck or collection name; empty for a library). */
+  name: string;
+  deletedAt: number;
+  collections: Collection[];
+  decks: Deck[];
+  cards: Card[];
+  /** Only for a library. */
+  tags: Tag[];
+}

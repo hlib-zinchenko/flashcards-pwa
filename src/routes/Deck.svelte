@@ -15,7 +15,7 @@
   import { levelCounts } from '../lib/learning';
   import { allCollections, allDecks, allTags } from '../lib/live';
   import { findSameFront, indexFronts, normalizeFront, type FrontIndex } from '../lib/duplicates';
-  import { addCard, cardsInDecks, DeckFullError, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
+  import { addCard, cardsInDecks, DeckFullError, deckCards, deleteCard, resetDeckProgress, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
   import { deleteDeck, moveDeck, renameDeck, setDeckSpeech, swapDeckSides } from '../lib/repo/decks';
   import { sideSpeech } from '../lib/collections';
   import { href, navigate, rememberCollection, takeDeckQuery } from '../lib/router.svelte';
@@ -25,6 +25,7 @@
   import { askConfirm } from '../lib/confirm.svelte';
   import { speechSupported } from '../lib/speech.svelte';
   import { showToast } from '../lib/toast.svelte';
+  import { restoreTrash } from '../lib/repo/trash';
   import { MAX_DECK_CARDS, type Card, type CardSide } from '../lib/types';
 
   let { id }: { id: string } = $props();
@@ -160,7 +161,7 @@
     if (!ok || !editing) return;
     const removed = await deleteCard(editing.id);
     editOpen = false;
-    if (removed) showToast(t('card.deleted'), 6000, { label: t('common.undo'), run: () => restoreCard(removed) });
+    if (removed) showToast(t('card.deleted'), 6000, { label: t('common.undo'), run: () => restoreTrash(removed.id) });
   }
 
   // ---- Deck menu ----
@@ -180,8 +181,10 @@
     menuOpen = false;
     const ok = await askConfirm({ title: t('deck.delete'), message: t('deck.deleteConfirm', { name: $deck.name }), confirmLabel: t('common.delete') });
     if (!ok) return;
-    await deleteDeck(id);
-    showToast(t('deck.deleted'));
+    // Keep the id: the closure outlives this screen, whose props are gone once it's left.
+    const deckId = id;
+    await deleteDeck(deckId);
+    showToast(t('deck.deleted'), 6000, { label: t('common.undo'), run: () => restoreTrash(deckId) });
     navigate('/', { replace: true });
   }
 

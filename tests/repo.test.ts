@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { db } from '../src/lib/db';
-import { addCards, cardsInDecks, DeckFullError, deckCards, deleteCard, gradeCard, resetDeckProgress, restoreCard, restoreGrade, swapCards, updateCard } from '../src/lib/repo/cards';
+import { addCards, cardsInDecks, DeckFullError, deckCards, deleteCard, gradeCard, resetDeckProgress, restoreGrade, swapCards, updateCard } from '../src/lib/repo/cards';
 import { createCollection, deleteCollection, setCollectionLanguages } from '../src/lib/repo/collections';
 import { createDeck, deleteDeck, moveDeck, setDeckSpeech, swapDeckSides } from '../src/lib/repo/decks';
 import { createTag, deleteTag, renameTag, resolveTagNames, TagExistsError } from '../src/lib/repo/tags';
 import { MAX_DECK_CARDS, PRESET_TAG_IDS } from '../src/lib/types';
+import { restoreTrash } from '../src/lib/repo/trash';
 import { resetDb } from './dbHelpers';
 
 const input = (front: string, tags: string[] = []) => ({ front, back: `${front}-back`, tags });
@@ -117,7 +118,7 @@ describe('cards', () => {
     const [a] = await deckCards(deck);
     const deleted = await deleteCard(a.id);
     expect(await db.cards.count()).toBe(0);
-    await restoreCard(deleted!);
+    await restoreTrash(deleted!.id);
     expect(await db.cards.get(a.id)).toEqual(a);
   });
 

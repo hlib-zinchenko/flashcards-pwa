@@ -19,7 +19,11 @@
   import { showToast } from '../lib/toast.svelte';
   import { openWhatsNew } from '../lib/whatsNew.svelte';
   import { copyDiagnostics } from '../lib/errors.svelte';
-  import type { Tag } from '../lib/types';
+  import { liveQuery } from 'dexie';
+  import { db } from '../lib/db';
+  import { DeckFullError } from '../lib/repo/cards';
+  import { deleteForever, restoreTrash, trashItems } from '../lib/repo/trash';
+  import { MAX_DECK_CARDS, TRASH_DAYS, type Tag, type TrashItem } from '../lib/types';
   import { RATE_SAMPLE, SPEECH_RATE } from '../lib/speech';
   import { setRate, speak, speechPrefs, speechSupported, stopSpeaking } from '../lib/speech.svelte';
 
@@ -94,6 +98,7 @@
     showToast(t('settings.exported'));
   }
 
+  const backupReason = $derived(backupDue(backupStatus, Date.now()));
   const lastBackup = $derived(
     backupStatus.lastAt === null
       ? t('settings.lastBackupNever')
@@ -132,6 +137,52 @@
     } catch (err) {
       showToast(t('settings.importFailed', { error: String(err) }), 4000);
     }
+  }
+
+  // ---- Recently deleted ----
+  const trashCount = liveQuery(() => db.trash.count());
+  let trashOpen = $state(false);
+  // Read only while the dialog is open: a library kept from an import can be big.
+  let trash = $state.raw<TrashItem[] | null>(null);
+
+  async function openTrash() {
+    trash = null;
+    trashOpen = true;
+    trash = await trashItems();
+  }
+
+  function trashTitle(item: TrashItem): string {
+    return item.kind === 'library' ? t('trash.library') : item.name || '—';
+  }
+
+  function trashMeta(item: TrashItem): string {
+    const days = daysSince(item.deletedAt, Date.now());
+    const when = new Intl.RelativeTimeFormat(i18n.lang, { numeric: 'auto' }).format(-days, 'day');
+    const what = item.kind === 'library' || item.kind === 'collection' ? `${t('collection.decks', { n: item.decks.length })} · ${t('decks.cards', { n: item.cards.length })}` : item.kind === 'deck' ? t('decks.cards', { n: item.cards.length }) : item.cards[0]?.back ?? '';
+    return [item.kind === 'library' ? '' : t(`trash.${item.kind}`), what, t('trash.deletedWhen', { when })].filter(Boolean).join(' · ');
+  }
+
+  async function restore(item: TrashItem) {
+    if (item.kind === 'library') {
+      const ok = await askConfirm({ title: t('trash.restoreLibrary'), message: t('trash.restoreLibraryConfirm'), confirmLabel: t('trash.restoreLibrary') });
+      if (!ok) return;
+    }
+    try {
+      await restoreTrash(item.id);
+    } catch (err) {
+      if (!(err instanceof DeckFullError)) throw err;
+      showToast(t('deck.full', { max: MAX_DECK_CARDS }), 5000);
+      return;
+    }
+    trash = await trashItems();
+    showToast(t('trash.restored'));
+  }
+
+  async function removeForever(item: TrashItem) {
+    const ok = await askConfirm({ title: t('trash.deleteNow'), message: t('trash.deleteNowConfirm', { name: trashTitle(item) }), confirmLabel: t('trash.deleteNow') });
+    if (!ok) return;
+    await deleteForever(item.id);
+    trash = await trashItems();
   }
 
   // ---- Storage ----
@@ -251,8 +302,10 @@
     <h2 class="section-title">{t('settings.backup')}</h2>
     <div class="panel box">
       <p class="muted small">{t('settings.backupHint')}</p>
-      {#if backupDue(backupStatus)}
+      {#if backupReason === 'sessions'}
         <p class="nudge small" role="status">{lastBackup}. {t('settings.backupNudge', { n: backupStatus.sessionsSince })}</p>
+      {:else if backupReason === 'days'}
+        <p class="nudge small" role="status">{lastBackup}. {t('settings.backupNudgeDays')}</p>
       {:else}
         <p class="small">{lastBackup}</p>
       {/if}
@@ -260,6 +313,21 @@
         <button class="btn" type="button" onclick={exportLibrary}><Icon name="download" size={18} />{t('settings.export')}</button>
         <button class="btn" type="button" onclick={chooseBackup}><Icon name="upload" size={18} />{t('settings.import')}</button>
       </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="panel list">
+      <ul class="links">
+        <li>
+          <button type="button" onclick={openTrash}>
+            <Icon name="trash" size={18} />
+            <span class="grow">{t('trash.title')}</span>
+            {#if $trashCount}<span class="muted small">{$trashCount}</span>{/if}
+            <Icon name="right" size={16} />
+          </button>
+        </li>
+      </ul>
     </div>
   </section>
 
@@ -360,7 +428,69 @@
   {/if}
 </Modal>
 
+<Modal bind:open={trashOpen} title={t('trash.title')} onclose={() => (trash = null)}>
+  <p class="muted small">{t('trash.hint', { n: TRASH_DAYS })}</p>
+  {#if trash && trash.length === 0}
+    <p class="trash-empty">{t('trash.empty')}</p>
+  {:else if trash}
+    <ul class="trash">
+      {#each trash as item (item.id)}
+        <li class="trash-item">
+          <div class="trash-text">
+            <strong class:card-text={item.kind === 'card'}>{trashTitle(item)}</strong>
+            <span class="muted small">{trashMeta(item)}</span>
+          </div>
+          <div class="trash-actions">
+            <button class="btn" type="button" onclick={() => restore(item)}><Icon name="undo" size={16} />{t('trash.restore')}</button>
+            <button class="btn btn-danger icon-only" type="button" onclick={() => removeForever(item)} aria-label={t('trash.deleteNow')} title={t('trash.deleteNow')}>
+              <Icon name="trash" size={16} />
+            </button>
+          </div>
+        </li>
+      {/each}
+    </ul>
+  {/if}
+</Modal>
+
 <style>
+  .trash {
+    display: grid;
+    gap: 8px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .trash-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--surface-2);
+  }
+  .trash-text {
+    display: grid;
+    flex: 1 1 12rem;
+    min-width: 0;
+  }
+  .trash-text strong,
+  .trash-text span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .trash-text .card-text {
+    font-family: var(--font-card);
+  }
+  .trash-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .trash-empty {
+    margin: 16px 0 4px;
+    text-align: center;
+  }
   .list {
     overflow: hidden;
   }

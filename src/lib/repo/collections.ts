@@ -21,10 +21,15 @@ export async function setCollectionLanguages(id: string, languages: CollectionLa
   });
 }
 
-/** Deletes the collection with all its decks and their cards. */
-export async function deleteCollection(id: string): Promise<void> {
-  await db.transaction('rw', db.collections, db.decks, db.cards, async () => {
-    const deckIds = (await db.decks.where('collectionId').equals(id).primaryKeys()) as string[];
+/** Move the collection with all its decks and their cards to "Recently deleted"; undo with restoreTrash(id). */
+export async function deleteCollection(id: string, now = Date.now()): Promise<void> {
+  await db.transaction('rw', [db.collections, db.decks, db.cards, db.trash], async () => {
+    const collection = await db.collections.get(id);
+    if (!collection) return;
+    const decks = await db.decks.where('collectionId').equals(id).toArray();
+    const deckIds = decks.map((d) => d.id);
+    const cards = await db.cards.where('deckId').anyOf(deckIds).toArray();
+    await db.trash.put({ id, kind: 'collection', name: collection.name, deletedAt: now, collections: [collection], decks, cards, tags: [] });
     await db.cards.where('deckId').anyOf(deckIds).delete();
     await db.decks.bulkDelete(deckIds);
     await db.collections.delete(id);

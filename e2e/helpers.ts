@@ -17,7 +17,10 @@ export async function createDeck(page: Page, collection = 'Japanese', deck = 'N5
 export async function addCards(page: Page, cards: [front: string, back: string][]): Promise<void> {
   for (const [front, back] of cards) {
     const addToggle = page.getByRole('button', { name: 'Add card' });
-    if (!(await page.getByPlaceholder('Word, question…').first().isVisible())) await addToggle.first().click();
+    const frontField = page.getByPlaceholder('Word, question…').first();
+    // An empty deck opens the form by itself once its cards load: wait for the form or the toggle, not just a moment.
+    await expect(frontField.or(addToggle.first())).toBeVisible();
+    if (!(await frontField.isVisible())) await addToggle.first().click();
     await page.getByPlaceholder('Word, question…').first().fill(front);
     await page.getByPlaceholder('Meaning, answer…').first().fill(back);
     await page.getByPlaceholder('Meaning, answer…').first().press('Enter');
