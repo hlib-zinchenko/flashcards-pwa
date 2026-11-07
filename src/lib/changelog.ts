@@ -10,6 +10,19 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.15.0',
+    en: [
+      'If the phone closes the app during a test, you can pick up where you left off: tap Resume.',
+      'When something goes wrong, the app says so. Settings → About can copy details for a bug report.',
+      'You can now email feedback to hello@hzinchenko.com from Settings → About.',
+    ],
+    uk: [
+      'Якщо телефон закрив застосунок посеред тесту, можна продовжити з того ж місця: натисніть «Продовжити».',
+      'Коли щось іде не так, застосунок про це каже. У Налаштування → Про застосунок можна скопіювати деталі для звіту про помилку.',
+      'Тепер можна написати відгук на hello@hzinchenko.com з Налаштування → Про застосунок.',
+    ],
+  },
+  {
     version: '0.14.0',
     en: [
       'A deck holds up to 999 cards, so it opens and searches quickly. Bigger decks from older backups still work.',
@@ -33,19 +46,6 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Меню колоди й колекції стали охайними списками; «Поділитися» та «Імпорт» тепер там.',
       'У тесті тап на колоду, рівень чи тег вибирає тільки його; «Усі» знову вибирає все.',
       'На екрані колоди вміщується більше карток.',
-    ],
-  },
-  {
-    version: '0.12.0',
-    en: [
-      'Test now uses the decks of the collection you opened last, never mixing collections.',
-      'The Study button on a collection is gone: use the Test tab instead.',
-      'Study, Start and Done buttons are now mint green.',
-    ],
-    uk: [
-      'Тест тепер бере колоди з колекції, яку ви відкривали останньою, і ніколи не змішує колекції.',
-      'Кнопки «Вчити» на колекції більше немає: відкрийте вкладку «Тест».',
-      'Кнопки «Вчити», «Почати» і «Готово» тепер м’ятно-зелені.',
     ],
   },
 ];
