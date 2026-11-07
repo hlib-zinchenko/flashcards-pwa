@@ -10,6 +10,21 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.13.0',
+    en: [
+      'Softer colours: main buttons are plum or lavender instead of black or white, and messages at the bottom are paper tiles.',
+      'Deck and collection menus are tidy lists; share and import moved into them.',
+      'In Test, tapping a deck, level or tag picks just that one; All picks everything again.',
+      'More cards fit on the screen of a deck.',
+    ],
+    uk: [
+      'М’якші кольори: головні кнопки сливові або лавандові замість чорних чи білих, а повідомлення внизу стали паперовими плитками.',
+      'Меню колоди й колекції стали охайними списками; «Поділитися» та «Імпорт» тепер там.',
+      'У тесті тап на колоду, рівень чи тег вибирає тільки його; «Усі» знову вибирає все.',
+      'На екрані колоди вміщується більше карток.',
+    ],
+  },
+  {
     version: '0.12.0',
     en: [
       'Test now uses the decks of the collection you opened last, never mixing collections.',
@@ -26,17 +41,6 @@ export const CHANGELOG: ChangelogEntry[] = [
     version: '0.11.5',
     en: ['Buttons at the top of a test are no longer dimmed on iPad.'],
     uk: ['Кнопки вгорі тесту більше не затінені на iPad.'],
-  },
-  {
-    version: '0.11.3',
-    en: [
-      'Browsers that cannot read aloud now say so, instead of asking you to set up languages.',
-      'Making storage persistent tells you when the browser declines.',
-    ],
-    uk: [
-      'Браузери, які не вміють читати вголос, тепер так і кажуть, а не пропонують налаштувати мови.',
-      'Якщо браузер не дозволяє зробити сховище постійним, застосунок про це скаже.',
-    ],
   },
 ];
 
