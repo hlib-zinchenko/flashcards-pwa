@@ -449,8 +449,8 @@
   }
   .stamp.edit {
     left: 50%;
-    background: var(--primary);
-    color: var(--on-primary);
+    background: var(--accent-soft);
+    color: var(--text);
     transform: translateX(-50%);
   }
 </style>

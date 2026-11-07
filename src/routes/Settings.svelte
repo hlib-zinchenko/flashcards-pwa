@@ -399,7 +399,7 @@
     width: 100%;
     height: 32px;
     margin: 0;
-    accent-color: var(--primary);
+    accent-color: var(--selected);
     cursor: pointer;
   }
   .rate-ends {

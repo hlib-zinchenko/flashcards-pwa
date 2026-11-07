@@ -33,11 +33,12 @@
     max-width: calc(100% - 32px);
     padding: 10px 16px;
     border-radius: 999px;
-    background: var(--primary);
-    color: var(--on-primary);
+    /* A paper tile, not an inverted pill: ink/paper flashed too bright, especially in dark mode. */
+    background: var(--surface);
+    color: var(--text);
     font-size: 0.9rem;
     font-weight: 600;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 4px 0 var(--surface-edge), var(--shadow-lg);
     transform: translateX(-50%);
     animation: pop 0.2s ease-out;
     pointer-events: none;
@@ -59,7 +60,7 @@
     cursor: pointer;
   }
   button:active {
-    background: color-mix(in srgb, var(--on-primary) 18%, transparent);
+    background: color-mix(in srgb, var(--text) 10%, transparent);
   }
   @keyframes pop {
     from {

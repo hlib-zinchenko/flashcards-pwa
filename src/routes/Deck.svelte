@@ -277,7 +277,7 @@
         </label>
         <button
           class="btn"
-          class:btn-primary={reordering}
+          class:btn-selected={reordering}
           type="button"
           onclick={() => {
             reordering = !reordering;
@@ -427,7 +427,7 @@
 <Modal bind:open={moveOpen} title={t('deck.move')}>
   <div class="menu">
     {#each $allCollections ?? [] as c (c.id)}
-      <button class="btn" class:btn-primary={c.id === $deck?.collectionId} type="button" onclick={() => moveTo(c.id)}>
+      <button class="btn" class:btn-selected={c.id === $deck?.collectionId} type="button" onclick={() => moveTo(c.id)}>
         {#if c.id === $deck?.collectionId}<Icon name="check" size={18} />{/if}{c.name}
       </button>
     {/each}

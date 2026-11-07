@@ -289,7 +289,7 @@
 
         <div class="summary-actions">
           {#if endedEarly}
-            <button class="btn btn-primary btn-block" type="button" onclick={resume}>
+            <button class="btn btn-mint btn-block" type="button" onclick={resume}>
               <Icon name="play" size={18} />{t('summary.continue')}
             </button>
           {/if}
@@ -391,7 +391,7 @@
             <li><span class="g accent">↓</span>{t('run.gestureDown')}</li>
           </ul>
           <p class="muted small keys">{t('run.gestureKeys')}</p>
-          <button class="btn btn-primary btn-block" type="button" onclick={dismissGestures}>{t('run.gestureOk')}</button>
+          <button class="btn btn-mint btn-block" type="button" onclick={dismissGestures}>{t('run.gestureOk')}</button>
         </div>
       </div>
     {/if}
@@ -456,7 +456,7 @@
   .fill {
     height: 100%;
     border-radius: inherit;
-    background: var(--text);
+    background: var(--accent);
     transition: width 0.3s;
   }
   .count {
@@ -778,6 +778,10 @@
   .g.miss {
     background: var(--rose);
     color: var(--on-rose);
+  }
+  .g.accent {
+    background: var(--accent-soft);
+    color: var(--text);
   }
   .keys {
     margin: 0 0 16px;

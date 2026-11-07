@@ -17,9 +17,9 @@
   --accent-soft: oklch(91% 0.04 300);
   --accent-edge: oklch(60% 0.09 300);
   --on-accent: oklch(98.5% 0.006 300);
-  /* Primary buttons: ink on light, paper on dark. */
-  --primary: oklch(21% 0.05 300);
-  --primary-edge: oklch(8% 0.03 300);
+  /* Primary buttons: deep plum on light, lavender on dark. Not ink/paper: that was too stark. */
+  --primary: oklch(34% 0.09 300);
+  --primary-edge: oklch(22% 0.07 300);
   --on-primary: oklch(96% 0.012 300);
   --butter: oklch(94% 0.07 98);
   --butter-edge: oklch(68% 0.11 85);
@@ -35,6 +35,7 @@
   /* Chosen chips, segments and the active tab: a mid violet in both themes, so a screen
      full of choices doesn't turn ink (light) or paper (dark); ink stays for the main action. */
   --selected: oklch(50% 0.15 300);
+  --selected-edge: oklch(38% 0.13 300);
   --on-selected: #ffffff;
   --know: oklch(45% 0.1 166);
   --miss: oklch(50% 0.16 10);
@@ -88,8 +89,8 @@
     --accent-soft: oklch(38% 0.07 300);
     --accent-edge: oklch(18% 0.05 300);
     --on-accent: oklch(21% 0.05 300);
-    --primary: oklch(95% 0.015 300);
-    --primary-edge: oklch(70% 0.04 300);
+    --primary: oklch(82% 0.07 300);
+    --primary-edge: oklch(60% 0.06 300);
     --on-primary: oklch(21% 0.05 300);
     --butter: oklch(38% 0.06 95);
     --butter-edge: oklch(22% 0.04 90);
@@ -101,6 +102,7 @@
     --nav-edge: oklch(10% 0.025 298);
     --on-nav: oklch(82% 0.03 300);
     --selected: oklch(55% 0.13 300);
+    --selected-edge: oklch(38% 0.11 300);
     --know: oklch(82% 0.1 166);
     --miss: oklch(78% 0.12 10);
     --danger: oklch(78% 0.12 10);
@@ -129,8 +131,8 @@
   --accent-soft: oklch(38% 0.07 300);
   --accent-edge: oklch(18% 0.05 300);
   --on-accent: oklch(21% 0.05 300);
-  --primary: oklch(95% 0.015 300);
-  --primary-edge: oklch(70% 0.04 300);
+  --primary: oklch(82% 0.07 300);
+  --primary-edge: oklch(60% 0.06 300);
   --on-primary: oklch(21% 0.05 300);
   --butter: oklch(38% 0.06 95);
   --butter-edge: oklch(22% 0.04 90);
@@ -142,6 +144,7 @@
   --nav-edge: oklch(10% 0.025 298);
   --on-nav: oklch(82% 0.03 300);
   --selected: oklch(55% 0.13 300);
+  --selected-edge: oklch(38% 0.11 300);
   --know: oklch(82% 0.1 166);
   --miss: oklch(78% 0.12 10);
   --danger: oklch(78% 0.12 10);
@@ -286,6 +289,12 @@ h3 {
 .btn-danger {
   color: var(--danger);
 }
+/* A button that shows a state (an active mode, the current choice), like a chosen chip. */
+.btn-selected {
+  --tile: var(--selected);
+  --tile-edge: var(--selected-edge);
+  color: var(--on-selected);
+}
 /* Primary action that destroys data (confirm dialogs). */
 .btn-destructive {
   --tile: var(--rose);
@@ -347,7 +356,7 @@ h3 {
 }
 
 /* A plain button on a paper panel or dialog sheet would be paper on paper; give it a tinted tile instead. */
-:is(.panel, dialog) .btn:not(.btn-primary, .btn-mint, .btn-destructive, .btn-ghost) {
+:is(.panel, dialog) .btn:not(.btn-primary, .btn-mint, .btn-selected, .btn-destructive, .btn-ghost) {
   --tile: color-mix(in oklch, var(--accent-soft), var(--text) 10%);
   --tile-edge: var(--accent-edge);
 }
