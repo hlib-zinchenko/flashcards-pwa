@@ -9,6 +9,7 @@ npm run check      # svelte-check + TypeScript; run after any change
 npm test           # Vitest (node env, fake-indexeddb), tests/**/*.test.ts
 npm run e2e        # Playwright, WebKit, against a fresh build on :4174 (e2e/*.spec.ts)
 npm run perf       # load test with big libraries; prints timings (e2e/perf.spec.ts)
+npm run screenshots # README screenshots from docs/demo/demo-backup.json (e2e/screenshots.spec.ts)
 npm run build      # into dist/
 npm run preview    # http://localhost:4173/ (build first)
 ```

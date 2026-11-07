@@ -1,11 +1,48 @@
 {
   "app": "flashcards-pwa",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "exportedAt": 1791968400000,
+  "collections": [
+    {
+      "id": "demo-collection-1",
+      "name": "Japanese N5",
+      "position": 0,
+      "languages": [
+        {
+          "lang": "ja-JP"
+        },
+        {
+          "lang": "en-US"
+        }
+      ],
+      "createdAt": 1789462800000,
+      "updatedAt": 1791882000000
+    },
+    {
+      "id": "demo-collection-2",
+      "name": "Trip to Tokyo",
+      "position": 1,
+      "languages": [
+        {
+          "lang": "ja-JP"
+        },
+        {
+          "lang": "en-US"
+        }
+      ],
+      "createdAt": 1789462800000,
+      "updatedAt": 1791882000000
+    }
+  ],
   "decks": [
     {
       "id": "demo-deck-1",
       "name": "Japanese N5 verbs",
+      "collectionId": "demo-collection-1",
+      "speech": {
+        "front": "ja-JP",
+        "back": "en-US"
+      },
       "position": 0,
       "createdAt": 1789549200000,
       "updatedAt": 1791882000000
@@ -13,21 +50,36 @@
     {
       "id": "demo-deck-2",
       "name": "Food & drink",
-      "position": 1,
+      "collectionId": "demo-collection-2",
+      "speech": {
+        "front": "ja-JP",
+        "back": "en-US"
+      },
+      "position": 0,
       "createdAt": 1789635600000,
       "updatedAt": 1791882000000
     },
     {
       "id": "demo-deck-3",
       "name": "Travel phrases",
-      "position": 2,
+      "collectionId": "demo-collection-2",
+      "speech": {
+        "front": "ja-JP",
+        "back": "en-US"
+      },
+      "position": 1,
       "createdAt": 1789722000000,
       "updatedAt": 1791882000000
     },
     {
       "id": "demo-deck-4",
       "name": "Adjectives",
-      "position": 3,
+      "collectionId": "demo-collection-1",
+      "speech": {
+        "front": "ja-JP",
+        "back": "en-US"
+      },
+      "position": 1,
       "createdAt": 1789808400000,
       "updatedAt": 1791882000000
     }

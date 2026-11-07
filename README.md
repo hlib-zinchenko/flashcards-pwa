@@ -9,14 +9,16 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
 **Live app:** https://flashcards.hzinchenko.com/
 
 <p>
-  <img src="docs/screenshots/decks.png" alt="Deck list with a Review weak cards button, a play button per deck and a card-level legend" width="220">
-  <img src="docs/screenshots/test-setup.png" alt="Test setup: decks, number of cards, direction, mode, order, levels and tags" width="220">
-  <img src="docs/screenshots/test-back.png" alt="Card back with tags and notes, with undo in the header" width="220">
+  <img src="docs/screenshots/home.png" alt="Collections home: Japanese N5 and Trip to Tokyo with card counts, level bars and a card-level legend" width="220">
+  <img src="docs/screenshots/collection.png" alt="A collection with its decks, a play button per deck and the languages it reads aloud" width="220">
+  <img src="docs/screenshots/collection-settings.png" alt="Collection settings: reading-aloud languages with a voice picker for each" width="220">
+  <img src="docs/screenshots/test-setup.png" alt="Test setup: decks, number of cards, which side first, mode, order and levels" width="220">
+  <img src="docs/screenshots/test-back.png" alt="Card back with a read-aloud button, tags and notes, with undo in the header" width="220">
   <img src="docs/screenshots/test-swipe.png" alt="Swiping a card right to mark it known" width="220">
-  <img src="docs/screenshots/summary.png" alt="Summary after quitting early: 6 of 7 known, missed cards listed, Continue button" width="220">
-  <img src="docs/screenshots/deck.png" alt="Deck with its cards and tags" width="220">
-  <img src="docs/screenshots/settings.png" alt="Settings with language and System, Light, Dark appearance" width="220">
-  <img src="docs/screenshots/decks-dark.png" alt="Deck list in dark theme" width="220">
+  <img src="docs/screenshots/summary.png" alt="Summary after finishing early: 6 of 8 known on the first try, with Continue, Retry missed and the missed cards" width="220">
+  <img src="docs/screenshots/deck.png" alt="Deck with its cards, tags, search and Reorder" width="220">
+  <img src="docs/screenshots/settings.png" alt="Settings with language, appearance and reading-aloud speed" width="220">
+  <img src="docs/screenshots/collection-dark.png" alt="A collection in dark theme" width="220">
 </p>
 
 ## Features
