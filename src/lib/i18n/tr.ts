@@ -178,7 +178,6 @@ export const tr: Messages = {
   'summary.knownCaption': 'bilinen',
   'summary.missedCards': 'Kaçırılan kartlar',
   'summary.continue': 'Devam',
-  'summary.answered': 'Cevaplar',
   'summary.missed': 'Kaçırılan',
   'summary.levelUps': 'Seviye yükselen',
   'summary.levelDowns': 'Seviye düşen',

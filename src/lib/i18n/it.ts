@@ -178,7 +178,6 @@ export const it: Messages = {
   'summary.knownCaption': 'sapute',
   'summary.missedCards': 'Carte sbagliate',
   'summary.continue': 'Continua',
-  'summary.answered': 'Risposte',
   'summary.missed': 'Sbagliate',
   'summary.levelUps': 'Salgono di livello',
   'summary.levelDowns': 'Scendono di livello',

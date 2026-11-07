@@ -281,10 +281,9 @@
         </div>
 
         <dl class="stats">
-          <div class="up"><dd class="display">{summary.levelUps}</dd><dt>{t('summary.levelUps')}</dt></div>
-          <div class="down"><dd class="display">{summary.levelDowns}</dd><dt>{t('summary.levelDowns')}</dt></div>
+          <div class:up={summary.levelUps > 0}><dd class="display">{summary.levelUps}</dd><dt>{t('summary.levelUps')}</dt></div>
+          <div class:down={summary.levelDowns > 0}><dd class="display">{summary.levelDowns}</dd><dt>{t('summary.levelDowns')}</dt></div>
           <div><dd class="display">{summary.missed}</dd><dt>{t('summary.missed')}</dt></div>
-          <div><dd class="display">{summary.answered}</dd><dt>{t('summary.answered')}</dt></div>
         </dl>
 
         <div class="summary-actions">
@@ -369,13 +368,13 @@
     </main>
 
     <footer>
-      <button class="answer miss" class:dim={!flipped} type="button" onclick={() => swipeCard?.fly(false)}>
+      <button class="answer miss" type="button" onclick={() => swipeCard?.fly(false)}>
         {t('run.dontKnow')}
       </button>
       <button class="answer flip" type="button" onclick={() => (flipped = !flipped)} aria-label={t('run.flip')} title={t('run.flip')}>
         <Icon name="reset" size={20} />
       </button>
-      <button class="answer know" class:dim={!flipped} type="button" onclick={() => swipeCard?.fly(true)}>
+      <button class="answer know" type="button" onclick={() => swipeCard?.fly(true)}>
         {t('run.know')}
       </button>
     </footer>
@@ -543,15 +542,11 @@
     font-weight: 700;
     white-space: nowrap;
     cursor: pointer;
-    transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, opacity 0.15s;
+    transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
   }
   .answer:active {
     transform: translateY(3px);
     box-shadow: 0 1px 0 var(--tile-edge);
-  }
-  /* Grade after seeing the answer; swiping still works for fast users. */
-  .answer.dim {
-    opacity: 0.55;
   }
   .answer.know {
     --tile: var(--mint);
@@ -615,7 +610,7 @@
   }
   .stats {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     margin: 0;
   }
@@ -649,11 +644,6 @@
     margin: 0;
     font-size: 1.6rem;
     line-height: 1;
-  }
-  @media (max-width: 360px) {
-    .stats {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
   }
   .missed {
     display: grid;

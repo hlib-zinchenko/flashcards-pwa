@@ -178,7 +178,6 @@ export const uk: Messages = {
   'summary.knownCaption': 'знаю',
   'summary.missedCards': 'Картки з помилками',
   'summary.continue': 'Продовжити',
-  'summary.answered': 'Відповідей',
   'summary.missed': 'Помилки',
   'summary.levelUps': 'Рівень вище',
   'summary.levelDowns': 'Рівень нижче',

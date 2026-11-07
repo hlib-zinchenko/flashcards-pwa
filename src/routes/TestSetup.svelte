@@ -4,7 +4,7 @@
   import { levelLabel, sortTags, t, tagLabel } from '../lib/i18n/index.svelte';
   import { allCards, allCollections, allDecks, allTags } from '../lib/live';
   import { href, lastCollection } from '../lib/router.svelte';
-  import { matchesTags, poolSize, scopeDeckIds, type Direction, type Mode, type SortMode } from '../lib/session';
+  import { isAll, matchesTags, pickFromAll, poolSize, scopeDeckIds, type Direction, type Mode, type SortMode } from '../lib/session';
   import { saveTestConfig, startSession, testState } from '../lib/testState.svelte';
   import { LEVELS, type Level } from '../lib/types';
 
@@ -93,7 +93,10 @@
     return list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
   }
 
-  const allDecksSelected = $derived(decks.length > 0 && decks.every((d) => cfg.deckIds.includes(d.id)));
+  // Decks and levels: with everything chosen only "All" looks pressed, as with tags (see pickFromAll).
+  const deckIds = $derived(decks.map((d) => d.id));
+  const allDecksSelected = $derived(isAll(cfg.deckIds, deckIds));
+  const allLevelsSelected = $derived(isAll(cfg.levels, LEVELS));
 
   function start() {
     startSession('/test');
@@ -123,7 +126,10 @@
       <a class="btn btn-primary" href={href('/')}><Icon name="decks" size={18} />{t('test.openCollection')}</a>
     </div>
   {:else if collection && $allDecks && cards.length === 0}
-    <p class="muted empty">{t('test.noDecks')}</p>
+    <div class="empty">
+      <p class="muted">{t('test.noDecks')}</p>
+      <a class="btn btn-primary" href={href(`/collection/${collection.id}`)}><Icon name="decks" size={18} />{collection.name}</a>
+    </div>
   {:else if collection && $allDecks}
     <section class="section">
       <h2 class="section-title">{collection.name}</h2>
@@ -133,7 +139,7 @@
             type="button"
             class="chip"
             aria-pressed={allDecksSelected}
-            onclick={() => (cfg.deckIds = allDecksSelected ? [] : decks.map((d) => d.id))}
+            onclick={() => (cfg.deckIds = [...deckIds])}
           >
             {t('common.all')}
           </button>
@@ -142,8 +148,9 @@
           <button
             type="button"
             class="chip"
-            aria-pressed={cfg.deckIds.includes(deck.id)}
-            onclick={() => (cfg.deckIds = toggle(cfg.deckIds, deck.id))}
+            class:zero={!deckCount.get(deck.id)}
+            aria-pressed={!allDecksSelected && cfg.deckIds.includes(deck.id)}
+            onclick={() => (cfg.deckIds = pickFromAll(cfg.deckIds, deckIds, deck.id))}
           >
             {deck.name} <span class="count">{deckCount.get(deck.id) ?? 0}</span>
           </button>
@@ -196,12 +203,16 @@
     <section class="section">
       <h2 class="section-title">{t('test.levels')}</h2>
       <div class="chips">
+        <button type="button" class="chip" aria-pressed={allLevelsSelected} onclick={() => (cfg.levels = [...LEVELS])}>
+          {t('common.all')}
+        </button>
         {#each LEVELS as level (level)}
           <button
             type="button"
             class="chip"
-            aria-pressed={cfg.levels.includes(level)}
-            onclick={() => (cfg.levels = toggle<Level>(cfg.levels, level).sort((a, b) => a - b))}
+            class:zero={levelCounts[level] === 0}
+            aria-pressed={!allLevelsSelected && cfg.levels.includes(level)}
+            onclick={() => (cfg.levels = pickFromAll<Level>(cfg.levels, LEVELS, level))}
           >
             <span class="level-dot" style:background="var(--lv{level})"></span>
             {levelLabel(level)} <span class="count">{levelCounts[level]}</span>
@@ -264,6 +275,10 @@
   .empty p {
     max-width: 32ch;
     margin: 0;
+  }
+  /* Nothing to test in it: still tappable, but quieter. */
+  .chip.zero:not([aria-pressed='true']) {
+    opacity: 0.5;
   }
   .mode-hint {
     margin: 8px 0 0;

@@ -206,7 +206,6 @@
           <span>{t('settings.speechFast')}</span>
         </div>
       </div>
-      <p class="muted small hint">{t('settings.voiceHint')}</p>
     {/if}
   </section>
 
@@ -411,9 +410,6 @@
     font-size: 0.875rem;
     font-weight: 700;
     color: var(--muted);
-  }
-  .hint {
-    margin: 10px 4px 0;
   }
   .box {
     padding: 14px 16px;

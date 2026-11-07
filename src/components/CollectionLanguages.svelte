@@ -159,17 +159,32 @@
 <style>
   .list {
     overflow: hidden;
+    container-type: inline-size;
   }
   .item {
     display: grid;
-    gap: 6px;
-    padding: 10px 8px 10px 14px;
+    gap: 4px;
+    padding: 8px 6px 8px 14px;
     border-bottom: 1px solid var(--border);
+  }
+  /* Name and voice side by side where they fit (tablets, desktop); stacked on a phone. */
+  @container (min-width: 440px) {
+    .item {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      align-items: center;
+      gap: 10px;
+    }
+    .lang {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
   .item:last-child {
     border-bottom: 0;
   }
   .lang {
+    font-size: 0.92rem;
     font-weight: 600;
   }
   .controls {

@@ -195,11 +195,6 @@
 <TopBar title={$deck?.name ?? ''} back={href($deck ? `/collection/${$deck.collectionId}` : '/')}>
   {#snippet actions()}
     {#if $deck}
-      {#if $cards?.length}
-        <button class="icon-btn" type="button" onclick={shareCsv} aria-label={t('deck.share')} title={t('deck.share')}>
-          <Icon name="share" size={19} />
-        </button>
-      {/if}
       <button class="icon-btn" type="button" onclick={() => (menuOpen = true)} aria-label={t('common.more')}>
         <Icon name="more" />
       </button>
@@ -372,32 +367,38 @@
 
 <!-- Deck actions -->
 <Modal bind:open={menuOpen} title={$deck?.name ?? ''}>
-  <div class="menu">
-    <button class="btn" type="button" onclick={() => { menuOpen = false; renaming = true; }}>
-      <Icon name="edit" size={18} />{t('deck.rename')}
-    </button>
+  <ul class="panel menu-list">
+    <li>
+      <button type="button" onclick={() => { menuOpen = false; renaming = true; }}><Icon name="edit" size={18} />{t('deck.rename')}</button>
+    </li>
     {#if speechSupported}
-      <button class="btn" type="button" onclick={() => { menuOpen = false; speechOpen = true; }}>
-        <Icon name="volume" size={18} />{t('deck.speech')}
-      </button>
+      <li>
+        <button type="button" onclick={() => { menuOpen = false; speechOpen = true; }}><Icon name="volume" size={18} />{t('deck.speech')}</button>
+      </li>
     {/if}
     {#if ($allCollections?.length ?? 0) > 1}
-      <button class="btn" type="button" onclick={() => { menuOpen = false; moveOpen = true; }}>
-        <Icon name="right" size={18} />{t('deck.move')}
-      </button>
+      <li>
+        <button type="button" onclick={() => { menuOpen = false; moveOpen = true; }}><Icon name="move" size={18} />{t('deck.move')}</button>
+      </li>
     {/if}
-    <button class="btn" type="button" onclick={swapSides} disabled={!$cards?.length}>
-      <Icon name="flip" size={18} />{t('deck.swapSides')}
-    </button>
-    <button class="btn" type="button" onclick={importCsv}><Icon name="fileImport" size={18} />{t('deck.importCsv')}</button>
-    <button class="btn" type="button" onclick={shareCsv} disabled={!$cards?.length}>
-      <Icon name="share" size={18} />{t('deck.share')}
-    </button>
-    <button class="btn" type="button" onclick={reset} disabled={!$cards?.length}>
-      <Icon name="reset" size={18} />{t('deck.resetProgress')}
-    </button>
-    <button class="btn btn-danger" type="button" onclick={remove}><Icon name="trash" size={18} />{t('deck.delete')}</button>
-  </div>
+    <li>
+      <button type="button" onclick={swapSides} disabled={!$cards?.length}><Icon name="flip" size={18} />{t('deck.swapSides')}</button>
+    </li>
+    <li>
+      <button type="button" onclick={importCsv}><Icon name="fileImport" size={18} />{t('deck.importCsv')}</button>
+    </li>
+    <li>
+      <button type="button" onclick={shareCsv} disabled={!$cards?.length}><Icon name="share" size={18} />{t('deck.share')}</button>
+    </li>
+    <li>
+      <button type="button" onclick={reset} disabled={!$cards?.length}><Icon name="reset" size={18} />{t('deck.resetProgress')}</button>
+    </li>
+  </ul>
+  <ul class="panel menu-list">
+    <li>
+      <button class="danger" type="button" onclick={remove}><Icon name="trash" size={18} />{t('deck.delete')}</button>
+    </li>
+  </ul>
 </Modal>
 
 <Modal bind:open={speechOpen} title={t('deck.speech')}>
@@ -425,13 +426,17 @@
 </Modal>
 
 <Modal bind:open={moveOpen} title={t('deck.move')}>
-  <div class="menu">
+  <ul class="panel menu-list">
     {#each $allCollections ?? [] as c (c.id)}
-      <button class="btn" class:btn-selected={c.id === $deck?.collectionId} type="button" onclick={() => moveTo(c.id)}>
-        {#if c.id === $deck?.collectionId}<Icon name="check" size={18} />{/if}{c.name}
-      </button>
+      {@const current = c.id === $deck?.collectionId}
+      <li>
+        <button type="button" aria-current={current} onclick={() => moveTo(c.id)}>
+          <span class="grow">{c.name}</span>
+          {#if current}<Icon name="check" size={18} />{/if}
+        </button>
+      </li>
     {/each}
-  </div>
+  </ul>
 </Modal>
 
 <NameModal
@@ -520,7 +525,7 @@
   }
   .cards {
     display: grid;
-    gap: 12px;
+    gap: 10px;
     margin: 12px 0 0;
     padding: 0;
     list-style: none;
@@ -536,7 +541,7 @@
     align-items: flex-start;
     gap: 12px;
     min-width: 0;
-    padding: 12px 14px;
+    padding: 9px 14px;
     border: 0;
     background: none;
     text-align: left;
@@ -550,13 +555,13 @@
     background: var(--surface-2);
   }
   .card-row .level-dot {
-    margin-top: 7px;
+    margin-top: 6px;
   }
   .texts {
     display: grid;
     flex: 1;
-    gap: 2px;
     min-width: 0;
+    line-height: 1.3;
   }
   .front,
   .back {
@@ -585,12 +590,12 @@
   .move .icon-btn:disabled {
     opacity: 0.3;
   }
-  .menu {
-    display: grid;
-    gap: 8px;
+  .grow {
+    flex: 1;
+    min-width: 0;
   }
-  .menu .btn {
-    justify-content: flex-start;
+  .menu-list [aria-current='true'] {
+    color: var(--accent);
   }
   .speech-lead {
     margin: 0 0 4px;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPool, DEFAULT_CONFIG, filterCards, normalizeConfig, poolSize, quickConfig, scopeDeckIds, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
+import { buildPool, DEFAULT_CONFIG, filterCards, isAll, normalizeConfig, pickFromAll, poolSize, quickConfig, scopeDeckIds, Session, sortCards, summarize, type TestConfig } from '../src/lib/session';
 import type { Level } from '../src/lib/types';
 import { card, seeded } from './helpers';
 
@@ -248,4 +248,19 @@ describe('scopeDeckIds', () => {
   it('selects the whole collection when none of its decks were chosen', () => expect(scopeDeckIds(['b1'], ['a1', 'a2'])).toEqual(['a1', 'a2']));
   it('selects the whole collection when nothing was chosen', () => expect(scopeDeckIds([], ['a1'])).toEqual(['a1']));
   it('keeps the selection for an empty collection', () => expect(scopeDeckIds(['b1'], [])).toEqual(['b1']));
+});
+
+describe('pickFromAll', () => {
+  const all = ['a', 'b', 'c'];
+  it('picks only the tapped one when everything was chosen', () => expect(pickFromAll(['a', 'b', 'c'], all, 'b')).toEqual(['b']));
+  it('adds a chip in the order of all', () => expect(pickFromAll(['c'], all, 'a')).toEqual(['a', 'c']));
+  it('removes a chosen chip', () => expect(pickFromAll(['a', 'c'], all, 'c')).toEqual(['a']));
+  it('goes back to all when the last one is unticked', () => expect(pickFromAll(['b'], all, 'b')).toEqual(all));
+  it('ignores ids that are not in all', () => expect(pickFromAll(['x', 'a'], all, 'b')).toEqual(['a', 'b']));
+});
+
+describe('isAll', () => {
+  it('is true when every one is chosen', () => expect(isAll(['b', 'a'], ['a', 'b'])).toBe(true));
+  it('is false when one is missing', () => expect(isAll(['a'], ['a', 'b'])).toBe(false));
+  it('is false for an empty row', () => expect(isAll([], [])).toBe(false));
 });

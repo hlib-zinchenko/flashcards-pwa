@@ -361,6 +361,48 @@ h3 {
   --tile-edge: var(--accent-edge);
 }
 
+/* Actions in a sheet: rows with dividers in one panel, like the lists in Settings.
+   Put a destructive action in a list of its own below. */
+.menu-list {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+}
+.menu-list + .menu-list {
+  margin-top: 14px;
+}
+.menu-list :is(button, a) {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 4px 16px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.menu-list li:first-child > :is(button, a) {
+  border-top: 0;
+}
+.menu-list :is(button, a):active {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+.menu-list button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.menu-list .danger {
+  color: var(--danger);
+}
+
 /* Keyboard focus: one ring for buttons, chips, links and other controls. */
 :where(button, a, summary, [tabindex]):focus-visible {
   outline: 2.5px solid var(--text);

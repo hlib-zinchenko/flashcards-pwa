@@ -178,7 +178,6 @@ export const zh: Messages = {
   'summary.knownCaption': '答对',
   'summary.missedCards': '答错的卡片',
   'summary.continue': '继续',
-  'summary.answered': '回答',
   'summary.missed': '答错',
   'summary.levelUps': '升级',
   'summary.levelDowns': '降级',

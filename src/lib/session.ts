@@ -110,6 +110,22 @@ export function scopeDeckIds(selected: readonly string[], collectionDeckIds: rea
   return kept.length > 0 ? kept : [...collectionDeckIds];
 }
 
+/**
+ * Tap a chip in a row that starts with "All" (decks, levels). With everything chosen, only "All" looks
+ * pressed, so a tap picks just that one; otherwise it toggles. Unticking the last one goes back to all.
+ * The result keeps the order of `all`.
+ */
+export function pickFromAll<T>(selected: readonly T[], all: readonly T[], value: T): T[] {
+  const everything = all.every((x) => selected.includes(x));
+  const next = everything ? [value] : selected.includes(value) ? selected.filter((x) => x !== value) : [...selected, value];
+  return next.length === 0 ? [...all] : all.filter((x) => next.includes(x));
+}
+
+/** True when every one of `all` is chosen: the row shows only "All" pressed. */
+export function isAll<T>(selected: readonly T[], all: readonly T[]): boolean {
+  return all.length > 0 && all.every((x) => selected.includes(x));
+}
+
 /** Filter, sort, then apply the card limit. */
 export function buildPool(
   cards: readonly Card[],

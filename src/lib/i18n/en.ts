@@ -180,7 +180,6 @@ export const en = {
   'summary.knownCaption': 'known',
   'summary.missedCards': 'Missed cards',
   'summary.continue': 'Continue',
-  'summary.answered': 'Answers',
   'summary.missed': 'Missed',
   'summary.levelUps': 'Level up',
   'summary.levelDowns': 'Level down',

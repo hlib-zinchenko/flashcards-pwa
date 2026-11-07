@@ -178,7 +178,6 @@ export const ja: Messages = {
   'summary.knownCaption': '正解',
   'summary.missedCards': '間違えたカード',
   'summary.continue': '続ける',
-  'summary.answered': '回答',
   'summary.missed': '不正解',
   'summary.levelUps': 'レベルアップ',
   'summary.levelDowns': 'レベルダウン',

@@ -178,7 +178,6 @@ export const nl: Messages = {
   'summary.knownCaption': 'gekend',
   'summary.missedCards': 'Gemiste kaarten',
   'summary.continue': 'Doorgaan',
-  'summary.answered': 'Antwoorden',
   'summary.missed': 'Gemist',
   'summary.levelUps': 'Niveau omhoog',
   'summary.levelDowns': 'Niveau omlaag',

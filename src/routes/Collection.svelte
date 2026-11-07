@@ -107,19 +107,11 @@
 <TopBar title={$collection?.name ?? ''} back={href('/')}>
   {#snippet actions()}
     {#if $collection}
-      {#if cards.length}
-        <button class="icon-btn" type="button" onclick={share} aria-label={t('collection.share')} title={t('collection.share')}>
-          <Icon name="share" size={19} />
-        </button>
-      {/if}
-      <button class="icon-btn" type="button" onclick={importCsv} aria-label={t('decks.importCsv')} title={t('decks.importCsv')}>
-        <Icon name="fileImport" size={19} />
-      </button>
       <button class="icon-btn" type="button" onclick={() => (creating = true)} aria-label={t('decks.new')} title={t('decks.new')}>
         <Icon name="plus" size={21} />
       </button>
       <button class="icon-btn" type="button" onclick={() => (settingsOpen = true)} aria-label={t('collection.settings')} title={t('collection.settings')}>
-        <Icon name="settings" size={19} />
+        <Icon name="more" />
       </button>
     {/if}
   {/snippet}
@@ -140,7 +132,7 @@
       {#if !speechSupported}
         {t('collection.speechUnsupported')}
       {:else if $collection.languages.length}
-        {$collection.languages.map((l) => languageName(l.lang)).join(' · ')}
+        <span class="speech-langs">{$collection.languages.map((l) => languageName(l.lang)).join(' · ')}</span>
       {:else}
         {t('collection.speechOff')}
       {/if}
@@ -209,12 +201,24 @@
     <h3 class="sub-title">{t('collection.languages')}</h3>
     <p class="muted small lead">{t('collection.languagesHint')}</p>
     <CollectionLanguages collection={$collection} />
-    <div class="menu">
-      <button class="btn" type="button" onclick={() => { settingsOpen = false; renaming = true; }}>
-        <Icon name="edit" size={18} />{t('collection.rename')}
-      </button>
-      <button class="btn btn-danger" type="button" onclick={remove}><Icon name="trash" size={18} />{t('collection.delete')}</button>
-    </div>
+    <ul class="panel menu-list actions">
+      <li>
+        <button type="button" onclick={() => { settingsOpen = false; renaming = true; }}><Icon name="edit" size={18} />{t('collection.rename')}</button>
+      </li>
+      <li>
+        <button type="button" onclick={() => { settingsOpen = false; importCsv(); }}><Icon name="fileImport" size={18} />{t('decks.importCsv')}</button>
+      </li>
+      {#if cards.length}
+        <li>
+          <button type="button" onclick={share}><Icon name="share" size={18} />{t('collection.share')}</button>
+        </li>
+      {/if}
+    </ul>
+    <ul class="panel menu-list">
+      <li>
+        <button class="danger" type="button" onclick={remove}><Icon name="trash" size={18} />{t('collection.delete')}</button>
+      </li>
+    </ul>
   {/if}
 </Modal>
 
@@ -237,7 +241,8 @@
     gap: 6px;
   }
   .speech-line {
-    display: inline-flex;
+    display: flex;
+    max-width: 100%;
     align-items: center;
     gap: 6px;
     margin-top: 10px;
@@ -250,6 +255,15 @@
     text-align: left;
     cursor: pointer;
   }
+  .speech-line :global(svg) {
+    flex: none;
+  }
+  .speech-langs {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .sub-title {
     margin: 0 0 4px;
     font-size: 0.95rem;
@@ -258,13 +272,8 @@
   .lead {
     margin: 0 0 10px;
   }
-  .menu {
-    display: grid;
-    gap: 8px;
+  .actions {
     margin-top: 20px;
-  }
-  .menu .btn {
-    justify-content: flex-start;
   }
   .tile {
     --tile: var(--surface);
