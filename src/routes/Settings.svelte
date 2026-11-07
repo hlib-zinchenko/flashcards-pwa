@@ -18,6 +18,7 @@
   import { askConfirm } from '../lib/confirm.svelte';
   import { showToast } from '../lib/toast.svelte';
   import { openWhatsNew } from '../lib/whatsNew.svelte';
+  import { copyDiagnostics } from '../lib/errors.svelte';
   import type { Tag } from '../lib/types';
   import { RATE_SAMPLE, SPEECH_RATE } from '../lib/speech';
   import { setRate, speak, speechPrefs, speechSupported, stopSpeaking } from '../lib/speech.svelte';
@@ -29,6 +30,8 @@
     { href: REPO, icon: 'code', label: () => t('settings.sourceCode') },
     { href: `${REPO}/issues`, icon: 'message', label: () => t('settings.feedback') },
   ];
+  const EMAIL = 'hello@hzinchenko.com';
+  const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(`Flashcards ${__APP_VERSION__}`)}`;
   const themes: [ThemePref, () => string][] = [
     ['system', () => t('settings.themeSystem')],
     ['light', () => t('settings.themeLight')],
@@ -314,6 +317,18 @@
             </a>
           </li>
         {/each}
+        <li>
+          <a href={mailto}>
+            <Icon name="mail" size={18} />
+            <span class="grow">{t('settings.contact', { email: EMAIL })}</span>
+          </a>
+        </li>
+        <li>
+          <button type="button" onclick={copyDiagnostics}>
+            <Icon name="copy" size={18} />
+            <span class="grow">{t('settings.diagnostics')}</span>
+          </button>
+        </li>
       </ul>
     </div>
   </section>

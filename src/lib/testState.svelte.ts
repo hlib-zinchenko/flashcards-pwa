@@ -1,5 +1,6 @@
 import { loadPref, savePref } from './prefs';
 import { navigate } from './router.svelte';
+import { parseSavedRun, type SavedRun } from './savedRun';
 import { normalizeConfig, quickConfig, type TestConfig } from './session';
 import type { Level } from './types';
 
@@ -10,7 +11,36 @@ export const testState = $state({
   onlyCardIds: null as string[] | null,
   /** Route the session returns to when it's done: where it was started. */
   origin: '/test',
+  /** The run screen should start a new session instead of resuming a saved one. */
+  fresh: false,
 });
+
+const RUN_PREF = 'savedRun';
+
+/** An unfinished session saved when the app went to the background; offered as "Resume session". */
+// raw: plain data, replaced as a whole, read back by TestRun without Proxies.
+class SavedRunStore {
+  run = $state.raw<SavedRun | null>(parseSavedRun(loadPref<unknown>(RUN_PREF, null)));
+}
+export const savedRun = new SavedRunStore();
+
+export function saveRun(run: SavedRun): void {
+  savedRun.run = run;
+  savePref(RUN_PREF, run);
+}
+
+export function clearSavedRun(): void {
+  if (savedRun.run === null && loadPref<unknown>(RUN_PREF, null) === null) return;
+  savedRun.run = null;
+  savePref(RUN_PREF, null);
+}
+
+/** Open the run screen on the saved session. */
+export function resumeRun(): void {
+  testState.onlyCardIds = null;
+  testState.fresh = false;
+  navigate('/test/run');
+}
 
 export function saveTestConfig(): void {
   savePref('testConfig', $state.snapshot(testState.config));
@@ -20,6 +50,8 @@ export function saveTestConfig(): void {
 export function startSession(origin: string): void {
   testState.onlyCardIds = null;
   testState.origin = origin;
+  testState.fresh = true;
+  clearSavedRun();
   navigate('/test/run');
 }
 

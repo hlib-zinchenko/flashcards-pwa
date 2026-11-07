@@ -186,6 +186,14 @@ export const tr: Messages = {
   'summary.retryMissed': 'Kaçırılanları tekrar dene ({n})',
   'summary.done': 'Bitti',
 
+  'resume.title': 'Yarım kalan oturum',
+  'resume.left': '{n} kart kaldı|{n} kart kaldı',
+  'resume.button': 'Devam et',
+  'resume.discard': 'Oturumu bırak',
+
+  'error.toast': 'Bir şeyler ters gitti',
+  'error.copy': 'Ayrıntıları kopyala',
+
   'csv.title': 'CSV içe aktar',
   'csv.header': 'İlk satır başlık',
   'csv.found': '{n} kart bulundu|{n} kart bulundu',
@@ -246,6 +254,10 @@ export const tr: Messages = {
   'settings.madeBy': 'Geliştiren: {name}',
   'settings.sourceCode': 'GitHub’da kaynak kod',
   'settings.feedback': 'Sorun bildirin veya özellik önerin',
+  'settings.contact': '{email} adresine yazın',
+  'settings.diagnostics': 'Hata bildirimi için tanılama bilgilerini kopyala',
+  'settings.copied': 'Kopyalandı. Mesajınıza yapıştırın.',
+  'settings.copyFailed': 'Kopyalanamadı',
   'settings.offline': 'Çevrimdışı çalışır. Verileriniz bu cihazdan asla çıkmaz.',
 
   'install.button': 'Yükle',

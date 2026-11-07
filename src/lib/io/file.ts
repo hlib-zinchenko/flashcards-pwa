@@ -74,3 +74,46 @@ export function dateStamp(d = new Date()): string {
 export function safeFileName(name: string): string {
   return name.replace(/[\\/:*?"<>|]+/g, '_').trim() || 'deck';
 }
+
+/**
+ * Copy text to the clipboard. The text may still be loading: Safari only allows copying during the
+ * tap, so a pending text goes in a ClipboardItem that is handed over right away. Returns false if
+ * the browser refused.
+ */
+export async function copyText(text: string | Promise<string>): Promise<boolean> {
+  const clipboard = navigator.clipboard;
+  if (typeof text !== 'string' && clipboard?.write && typeof ClipboardItem !== 'undefined') {
+    try {
+      const blob = text.then((s) => new Blob([s], { type: 'text/plain' }));
+      await clipboard.write([new ClipboardItem({ 'text/plain': blob })]);
+      return true;
+    } catch {
+      // fall through
+    }
+  }
+  const value = await text;
+  try {
+    await clipboard.writeText(value);
+    return true;
+  } catch {
+    return copyWithTextarea(value);
+  }
+}
+
+/** The old way, for browsers without the async clipboard or with it blocked. */
+function copyWithTextarea(value: string): boolean {
+  const area = document.createElement('textarea');
+  area.value = value;
+  area.setAttribute('readonly', '');
+  area.style.position = 'fixed';
+  area.style.opacity = '0';
+  document.body.append(area);
+  area.select();
+  try {
+    return document.execCommand('copy');
+  } catch {
+    return false;
+  } finally {
+    area.remove();
+  }
+}

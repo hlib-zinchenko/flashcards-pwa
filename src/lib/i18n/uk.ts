@@ -186,6 +186,14 @@ export const uk: Messages = {
   'summary.retryMissed': 'Повторити помилки ({n})',
   'summary.done': 'Готово',
 
+  'resume.title': 'Незавершена сесія',
+  'resume.left': 'Залишилась {n} картка|Залишилось {n} картки|Залишилось {n} карток|Залишилось {n} картки',
+  'resume.button': 'Продовжити',
+  'resume.discard': 'Відкинути сесію',
+
+  'error.toast': 'Щось пішло не так',
+  'error.copy': 'Скопіювати деталі',
+
   'csv.title': 'Імпорт CSV',
   'csv.header': 'Перший рядок — заголовок',
   'csv.found': 'Знайдено {n} картку|Знайдено {n} картки|Знайдено {n} карток|Знайдено {n} картки',
@@ -246,6 +254,10 @@ export const uk: Messages = {
   'settings.madeBy': 'Автор: {name}',
   'settings.sourceCode': 'Вихідний код на GitHub',
   'settings.feedback': 'Повідомити про проблему чи запропонувати ідею',
+  'settings.contact': 'Написати на {email}',
+  'settings.diagnostics': 'Скопіювати діагностику для звіту про помилку',
+  'settings.copied': 'Скопійовано. Вставте це у своє повідомлення.',
+  'settings.copyFailed': 'Не вдалося скопіювати',
   'settings.offline': 'Працює офлайн. Ваші дані не покидають цей пристрій.',
 
   'install.button': 'Встановити',

@@ -186,6 +186,14 @@ export const nl: Messages = {
   'summary.retryMissed': 'Gemiste opnieuw proberen ({n})',
   'summary.done': 'Klaar',
 
+  'resume.title': 'Onafgemaakte sessie',
+  'resume.left': 'Nog {n} kaart|Nog {n} kaarten',
+  'resume.button': 'Hervatten',
+  'resume.discard': 'Sessie weggooien',
+
+  'error.toast': 'Er ging iets mis',
+  'error.copy': 'Details kopiëren',
+
   'csv.title': 'Csv importeren',
   'csv.header': 'Eerste rij is een koprij',
   'csv.found': '{n} kaart gevonden|{n} kaarten gevonden',
@@ -246,6 +254,10 @@ export const nl: Messages = {
   'settings.madeBy': 'Gemaakt door {name}',
   'settings.sourceCode': 'Broncode op GitHub',
   'settings.feedback': 'Een probleem melden of een functie voorstellen',
+  'settings.contact': 'Mail naar {email}',
+  'settings.diagnostics': 'Diagnose kopiëren voor een foutmelding',
+  'settings.copied': 'Gekopieerd. Plak het in je bericht.',
+  'settings.copyFailed': 'Kopiëren mislukt',
   'settings.offline': 'Werkt offline. Je gegevens verlaten dit apparaat nooit.',
 
   'install.button': 'Installeren',

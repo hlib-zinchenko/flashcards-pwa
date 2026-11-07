@@ -186,6 +186,14 @@ export const de: Messages = {
   'summary.retryMissed': 'Verfehlte wiederholen ({n})',
   'summary.done': 'Fertig',
 
+  'resume.title': 'Unbeendete Sitzung',
+  'resume.left': 'Noch {n} Karte|Noch {n} Karten',
+  'resume.button': 'Fortsetzen',
+  'resume.discard': 'Sitzung verwerfen',
+
+  'error.toast': 'Etwas ist schiefgelaufen',
+  'error.copy': 'Details kopieren',
+
   'csv.title': 'CSV importieren',
   'csv.header': 'Erste Zeile ist eine Kopfzeile',
   'csv.found': '{n} Karte gefunden|{n} Karten gefunden',
@@ -246,6 +254,10 @@ export const de: Messages = {
   'settings.madeBy': 'Entwickelt von {name}',
   'settings.sourceCode': 'Quellcode auf GitHub',
   'settings.feedback': 'Problem melden oder Funktion vorschlagen',
+  'settings.contact': 'E-Mail an {email}',
+  'settings.diagnostics': 'Diagnosedaten für einen Fehlerbericht kopieren',
+  'settings.copied': 'Kopiert. Füge es in deine Nachricht ein.',
+  'settings.copyFailed': 'Kopieren fehlgeschlagen',
   'settings.offline': 'Funktioniert offline. Deine Daten verlassen dieses Gerät nie.',
 
   'install.button': 'Installieren',

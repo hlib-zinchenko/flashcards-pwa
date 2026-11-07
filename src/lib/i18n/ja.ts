@@ -186,6 +186,14 @@ export const ja: Messages = {
   'summary.retryMissed': '間違えたカードをやり直す（{n}）',
   'summary.done': '完了',
 
+  'resume.title': '途中のセッション',
+  'resume.left': '残り{n}枚',
+  'resume.button': '再開',
+  'resume.discard': 'セッションを破棄',
+
+  'error.toast': '問題が発生しました',
+  'error.copy': '詳細をコピー',
+
   'csv.title': 'CSVを読み込む',
   'csv.header': '1行目は見出し',
   'csv.found': '{n}枚のカードが見つかりました',
@@ -246,6 +254,10 @@ export const ja: Messages = {
   'settings.madeBy': '作者：{name}',
   'settings.sourceCode': 'GitHubでソースコードを見る',
   'settings.feedback': '問題の報告・機能の提案',
+  'settings.contact': '{email} にメール',
+  'settings.diagnostics': '不具合報告用に診断情報をコピー',
+  'settings.copied': 'コピーしました。メッセージに貼り付けてください。',
+  'settings.copyFailed': 'コピーできませんでした',
   'settings.offline': 'オフラインで動作します。データがこのデバイスの外に出ることはありません。',
 
   'install.button': 'インストール',

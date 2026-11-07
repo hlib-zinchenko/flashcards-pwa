@@ -186,6 +186,14 @@ export const zh: Messages = {
   'summary.retryMissed': '重做答错的（{n}）',
   'summary.done': '完成',
 
+  'resume.title': '未完成的一轮',
+  'resume.left': '还剩 {n} 张',
+  'resume.button': '继续',
+  'resume.discard': '放弃这一轮',
+
+  'error.toast': '出错了',
+  'error.copy': '复制详情',
+
   'csv.title': '导入 CSV',
   'csv.header': '第一行是表头',
   'csv.found': '找到 {n} 张卡片',
@@ -246,6 +254,10 @@ export const zh: Messages = {
   'settings.madeBy': '作者：{name}',
   'settings.sourceCode': 'GitHub 上的源代码',
   'settings.feedback': '报告问题或提出功能建议',
+  'settings.contact': '发邮件到 {email}',
+  'settings.diagnostics': '复制诊断信息以报告问题',
+  'settings.copied': '已复制，请粘贴到你的消息中。',
+  'settings.copyFailed': '无法复制',
   'settings.offline': '可离线使用。你的数据不会离开此设备。',
 
   'install.button': '安装',

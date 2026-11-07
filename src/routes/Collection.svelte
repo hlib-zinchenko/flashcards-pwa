@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ResumeSession from '../components/ResumeSession.svelte';
   import { liveQuery } from 'dexie';
   import CollectionLanguages from '../components/CollectionLanguages.svelte';
   import CsvImportModal from '../components/CsvImportModal.svelte';
@@ -118,6 +119,7 @@
 </TopBar>
 
 <div class="page">
+  <ResumeSession />
   {#if $collection === null}
     <p class="muted center">{t('collection.notFound')}</p>
   {:else if $collection && $allDecks}

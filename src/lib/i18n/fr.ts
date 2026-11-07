@@ -186,6 +186,14 @@ export const fr: Messages = {
   'summary.retryMissed': 'Réessayer les ratées ({n})',
   'summary.done': 'Terminé',
 
+  'resume.title': 'Session inachevée',
+  'resume.left': 'Il reste {n} carte|Il reste {n} cartes',
+  'resume.button': 'Reprendre',
+  'resume.discard': 'Abandonner la session',
+
+  'error.toast': 'Une erreur s’est produite',
+  'error.copy': 'Copier les détails',
+
   'csv.title': 'Importer un CSV',
   'csv.header': 'La première ligne est un en-tête',
   'csv.found': '{n} carte trouvée|{n} cartes trouvées',
@@ -246,6 +254,10 @@ export const fr: Messages = {
   'settings.madeBy': 'Créé par {name}',
   'settings.sourceCode': 'Code source sur GitHub',
   'settings.feedback': 'Signaler un problème ou suggérer une fonctionnalité',
+  'settings.contact': 'Écrire à {email}',
+  'settings.diagnostics': 'Copier le diagnostic pour signaler un bug',
+  'settings.copied': 'Copié. Collez-le dans votre message.',
+  'settings.copyFailed': 'Copie impossible',
   'settings.offline': 'Fonctionne hors ligne. Vos données ne quittent jamais cet appareil.',
 
   'install.button': 'Installer',

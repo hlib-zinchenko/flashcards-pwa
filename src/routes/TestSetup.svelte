@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ResumeSession from '../components/ResumeSession.svelte';
   import Icon from '../components/Icon.svelte';
   import TopBar from '../components/TopBar.svelte';
   import { levelLabel, sortTags, t, tagLabel } from '../lib/i18n/index.svelte';
@@ -120,6 +121,7 @@
 <TopBar title={t('test.title')} />
 
 <div class="page">
+  <ResumeSession />
   {#if collection === null}
     <div class="empty">
       <p class="muted">{t('test.noCollection')}</p>

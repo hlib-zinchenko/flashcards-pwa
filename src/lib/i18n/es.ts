@@ -186,6 +186,14 @@ export const es: Messages = {
   'summary.retryMissed': 'Repetir falladas ({n})',
   'summary.done': 'Listo',
 
+  'resume.title': 'Sesión sin terminar',
+  'resume.left': 'Queda {n} tarjeta|Quedan {n} tarjetas',
+  'resume.button': 'Continuar',
+  'resume.discard': 'Descartar sesión',
+
+  'error.toast': 'Algo salió mal',
+  'error.copy': 'Copiar detalles',
+
   'csv.title': 'Importar CSV',
   'csv.header': 'La primera fila es un encabezado',
   'csv.found': '{n} tarjeta encontrada|{n} tarjetas encontradas',
@@ -246,6 +254,10 @@ export const es: Messages = {
   'settings.madeBy': 'Creada por {name}',
   'settings.sourceCode': 'Código fuente en GitHub',
   'settings.feedback': 'Informar de un problema o sugerir una función',
+  'settings.contact': 'Escribir a {email}',
+  'settings.diagnostics': 'Copiar diagnóstico para informar de un error',
+  'settings.copied': 'Copiado. Pégalo en tu mensaje.',
+  'settings.copyFailed': 'No se pudo copiar',
   'settings.offline': 'Funciona sin conexión. Tus datos nunca salen de este dispositivo.',
 
   'install.button': 'Instalar',

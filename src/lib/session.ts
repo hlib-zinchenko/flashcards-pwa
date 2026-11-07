@@ -137,6 +137,20 @@ export function buildPool(
   return cfg.limit && cfg.limit > 0 ? sorted.slice(0, cfg.limit) : sorted;
 }
 
+/** Everything a Session needs to carry on after the app is closed (undo history is not kept). */
+export interface SessionState {
+  pool: string[];
+  mode: Mode;
+  queue: string[];
+  current: string | null;
+  answered: number;
+  knownCount: number;
+  learned: string[];
+  missed: string[];
+  firstTry: string[];
+  attempted: string[];
+}
+
 interface SessionSnapshot {
   queue: string[];
   current: string | null;
@@ -177,6 +191,22 @@ export class Session {
     this.rng = opts.rng ?? Math.random;
     this.queue = this.pool.slice();
     this.advance();
+  }
+
+  /** A session where it was left off, from `state()`. Undo starts empty. */
+  static restore(state: SessionState, opts: { rng?: Rng } = {}): Session {
+    const s = new Session([], state.mode, opts);
+    s.pool = state.pool.slice();
+    s.queue = state.queue.slice();
+    s.current = state.current;
+    s.answered = state.answered;
+    s.knownCount = state.knownCount;
+    for (const key of ['learned', 'missed', 'firstTry', 'attempted'] as const) for (const id of state[key]) s[key].add(id);
+    return s;
+  }
+
+  state(): SessionState {
+    return { pool: this.pool.slice(), mode: this.mode, ...this.snapshot() };
   }
 
   get done(): boolean {

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ResumeSession from '../components/ResumeSession.svelte';
   import Icon from '../components/Icon.svelte';
   import InstallHint from '../components/InstallHint.svelte';
   import LevelBar from '../components/LevelBar.svelte';
@@ -50,6 +51,7 @@
 
 <div class="page">
   <InstallHint />
+  <ResumeSession />
 
   {#if $allCollections && $allCollections.length === 0}
     <div class="empty">

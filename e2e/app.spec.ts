@@ -25,6 +25,47 @@ test('create a deck, study it by swiping, see the summary', async ({ page }) => 
   await expect(page.getByText('Missed cards')).toBeVisible();
 });
 
+test('a session closed halfway can be resumed', async ({ page }) => {
+  await createDeck(page);
+  await addCards(page, [['猫', 'cat'], ['犬', 'dog'], ['鳥', 'bird']]);
+
+  await page.getByRole('link', { name: 'Test' }).click();
+  await page.getByRole('button', { name: /Start · 3 cards/ }).click();
+  await page.getByRole('button', { name: 'Got it' }).click();
+  await page.getByRole('button', { name: 'Know', exact: true }).click();
+  await expect(page.getByText('1 / 3')).toBeVisible();
+  const next = await page.locator('.flipper').first().innerText();
+
+  // iOS closes a PWA in the background: hide the page, then load the app from scratch.
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await page.goto('/');
+  await expect(page.getByText('Unfinished session')).toBeVisible();
+  await expect(page.getByText('2 cards left')).toBeVisible();
+  await page.getByRole('button', { name: 'Resume' }).click();
+  await expect(page.getByText('1 / 3')).toBeVisible();
+  expect(await page.locator('.flipper').first().innerText()).toBe(next);
+
+  await page.getByRole('button', { name: 'Know', exact: true }).click();
+  await expect(page.getByText('2 / 3')).toBeVisible();
+  await page.getByRole('button', { name: 'Know', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '3 of 3 known' })).toBeVisible();
+  await page.getByRole('button', { name: 'Done' }).click();
+  await expect(page.getByText('Unfinished session')).toHaveCount(0);
+});
+
+test('an unexpected error shows a toast and lands in the diagnostics', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => {});
+  await page.goto('#/settings');
+  await page.evaluate(() => setTimeout(() => Promise.reject(new DOMException('could not be cloned', 'DataCloneError'))));
+  await expect(page.getByText('Something went wrong')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Email hello@hzinchenko.com' })).toHaveAttribute('href', /^mailto:hello@hzinchenko\.com/);
+  const log = await page.evaluate(() => localStorage.getItem('errorLog'));
+  expect(log).toContain('DataCloneError: could not be cloned');
+});
+
 test('export a backup, wipe the library, import it back', async ({ page }) => {
   await createDeck(page);
   await addCards(page, [['猫', 'cat']]);

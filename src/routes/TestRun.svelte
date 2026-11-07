@@ -14,8 +14,9 @@
   import { gradeFields } from '../lib/learning';
   import { DeckFullError, deleteCard, gradeCard, restoreCard, restoreGrade, updateCard, type CardInput } from '../lib/repo/cards';
   import { navigate } from '../lib/router.svelte';
-  import { buildPool, Session, sortCards, summarize, type Summary } from '../lib/session';
-  import { testState } from '../lib/testState.svelte';
+  import type { SavedRun } from '../lib/savedRun';
+  import { buildPool, Session, sortCards, summarize, type Direction, type Mode, type Summary } from '../lib/session';
+  import { clearSavedRun, savedRun, saveRun, testState } from '../lib/testState.svelte';
   import { hideToast, showToast } from '../lib/toast.svelte';
   import { askConfirm } from '../lib/confirm.svelte';
   import { MAX_DECK_CARDS, type Card, type CardSide, type Level } from '../lib/types';
@@ -24,6 +25,11 @@
 
   const cards = new SvelteMap<string, Card>();
   let session = $state.raw<Session | null>(null);
+  /** Taken from the setup when a session starts; a resumed session keeps its own. */
+  let direction = $state<Direction>(cfg.direction);
+  let mode = $state<Mode>(cfg.mode);
+  /** The user is closing the session on purpose (Done), so it isn't saved for later. */
+  let leaving = false;
   let startLevels = new Map<string, Level>();
   /** Bumped after every session mutation (Session itself is not reactive). */
   let version = $state(0);
@@ -69,8 +75,8 @@
     return Array.from({ length: Math.max(0, n) }, (_, i) => progress.answered + n - i);
   });
   const missedCards = $derived(missedIds.map((id) => cards.get(id)).filter((c) => !!c));
-  const promptOf = (c: Card) => (cfg.direction === 'front' ? c.front : c.back);
-  const answerOf = (c: Card) => (cfg.direction === 'front' ? c.back : c.front);
+  const promptOf = (c: Card) => (direction === 'front' ? c.front : c.back);
+  const answerOf = (c: Card) => (direction === 'front' ? c.back : c.front);
   const deckById = $derived(new Map(($allDecks ?? []).map((d) => [d.id, d])));
   const collectionById = $derived(new Map(($allCollections ?? []).map((c) => [c.id, c])));
   /** How a card field is read aloud: set per deck, from its collection's languages; null = not read. */
@@ -78,8 +84,8 @@
     const deck = deckById.get(c.deckId);
     return deck ? sideSpeech(deck, collectionById.get(deck.collectionId), side) : null;
   }
-  const promptSpeech = $derived(current ? speechOf(current, cfg.direction === 'front' ? 'front' : 'back') : null);
-  const answerSpeech = $derived(current ? speechOf(current, cfg.direction === 'front' ? 'back' : 'front') : null);
+  const promptSpeech = $derived(current ? speechOf(current, direction === 'front' ? 'front' : 'back') : null);
+  const answerSpeech = $derived(current ? speechOf(current, direction === 'front' ? 'back' : 'front') : null);
   const prompt = $derived(current ? promptOf(current) : '');
   const answer = $derived(current ? answerOf(current) : '');
   const tagLabels = $derived(
@@ -90,7 +96,8 @@
     cards.clear();
     for (const c of pool) cards.set(c.id, c);
     startLevels = new Map(pool.map((c) => [c.id, c.level]));
-    session = new Session(pool.map((c) => c.id), cfg.mode);
+    session = new Session(pool.map((c) => c.id), mode);
+    clearSavedRun();
     gradedBefore = [];
     counted = false;
     summary = null;
@@ -121,12 +128,72 @@
     begin(pool);
   }
 
+  /** Carry on with a session saved before the app was closed. Cards deleted since then are dropped. */
+  async function resumeSaved(run: SavedRun) {
+    testState.origin = run.origin;
+    direction = run.direction;
+    const restored = Session.restore(run.session);
+    const found = await db.cards.bulkGet(restored.pool.slice());
+    cards.clear();
+    for (const c of found) if (c) cards.set(c.id, c);
+    for (const id of run.session.pool) if (!cards.has(id)) restored.remove(id);
+    if (restored.done) {
+      clearSavedRun();
+      navigate(run.origin, { replace: true });
+      return;
+    }
+    startLevels = new Map(run.startLevels);
+    mode = restored.mode;
+    session = restored;
+    gradedBefore = [];
+    counted = run.counted;
+    summary = null;
+    flipped = false;
+    version++;
+  }
+
+  /** Keep the session for later: iOS often closes a PWA soon after it goes to the background. */
+  function persist() {
+    if (!session || session.done || session.answered === 0) return;
+    saveRun({
+      savedAt: Date.now(),
+      origin: testState.origin,
+      direction,
+      session: session.state(),
+      startLevels: [...startLevels],
+      counted,
+    });
+  }
+
+  function onVisibility() {
+    if (document.visibilityState === 'hidden') persist();
+  }
+
+  /** Done: the session is over, nothing to resume. */
+  function leave() {
+    leaving = true;
+    clearSavedRun();
+    navigate(testState.origin);
+  }
+
   onMount(() => {
     const only = testState.onlyCardIds;
+    const saved = testState.fresh || only ? null : savedRun.run;
     testState.onlyCardIds = null;
-    load(only);
+    testState.fresh = false;
+    if (saved) {
+      resumeSaved(saved);
+    } else {
+      direction = cfg.direction;
+      mode = cfg.mode;
+      load(only);
+    }
   });
-  onDestroy(dropUndoToast);
+  onDestroy(() => {
+    dropUndoToast();
+    // Left some other way than Done (the back gesture, a link): offer to resume it.
+    if (!leaving) persist();
+  });
 
   async function grade(known: boolean) {
     if (!session || busy || session.current === null) return;
@@ -171,9 +238,10 @@
   function finish() {
     if (!session) return;
     if (session.answered === 0) {
-      navigate(testState.origin);
+      leave();
       return;
     }
+    if (session.done) clearSavedRun();
     const levels = new Map([...cards].map(([id, c]) => [id, c.level]));
     summary = summarize(session, startLevels, levels);
     endedEarly = !session.done;
@@ -272,7 +340,8 @@
   }
 </script>
 
-<svelte:window onkeydown={onKey} />
+<svelte:window onkeydown={onKey} onpagehide={persist} />
+<svelte:document onvisibilitychange={onVisibility} />
 
 <div class="run">
   {#if summary}
@@ -282,7 +351,7 @@
           <p class="status">{endedEarly ? t('summary.ended', { n: remaining }) : t('summary.title')}</p>
           <h1 aria-label={t('summary.headline', { known: summary.firstTry, total: summary.uniqueCards })}>
             <span class="score display" aria-hidden="true">{summary.firstTry}<span class="of">/{summary.uniqueCards}</span></span>
-            <span class="caption" aria-hidden="true">{cfg.mode === 'cram' ? `${t('summary.knownCaption')} ${t('summary.firstTryNote')}` : t('summary.knownCaption')}</span>
+            <span class="caption" aria-hidden="true">{mode === 'cram' ? `${t('summary.knownCaption')} ${t('summary.firstTryNote')}` : t('summary.knownCaption')}</span>
           </h1>
         </div>
 
@@ -308,7 +377,7 @@
               <Icon name="reset" size={18} />{t('summary.again')}
             </button>
           {/if}
-          <button class="btn btn-block" class:btn-mint={!endedEarly} type="button" onclick={() => navigate(testState.origin)}>
+          <button class="btn btn-block" class:btn-mint={!endedEarly} type="button" onclick={leave}>
             {t('summary.done')}
           </button>
         </div>

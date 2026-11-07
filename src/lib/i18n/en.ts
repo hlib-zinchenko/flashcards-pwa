@@ -188,6 +188,14 @@ export const en = {
   'summary.retryMissed': 'Retry missed ({n})',
   'summary.done': 'Done',
 
+  'resume.title': 'Unfinished session',
+  'resume.left': '{n} card left|{n} cards left',
+  'resume.button': 'Resume',
+  'resume.discard': 'Discard session',
+
+  'error.toast': 'Something went wrong',
+  'error.copy': 'Copy details',
+
   'csv.title': 'Import CSV',
   'csv.header': 'First row is a header',
   'csv.found': '{n} card found|{n} cards found',
@@ -248,6 +256,10 @@ export const en = {
   'settings.madeBy': 'Made by {name}',
   'settings.sourceCode': 'Source code on GitHub',
   'settings.feedback': 'Report a problem or suggest a feature',
+  'settings.contact': 'Email {email}',
+  'settings.diagnostics': 'Copy diagnostics for a bug report',
+  'settings.copied': 'Copied. Paste it into your message.',
+  'settings.copyFailed': 'Couldn’t copy',
   'settings.offline': 'Works offline. Your data never leaves this device.',
 
   'install.button': 'Install',
