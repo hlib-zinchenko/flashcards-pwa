@@ -89,6 +89,7 @@ export const nl: Messages = {
   'deck.reorderDone': 'Klaar',
   'deck.search': 'Kaarten zoeken',
   'deck.noCards': 'Nog geen kaarten. Voeg hierboven de eerste toe.',
+  'deck.full': 'Deze stapel is vol: een stapel bevat maximaal {max} kaarten. Maak een nieuwe stapel voor meer.',
   'deck.noMatches': 'Geen kaarten gevonden.',
   'deck.speech': 'Voorlezen',
   'deck.speechHint': 'De taal waarin elke kant van de kaarten wordt voorgelezen.',
@@ -199,6 +200,7 @@ export const nl: Messages = {
   'share.downloaded': 'Bestand opgeslagen. Verstuur het vanuit je downloads.',
   'csv.empty': 'Geen kaarten gevonden in dit bestand',
   'csv.more': '…en nog {n}',
+  'csv.noRoom': 'Er past nog {n} kaart in deze stapel (maximaal {max}).|Er passen nog {n} kaarten in deze stapel (maximaal {max}).',
 
   'settings.title': 'Instellingen',
   'settings.language': 'Taal',

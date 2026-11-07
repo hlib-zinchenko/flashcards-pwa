@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { groupByDeck, parseCsv, splitTags, toCsv } from '../src/lib/io/csv';
+import { groupByDeck, parseCsv, splitGroups, splitTags, toCsv, type CsvRow } from '../src/lib/io/csv';
 
 describe('parseCsv', () => {
   it('parses comma separated with auto header and tags', () => {
@@ -72,5 +72,16 @@ describe('groupByDeck', () => {
       ['File', ['2']],
       ['A', ['3']],
     ]);
+  });
+});
+
+describe('splitGroups', () => {
+  const r = (front: string): CsvRow => ({ front, back: '', tags: [], notes: '' });
+  const rows = (n: number) => Array.from({ length: n }, (_, i) => r(String(i)));
+
+  it('keeps groups that fit and splits the rest into numbered decks', () => {
+    const groups = splitGroups([{ name: 'Small', rows: rows(3) }, { name: 'Big', rows: rows(7) }], 3);
+    expect(groups.map((g) => [g.name, g.rows.length])).toEqual([['Small', 3], ['Big', 3], ['Big 2', 3], ['Big 3', 1]]);
+    expect(groups.slice(1).flatMap((g) => g.rows.map((x) => x.front))).toEqual(rows(7).map((x) => x.front));
   });
 });

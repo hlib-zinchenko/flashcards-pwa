@@ -66,5 +66,7 @@ export default defineConfig({
   test: {
     include: ['tests/**/*.test.ts'],
     environment: 'node',
+    // IndexedDB for the repo/import/upgrade tests; Dexie reads it when first imported.
+    setupFiles: ['fake-indexeddb/auto'],
   },
 });

@@ -1,10 +1,11 @@
 <script lang="ts">
   import { t } from '../lib/i18n/index.svelte';
-  import { groupByDeck, parseCsv } from '../lib/io/csv';
-  import { addCards } from '../lib/repo/cards';
+  import { groupByDeck, parseCsv, splitGroups } from '../lib/io/csv';
+  import { addCards, DeckFullError } from '../lib/repo/cards';
   import { createDeck } from '../lib/repo/decks';
   import { normalizeTagName, resolveTagNames } from '../lib/repo/tags';
   import { showToast } from '../lib/toast.svelte';
+  import { MAX_DECK_CARDS } from '../lib/types';
   import Modal from './Modal.svelte';
 
   let {
@@ -39,7 +40,8 @@
 
   const parsed = $derived(parseCsv(text, { header }));
   // A collection file names a deck per row; importing into a deck ignores those names.
-  const groups = $derived(deckId ? null : groupByDeck(parsed.rows, deckName.trim() || fileName));
+  // A deck holds MAX_DECK_CARDS at most: bigger groups become "Name", "Name 2"…
+  const groups = $derived(deckId ? null : splitGroups(groupByDeck(parsed.rows, deckName.trim() || fileName), MAX_DECK_CARDS));
   const multi = $derived(!!groups && parsed.rows.some((r) => r.deck));
   const separator = $derived(
     parsed.delimiter === '\t' ? t('csv.tab') : parsed.delimiter === ';' ? t('csv.semicolon') : t('csv.comma'),
@@ -67,6 +69,10 @@
       open = false;
       // Several decks: stay where the user is, so they see them all.
       if (targets.length === 1) onimported?.(targets[0].id);
+    } catch (err) {
+      // Only when importing into an existing deck: new decks are split to fit.
+      if (!(err instanceof DeckFullError)) throw err;
+      showToast(t('csv.noRoom', { n: err.room, max: MAX_DECK_CARDS }), 5000);
     } finally {
       busy = false;
     }
@@ -87,7 +93,7 @@
   </label>
   <p class="meta">
     <strong>{t('csv.found', { n: parsed.rows.length })}</strong>
-    {#if multi && groups}<span class="muted"> · {t('collection.decks', { n: groups.length })}</span>{/if}
+    {#if groups && groups.length > 1}<span class="muted"> · {t('collection.decks', { n: groups.length })}</span>{/if}
     <span class="muted"> · {t('csv.separator')}: {separator}</span>
     {#if parsed.skipped}<span class="muted"> · {t('csv.skipped', { n: parsed.skipped })}</span>{/if}
   </p>

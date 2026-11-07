@@ -89,6 +89,7 @@ export const tr: Messages = {
   'deck.reorderDone': 'Bitti',
   'deck.search': 'Kartlarda ara',
   'deck.noCards': 'Henüz kart yok. İlkini yukarıdan ekleyin.',
+  'deck.full': 'Bu deste dolu: bir deste en fazla {max} kart alır. Daha fazlası için yeni bir deste oluşturun.',
   'deck.noMatches': 'Eşleşen kart yok.',
   'deck.speech': 'Sesli okuma',
   'deck.speechHint': 'Kartların her yüzünün okunacağı dil.',
@@ -199,6 +200,7 @@ export const tr: Messages = {
   'share.downloaded': 'Dosya kaydedildi. İndirilenler\'den gönderin.',
   'csv.empty': 'Bu dosyada kart bulunamadı',
   'csv.more': '…ve {n} tane daha',
+  'csv.noRoom': 'Bu destede {n} kartlık yer kaldı (en fazla {max}).|Bu destede {n} kartlık yer kaldı (en fazla {max}).',
 
   'settings.title': 'Ayarlar',
   'settings.language': 'Dil',

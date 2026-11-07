@@ -1,7 +1,20 @@
 import Dexie from 'dexie';
 import { db, newId } from '../db';
 import { gradeFields, gradeUpdate } from '../learning';
-import type { Card } from '../types';
+import { MAX_DECK_CARDS, type Card } from '../types';
+
+/** The deck can't take that many more cards; `room` is how many still fit. */
+export class DeckFullError extends Error {
+  constructor(readonly room: number) {
+    super(`Deck is full: room for ${room} more`);
+  }
+}
+
+/** Throw DeckFullError unless `adding` more cards fit in the deck. Call inside a transaction on db.cards. */
+async function checkRoom(deckId: string, adding: number): Promise<void> {
+  const room = Math.max(0, MAX_DECK_CARDS - (await db.cards.where('deckId').equals(deckId).count()));
+  if (adding > room) throw new DeckFullError(room);
+}
 
 export interface CardInput {
   front: string;
@@ -40,8 +53,10 @@ function newCard(deckId: string, input: CardInput, position: number, now: number
   };
 }
 
+/** Add cards at the end of the deck; all or none (DeckFullError when they don't fit). */
 export async function addCards(deckId: string, inputs: CardInput[]): Promise<void> {
   await db.transaction('rw', db.cards, async () => {
+    await checkRoom(deckId, inputs.length);
     const start = await nextPosition(deckId);
     const now = Date.now();
     await db.cards.bulkAdd(inputs.map((input, i) => newCard(deckId, input, start + i, now)));
@@ -64,6 +79,7 @@ export async function updateCard(id: string, input: CardInput & { deckId?: strin
     };
     if (input.notes !== undefined) changes.notes = input.notes.trim();
     if (input.deckId && input.deckId !== card.deckId) {
+      await checkRoom(input.deckId, 1);
       changes.deckId = input.deckId;
       changes.position = await nextPosition(input.deckId);
     }

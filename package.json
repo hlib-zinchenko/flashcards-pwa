@@ -9,10 +9,13 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run",
+    "e2e": "playwright test",
+    "perf": "PERF=1 playwright test perf --workers=1",
     "icons": "pwa-assets-generator",
     "og-image": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,630 --allow-file-access-from-files --virtual-time-budget=3000 --screenshot=public/og-image.png docs/og/og-image.html"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@tsconfig/svelte": "^5.0.8",
     "@types/papaparse": "^5.5.2",

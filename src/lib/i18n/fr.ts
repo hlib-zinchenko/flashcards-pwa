@@ -89,6 +89,7 @@ export const fr: Messages = {
   'deck.reorderDone': 'Terminé',
   'deck.search': 'Rechercher des cartes',
   'deck.noCards': 'Aucune carte pour l’instant. Ajoutez la première ci-dessus.',
+  'deck.full': 'Ce paquet est plein : un paquet contient jusqu’à {max} cartes. Créez un autre paquet pour en ajouter.',
   'deck.noMatches': 'Aucune carte ne correspond.',
   'deck.speech': 'Lecture à voix haute',
   'deck.speechHint': 'La langue dans laquelle chaque face des cartes est lue.',
@@ -199,6 +200,7 @@ export const fr: Messages = {
   'share.downloaded': 'Fichier enregistré. Envoyez-le depuis vos téléchargements.',
   'csv.empty': 'Aucune carte trouvée dans ce fichier',
   'csv.more': '… et {n} de plus',
+  'csv.noRoom': 'Ce paquet a encore de la place pour {n} carte (maximum {max}).|Ce paquet a encore de la place pour {n} cartes (maximum {max}).',
 
   'settings.title': 'Réglages',
   'settings.language': 'Langue',

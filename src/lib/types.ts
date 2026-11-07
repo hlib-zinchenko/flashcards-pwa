@@ -29,6 +29,13 @@ export type CardSide = 'front' | 'back';
 /** Language each card side is read aloud in; a missing side is not read. */
 export type DeckSpeech = Partial<Record<CardSide, string>>;
 
+/**
+ * Most cards a deck can hold. Bigger decks get slow to open and search on a phone (the deck screen
+ * renders every card), so lists over this size are split into several decks. Backups still import
+ * bigger decks from older versions as they are.
+ */
+export const MAX_DECK_CARDS = 999;
+
 export interface Deck {
   id: string;
   name: string;

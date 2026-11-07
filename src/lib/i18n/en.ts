@@ -91,6 +91,7 @@ export const en = {
   'deck.reorderDone': 'Done',
   'deck.search': 'Search cards',
   'deck.noCards': 'No cards yet. Add the first one above.',
+  'deck.full': 'This deck is full: a deck holds up to {max} cards. Create another deck for more.',
   'deck.noMatches': 'No cards match.',
   'deck.speech': 'Reading aloud',
   'deck.speechHint': 'The language each side of the cards is read in.',
@@ -201,6 +202,7 @@ export const en = {
   'share.downloaded': 'File saved. Send it from your Downloads.',
   'csv.empty': 'No cards found in this file',
   'csv.more': '…and {n} more',
+  'csv.noRoom': 'This deck has room for {n} more card (a deck holds up to {max}).|This deck has room for {n} more cards (a deck holds up to {max}).',
 
   'settings.title': 'Settings',
   'settings.language': 'Language',

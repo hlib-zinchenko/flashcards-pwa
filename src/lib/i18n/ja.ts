@@ -89,6 +89,7 @@ export const ja: Messages = {
   'deck.reorderDone': '完了',
   'deck.search': 'カードを検索',
   'deck.noCards': 'カードはまだありません。上から最初の1枚を追加しましょう。',
+  'deck.full': 'このデッキはいっぱいです（1デッキ最大{max}枚）。追加するには別のデッキを作成してください。',
   'deck.noMatches': '一致するカードはありません。',
   'deck.speech': '読み上げ',
   'deck.speechHint': 'カードの各面を読み上げる言語です。',
@@ -199,6 +200,7 @@ export const ja: Messages = {
   'share.downloaded': 'ファイルを保存しました。ダウンロードから送信してください。',
   'csv.empty': 'このファイルにカードが見つかりません',
   'csv.more': '…ほか{n}件',
+  'csv.noRoom': 'このデッキにはあと{n}枚しか追加できません（最大{max}枚）。',
 
   'settings.title': '設定',
   'settings.language': '言語',

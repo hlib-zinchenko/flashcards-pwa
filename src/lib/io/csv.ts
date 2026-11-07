@@ -119,3 +119,15 @@ export function groupByDeck(rows: readonly CsvRow[], fallback: string): DeckGrou
   }
   return [...groups.values()];
 }
+
+/** Split groups bigger than `max` rows into "Name", "Name 2", "Name 3"… so each fits in a deck. */
+export function splitGroups(groups: readonly DeckGroup[], max: number): DeckGroup[] {
+  return groups.flatMap((g) => {
+    if (g.rows.length <= max) return [g];
+    const parts: DeckGroup[] = [];
+    for (let i = 0; i < g.rows.length; i += max) {
+      parts.push({ name: i === 0 ? g.name : `${g.name} ${i / max + 1}`, rows: g.rows.slice(i, i + max) });
+    }
+    return parts;
+  });
+}

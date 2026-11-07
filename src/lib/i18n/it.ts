@@ -89,6 +89,7 @@ export const it: Messages = {
   'deck.reorderDone': 'Fine',
   'deck.search': 'Cerca carte',
   'deck.noCards': 'Ancora nessuna carta. Aggiungi la prima qui sopra.',
+  'deck.full': 'Questo mazzo è pieno: un mazzo contiene fino a {max} carte. Crea un altro mazzo per aggiungerne altre.',
   'deck.noMatches': 'Nessuna carta corrisponde.',
   'deck.speech': 'Lettura ad alta voce',
   'deck.speechHint': 'La lingua in cui viene letto ogni lato delle carte.',
@@ -199,6 +200,7 @@ export const it: Messages = {
   'share.downloaded': 'File salvato. Invialo dai Download.',
   'csv.empty': 'Nessuna carta trovata in questo file',
   'csv.more': '…e altre {n}',
+  'csv.noRoom': 'Questo mazzo ha spazio per altra {n} carta (massimo {max}).|Questo mazzo ha spazio per altre {n} carte (massimo {max}).',
 
   'settings.title': 'Impostazioni',
   'settings.language': 'Lingua',

@@ -89,6 +89,7 @@ export const es: Messages = {
   'deck.reorderDone': 'Listo',
   'deck.search': 'Buscar tarjetas',
   'deck.noCards': 'Aún no hay tarjetas. Añade la primera arriba.',
+  'deck.full': 'Este mazo está lleno: un mazo admite hasta {max} tarjetas. Crea otro mazo para añadir más.',
   'deck.noMatches': 'Ninguna tarjeta coincide.',
   'deck.speech': 'Lectura en voz alta',
   'deck.speechHint': 'El idioma en que se lee cada lado de las tarjetas.',
@@ -199,6 +200,7 @@ export const es: Messages = {
   'share.downloaded': 'Archivo guardado. Envíalo desde Descargas.',
   'csv.empty': 'No se encontraron tarjetas en este archivo',
   'csv.more': '…y {n} más',
+  'csv.noRoom': 'Este mazo tiene espacio para {n} tarjeta más (máximo {max}).|Este mazo tiene espacio para {n} tarjetas más (máximo {max}).',
 
   'settings.title': 'Ajustes',
   'settings.language': 'Idioma',

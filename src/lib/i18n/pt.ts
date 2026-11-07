@@ -89,6 +89,7 @@ export const pt: Messages = {
   'deck.reorderDone': 'Concluído',
   'deck.search': 'Pesquisar cartões',
   'deck.noCards': 'Ainda não há cartões. Adicione o primeiro acima.',
+  'deck.full': 'Este baralho está cheio: um baralho comporta até {max} cartões. Crie outro baralho para adicionar mais.',
   'deck.noMatches': 'Nenhum cartão corresponde.',
   'deck.speech': 'Leitura em voz alta',
   'deck.speechHint': 'O idioma em que cada lado dos cartões é lido.',
@@ -199,6 +200,7 @@ export const pt: Messages = {
   'share.downloaded': 'Ficheiro guardado. Envie-o a partir das Transferências.',
   'csv.empty': 'Não foram encontrados cartões neste ficheiro',
   'csv.more': '…e mais {n}',
+  'csv.noRoom': 'Este baralho tem espaço para mais {n} cartão (máximo {max}).|Este baralho tem espaço para mais {n} cartões (máximo {max}).',
 
   'settings.title': 'Definições',
   'settings.language': 'Idioma',

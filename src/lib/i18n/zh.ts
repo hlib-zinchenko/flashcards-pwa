@@ -89,6 +89,7 @@ export const zh: Messages = {
   'deck.reorderDone': '完成',
   'deck.search': '搜索卡片',
   'deck.noCards': '还没有卡片。请在上方添加第一张。',
+  'deck.full': '此卡组已满：每个卡组最多 {max} 张卡片。如需更多，请新建一个卡组。',
   'deck.noMatches': '没有匹配的卡片。',
   'deck.speech': '朗读',
   'deck.speechHint': '卡片每一面朗读所用的语言。',
@@ -199,6 +200,7 @@ export const zh: Messages = {
   'share.downloaded': '文件已保存。请从“下载”中发送。',
   'csv.empty': '此文件中没有找到卡片',
   'csv.more': '……另有 {n} 张',
+  'csv.noRoom': '此卡组只能再添加 {n} 张卡片（最多 {max} 张）。',
 
   'settings.title': '设置',
   'settings.language': '语言',

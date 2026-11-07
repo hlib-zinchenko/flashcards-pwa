@@ -14,7 +14,7 @@
   import { pickFile, safeFileName, shareFile } from '../lib/io/file';
   import { levelCounts } from '../lib/learning';
   import { allCollections, allDecks, allTags } from '../lib/live';
-  import { addCard, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
+  import { addCard, DeckFullError, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
   import { deleteDeck, moveDeck, renameDeck, setDeckSpeech, swapDeckSides } from '../lib/repo/decks';
   import { sideSpeech } from '../lib/collections';
   import { href, navigate, rememberCollection } from '../lib/router.svelte';
@@ -23,7 +23,7 @@
   import { askConfirm } from '../lib/confirm.svelte';
   import { speechSupported } from '../lib/speech.svelte';
   import { showToast } from '../lib/toast.svelte';
-  import type { Card, CardSide } from '../lib/types';
+  import { MAX_DECK_CARDS, type Card, type CardSide } from '../lib/types';
 
   let { id }: { id: string } = $props();
 
@@ -41,12 +41,22 @@
   let frontEl: HTMLTextAreaElement | undefined = $state();
   let backEl: HTMLTextAreaElement | undefined = $state();
   let addOpen = $state(false);
-  const showAdd = $derived(addOpen || $cards?.length === 0);
+  const full = $derived(($cards?.length ?? 0) >= MAX_DECK_CARDS);
+  const showAdd = $derived(!full && (addOpen || $cards?.length === 0));
+
+  function deckFull(err: unknown): void {
+    if (!(err instanceof DeckFullError)) throw err;
+    showToast(t('deck.full', { max: MAX_DECK_CARDS }), 5000);
+  }
 
   async function add(e?: SubmitEvent) {
     e?.preventDefault();
     if (!front.trim() && !back.trim()) return;
-    await addCard(id, { front, back, tags: newTags });
+    try {
+      await addCard(id, { front, back, tags: newTags });
+    } catch (err) {
+      return deckFull(err);
+    }
     // Keep the form open for the next card (it was shown implicitly while the deck was empty).
     addOpen = true;
     front = '';
@@ -94,7 +104,11 @@
   }
   async function saveEdit(input: CardInput & { deckId?: string }) {
     if (!editing) return;
-    await updateCard(editing.id, input);
+    try {
+      await updateCard(editing.id, input);
+    } catch (err) {
+      return deckFull(err);
+    }
     editOpen = false;
     showToast(t('card.saved'));
   }
@@ -257,6 +271,8 @@
           </button>
         </div>
       </form>
+    {:else if full}
+      <p class="muted small full-hint">{t('deck.full', { max: MAX_DECK_CARDS })}</p>
     {:else}
       <button class="btn btn-block add-toggle" type="button" onclick={() => (addOpen = true)}>
         <Icon name="plus" size={18} />{t('card.add')}
@@ -483,6 +499,10 @@
   }
   .add-actions .muted {
     flex: 1;
+  }
+  .full-hint {
+    margin: 16px 0 0;
+    text-align: center;
   }
   .add-toggle {
     margin-top: 16px;

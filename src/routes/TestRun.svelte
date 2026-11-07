@@ -12,13 +12,13 @@
   import { sideSpeech } from '../lib/collections';
   import { loadPref, savePref } from '../lib/prefs';
   import { gradeFields } from '../lib/learning';
-  import { deleteCard, gradeCard, restoreCard, restoreGrade, updateCard, type CardInput } from '../lib/repo/cards';
+  import { DeckFullError, deleteCard, gradeCard, restoreCard, restoreGrade, updateCard, type CardInput } from '../lib/repo/cards';
   import { navigate } from '../lib/router.svelte';
   import { buildPool, Session, sortCards, summarize, type Summary } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
   import { hideToast, showToast } from '../lib/toast.svelte';
   import { askConfirm } from '../lib/confirm.svelte';
-  import type { Card, CardSide, Level } from '../lib/types';
+  import { MAX_DECK_CARDS, type Card, type CardSide, type Level } from '../lib/types';
 
   const cfg = testState.config;
 
@@ -197,7 +197,13 @@
 
   async function saveEdit(input: CardInput) {
     if (!current) return;
-    await updateCard(current.id, input);
+    try {
+      await updateCard(current.id, input);
+    } catch (err) {
+      if (!(err instanceof DeckFullError)) throw err;
+      showToast(t('deck.full', { max: MAX_DECK_CARDS }), 5000);
+      return;
+    }
     const updated = await db.cards.get(current.id);
     if (updated) cards.set(updated.id, updated);
     editOpen = false;

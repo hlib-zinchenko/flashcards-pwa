@@ -89,6 +89,7 @@ export const de: Messages = {
   'deck.reorderDone': 'Fertig',
   'deck.search': 'Karten suchen',
   'deck.noCards': 'Noch keine Karten. Füge oben die erste hinzu.',
+  'deck.full': 'Dieser Stapel ist voll: Ein Stapel fasst bis zu {max} Karten. Lege für weitere einen neuen Stapel an.',
   'deck.noMatches': 'Keine Karte passt.',
   'deck.speech': 'Vorlesen',
   'deck.speechHint': 'Die Sprache, in der jede Seite der Karten vorgelesen wird.',
@@ -199,6 +200,7 @@ export const de: Messages = {
   'share.downloaded': 'Datei gespeichert. Sende sie aus deinen Downloads.',
   'csv.empty': 'In dieser Datei wurden keine Karten gefunden',
   'csv.more': '… und {n} weitere',
+  'csv.noRoom': 'In diesem Stapel ist noch Platz für {n} Karte (höchstens {max}).|In diesem Stapel ist noch Platz für {n} Karten (höchstens {max}).',
 
   'settings.title': 'Einstellungen',
   'settings.language': 'Sprache',
