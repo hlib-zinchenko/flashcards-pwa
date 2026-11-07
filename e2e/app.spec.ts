@@ -66,6 +66,27 @@ test('an unexpected error shows a toast and lands in the diagnostics', async ({ 
   expect(log).toContain('DataCloneError: could not be cloned');
 });
 
+test('the Content-Security-Policy blocks nothing the app uses', async ({ page }) => {
+  await page.addInitScript(() => {
+    const seen: string[] = ((window as unknown as { cspViolations: string[] }).cspViolations = []);
+    document.addEventListener('securitypolicyviolation', (e) => seen.push(`${e.violatedDirective} ${e.blockedURI}`));
+  });
+  const violations = () => page.evaluate(() => (window as unknown as { cspViolations: string[] }).cspViolations);
+  // The theme script runs before first paint only if its hash matches.
+  await page.addInitScript(() => localStorage.setItem('theme', '"dark"'));
+  await createDeck(page);
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await addCards(page, [['猫', 'cat']]);
+  await page.getByRole('link', { name: 'Test' }).click();
+  await page.getByRole('button', { name: /Start · 1 card/ }).click();
+  await page.getByRole('button', { name: 'Got it' }).click();
+  await page.getByRole('button', { name: 'Know', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '1 of 1 known' })).toBeVisible();
+  await page.goto('#/settings');
+  await expect(page.getByText('Copy diagnostics for a bug report')).toBeVisible();
+  expect(await violations()).toEqual([]);
+});
+
 test('export a backup, wipe the library, import it back', async ({ page }) => {
   await createDeck(page);
   await addCards(page, [['猫', 'cat']]);
