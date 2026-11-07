@@ -10,6 +10,17 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.14.0',
+    en: [
+      'A deck holds up to 999 cards, so it opens and searches quickly. Bigger decks from older backups still work.',
+      'A CSV file with more than 999 cards is split into several decks: “Name”, “Name 2”…',
+    ],
+    uk: [
+      'У колоді може бути до 999 карток, тому вона швидко відкривається і шукає. Більші колоди зі старих бекапів працюють як і раніше.',
+      'CSV-файл, у якому понад 999 карток, ділиться на кілька колод: «Назва», «Назва 2»…',
+    ],
+  },
+  {
     version: '0.13.0',
     en: [
       'Softer colours: main buttons are plum or lavender instead of black or white, and messages at the bottom are paper tiles.',
@@ -36,11 +47,6 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Кнопки «Вчити» на колекції більше немає: відкрийте вкладку «Тест».',
       'Кнопки «Вчити», «Почати» і «Готово» тепер м’ятно-зелені.',
     ],
-  },
-  {
-    version: '0.11.5',
-    en: ['Buttons at the top of a test are no longer dimmed on iPad.'],
-    uk: ['Кнопки вгорі тесту більше не затінені на iPad.'],
   },
 ];
 
