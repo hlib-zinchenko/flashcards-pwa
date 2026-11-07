@@ -10,6 +10,21 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.16.0',
+    en: [
+      'Search words across a whole collection: tap the magnifier on the collection screen.',
+      'Adding a card warns you if the same word is already in any deck of the collection. You can still save it.',
+      'You can write notes when adding a card.',
+      'Tags are cleared after each card you add, so they don’t go onto the next one by mistake.',
+    ],
+    uk: [
+      'Пошук слів у всій колекції: натисніть лупу на екрані колекції.',
+      'Під час додавання картки застосунок попередить, якщо таке слово вже є в якійсь колоді колекції. Зберегти все одно можна.',
+      'Під час додавання картки можна написати нотатки.',
+      'Теги скидаються після кожної доданої картки, щоб не потрапити на наступну випадково.',
+    ],
+  },
+  {
     version: '0.15.0',
     en: [
       'If the phone closes the app during a test, you can pick up where you left off: tap Resume.',
@@ -31,21 +46,6 @@ export const CHANGELOG: ChangelogEntry[] = [
     uk: [
       'У колоді може бути до 999 карток, тому вона швидко відкривається і шукає. Більші колоди зі старих бекапів працюють як і раніше.',
       'CSV-файл, у якому понад 999 карток, ділиться на кілька колод: «Назва», «Назва 2»…',
-    ],
-  },
-  {
-    version: '0.13.0',
-    en: [
-      'Softer colours: main buttons are plum or lavender instead of black or white, and messages at the bottom are paper tiles.',
-      'Deck and collection menus are tidy lists; share and import moved into them.',
-      'In Test, tapping a deck, level or tag picks just that one; All picks everything again.',
-      'More cards fit on the screen of a deck.',
-    ],
-    uk: [
-      'М’якші кольори: головні кнопки сливові або лавандові замість чорних чи білих, а повідомлення внизу стали паперовими плитками.',
-      'Меню колоди й колекції стали охайними списками; «Поділитися» та «Імпорт» тепер там.',
-      'У тесті тап на колоду, рівень чи тег вибирає тільки його; «Усі» знову вибирає все.',
-      'На екрані колоди вміщується більше карток.',
     ],
   },
 ];

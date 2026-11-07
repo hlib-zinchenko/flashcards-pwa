@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { db } from '../src/lib/db';
-import { addCards, DeckFullError, deckCards, deleteCard, gradeCard, resetDeckProgress, restoreCard, restoreGrade, swapCards, updateCard } from '../src/lib/repo/cards';
+import { addCards, cardsInDecks, DeckFullError, deckCards, deleteCard, gradeCard, resetDeckProgress, restoreCard, restoreGrade, swapCards, updateCard } from '../src/lib/repo/cards';
 import { createCollection, deleteCollection, setCollectionLanguages } from '../src/lib/repo/collections';
 import { createDeck, deleteDeck, moveDeck, setDeckSpeech, swapDeckSides } from '../src/lib/repo/decks';
 import { createTag, deleteTag, renameTag, resolveTagNames, TagExistsError } from '../src/lib/repo/tags';
@@ -211,5 +211,19 @@ describe('deck size limit', () => {
     const [first] = await deckCards(full);
     await updateCard(first.id, { ...input('edited'), deckId: full });
     expect((await db.cards.get(first.id))!.front).toBe('edited');
+  });
+});
+
+describe('cardsInDecks', () => {
+  it('reads the cards of the given decks only, in deck order', async () => {
+    const k = await createCollection('Japanese');
+    const nouns = await createDeck('nouns', k);
+    const verbs = await createDeck('verbs', k);
+    const other = await createDeck('other', await createCollection('Other'));
+    await addCards(verbs, [input('食べる'), input('飲む')]);
+    await addCards(nouns, [input('猫'), input('犬')]);
+    await addCards(other, [input('鳥')]);
+    expect((await cardsInDecks([nouns, verbs])).map((c) => c.front)).toEqual(['猫', '犬', '食べる', '飲む']);
+    expect(await cardsInDecks([])).toEqual([]);
   });
 });

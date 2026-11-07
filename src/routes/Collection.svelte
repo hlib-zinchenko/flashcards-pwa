@@ -17,7 +17,8 @@
   import { allCards, allDecks } from '../lib/live';
   import { deleteCollection, renameCollection } from '../lib/repo/collections';
   import { createDeck } from '../lib/repo/decks';
-  import { href, lastCollection, navigate, rememberCollection } from '../lib/router.svelte';
+  import { href, lastCollection, navigate, openDeck, rememberCollection } from '../lib/router.svelte';
+  import { searchCards, searchEntries } from '../lib/search';
   import { startQuick } from '../lib/testState.svelte';
   import { speechSupported } from '../lib/speech.svelte';
   import { showToast } from '../lib/toast.svelte';
@@ -60,6 +61,26 @@
   let csvName = $state('');
   let settingsOpen = $state(false);
   let renaming = $state(false);
+
+  // ---- Word search across the collection's decks ----
+  const SHOWN_RESULTS = 100;
+  let searchOpen = $state(false);
+  let searchQuery = $state('');
+  // Normalized once per opening of the dialog, not per keystroke.
+  // Deck order, then card order, as on the screen.
+  const entries = $derived(searchOpen ? searchEntries(decks.flatMap((d) => [...(byDeck.get(d.id) ?? [])].sort((a, b) => a.position - b.position))) : []);
+  const results = $derived(searchCards(entries, searchQuery));
+  const deckName = $derived(new Map(decks.map((d) => [d.id, d.name])));
+
+  function openSearch() {
+    searchQuery = '';
+    searchOpen = true;
+  }
+
+  function openResult(card: Card) {
+    searchOpen = false;
+    openDeck(card.deckId, card.front || card.back);
+  }
 
   async function create(name: string) {
     const deckId = await createDeck(name, id);
@@ -108,6 +129,9 @@
 <TopBar title={$collection?.name ?? ''} back={href('/')}>
   {#snippet actions()}
     {#if $collection}
+      <button class="icon-btn" type="button" onclick={openSearch} aria-label={t('collection.search')} title={t('collection.search')}>
+        <Icon name="search" size={21} />
+      </button>
       <button class="icon-btn" type="button" onclick={() => (creating = true)} aria-label={t('decks.new')} title={t('decks.new')}>
         <Icon name="plus" size={21} />
       </button>
@@ -198,6 +222,37 @@
   onsubmit={rename}
 />
 
+<Modal bind:open={searchOpen} title={t('collection.search')}>
+  <label class="search-field">
+    <Icon name="search" size={18} />
+    <!-- svelte-ignore a11y_autofocus -->
+    <input class="input" type="search" bind:value={searchQuery} placeholder={t('collection.searchPlaceholder')} aria-label={t('collection.search')} autofocus enterkeyhint="search" />
+  </label>
+  {#if !searchQuery.trim()}
+    <p class="muted small">{t('collection.searchHint')}</p>
+  {:else if results.length === 0}
+    <p class="muted small">{t('deck.noMatches')}</p>
+  {:else}
+    <p class="muted small" role="status">{t('decks.cards', { n: results.length })}</p>
+    <ul class="results">
+      {#each results.slice(0, SHOWN_RESULTS) as card (card.id)}
+        <li>
+          <button class="result" type="button" onclick={() => openResult(card)}>
+            <span class="texts">
+              <span class="front card-text">{card.front}</span>
+              <span class="back card-text muted">{card.back}</span>
+            </span>
+            <span class="chip deck-name">{deckName.get(card.deckId)}</span>
+          </button>
+        </li>
+      {/each}
+    </ul>
+    {#if results.length > SHOWN_RESULTS}
+      <p class="muted small">{t('collection.searchMore', { n: results.length - SHOWN_RESULTS })}</p>
+    {/if}
+  {/if}
+</Modal>
+
 <Modal bind:open={settingsOpen} title={$collection?.name ?? ''}>
   {#if $collection}
     <h3 class="sub-title">{t('collection.languages')}</h3>
@@ -227,6 +282,68 @@
 <CsvImportModal bind:open={csvOpen} text={csvText} fileName={csvName} collectionId={id} onimported={(deckId) => navigate(`/deck/${deckId}`)} />
 
 <style>
+  .search-field {
+    position: relative;
+    display: block;
+    color: var(--muted);
+  }
+  .search-field :global(svg) {
+    position: absolute;
+    top: 13px;
+    left: 12px;
+  }
+  .search-field input {
+    padding-left: 38px;
+  }
+  .results {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .result {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--surface-2);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .result:active {
+    background: color-mix(in srgb, var(--surface-2) 70%, var(--text));
+  }
+  .result .texts {
+    display: grid;
+    flex: 1;
+    min-width: 0;
+  }
+  .result .front,
+  .result .back {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .result .front {
+    font-weight: 700;
+  }
+  .card-text {
+    font-family: var(--font-card);
+  }
+  .deck-name {
+    flex: none;
+    max-width: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .center {
     padding: 32px 0;
     text-align: center;

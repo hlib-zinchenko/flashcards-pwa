@@ -25,6 +25,55 @@ test('create a deck, study it by swiping, see the summary', async ({ page }) => 
   await expect(page.getByText('Missed cards')).toBeVisible();
 });
 
+test('quick add saves notes, clears tags and flags a word already in another deck', async ({ page }) => {
+  await createDeck(page, 'Japanese', 'Verbs');
+  const form = page.locator('form.add');
+  await form.getByPlaceholder('Word, question…').fill('食べる');
+  await form.getByPlaceholder('Meaning, answer…').fill('to eat');
+  await form.getByLabel('Notes').fill('ichidan');
+  await form.getByRole('button', { name: 'verb' }).click();
+  await form.getByLabel('Notes').press('Enter');
+  await expect(page.getByText('Card added')).toBeVisible();
+  // The form is ready for a fresh card: no notes, no tags.
+  await expect(form.getByLabel('Notes')).toHaveValue('');
+  await expect(form.getByRole('button', { name: 'verb' })).toHaveAttribute('aria-pressed', 'false');
+
+  // The same word in another deck of the collection gets a hint but can still be added.
+  await page.getByRole('link', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'New deck' }).first().click();
+  await page.getByLabel('Deck name').fill('Food');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await form.getByPlaceholder('Word, question…').fill(' 食べる');
+  await expect(form.getByRole('status')).toContainText('You already have this word');
+  await expect(form.getByRole('status')).toContainText('Verbs · to eat');
+  await form.getByPlaceholder('Meaning, answer…').fill('eating');
+  await form.getByPlaceholder('Meaning, answer…').press('Enter');
+  await expect(page.getByText('eating', { exact: true })).toBeVisible();
+  await expect(form.getByRole('status')).toBeEmpty();
+});
+
+test('word search finds a card in any deck of the collection and opens its deck', async ({ page }) => {
+  await createDeck(page, 'Japanese', 'Verbs');
+  await addCards(page, [['食べる', 'to eat'], ['飲む', 'to drink']]);
+  await page.getByRole('link', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'New deck' }).first().click();
+  await page.getByLabel('Deck name').fill('Food');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await addCards(page, [['食べ物', 'food']]);
+  await page.getByRole('link', { name: 'Back' }).click();
+
+  await page.getByRole('button', { name: 'Search words' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('searchbox').fill('ＥＡＴ');
+  await expect(dialog.getByRole('status')).toHaveText('1 card');
+  await dialog.getByRole('button', { name: /食べる/ }).click();
+
+  await expect(page.getByRole('heading', { name: 'Verbs' })).toBeVisible();
+  await expect(page.getByPlaceholder('Search cards')).toHaveValue('食べる');
+  await expect(page.getByText('to eat', { exact: true })).toBeVisible();
+  await expect(page.getByText('to drink', { exact: true })).toHaveCount(0);
+});
+
 test('a session closed halfway can be resumed', async ({ page }) => {
   await createDeck(page);
   await addCards(page, [['猫', 'cat'], ['犬', 'dog'], ['鳥', 'bird']]);

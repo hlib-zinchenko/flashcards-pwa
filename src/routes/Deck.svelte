@@ -14,10 +14,12 @@
   import { pickFile, safeFileName, shareFile } from '../lib/io/file';
   import { levelCounts } from '../lib/learning';
   import { allCollections, allDecks, allTags } from '../lib/live';
-  import { addCard, DeckFullError, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
+  import { findSameFront, indexFronts, normalizeFront, type FrontIndex } from '../lib/duplicates';
+  import { addCard, cardsInDecks, DeckFullError, deckCards, deleteCard, resetDeckProgress, restoreCard, swapCards, updateCard, type CardInput } from '../lib/repo/cards';
   import { deleteDeck, moveDeck, renameDeck, setDeckSpeech, swapDeckSides } from '../lib/repo/decks';
   import { sideSpeech } from '../lib/collections';
-  import { href, navigate, rememberCollection } from '../lib/router.svelte';
+  import { href, navigate, rememberCollection, takeDeckQuery } from '../lib/router.svelte';
+  import { normalizeText } from '../lib/search';
   import { quickConfig } from '../lib/session';
   import { testState } from '../lib/testState.svelte';
   import { askConfirm } from '../lib/confirm.svelte';
@@ -37,6 +39,7 @@
   // ---- Quick add ----
   let front = $state('');
   let back = $state('');
+  let notes = $state('');
   let newTags = $state<string[]>([]);
   let frontEl: HTMLTextAreaElement | undefined = $state();
   let backEl: HTMLTextAreaElement | undefined = $state();
@@ -53,17 +56,57 @@
     e?.preventDefault();
     if (!front.trim() && !back.trim()) return;
     try {
-      await addCard(id, { front, back, tags: newTags });
+      await addCard(id, { front, back, notes, tags: [...newTags] });
     } catch (err) {
       return deckFull(err);
     }
     // Keep the form open for the next card (it was shown implicitly while the deck was empty).
+    // Tags are cleared too: kept on, they'd silently go onto the next card.
     addOpen = true;
     front = '';
     back = '';
+    notes = '';
+    newTags = [];
     frontEl?.focus();
     showToast(t('card.added'));
   }
+
+  // ---- Same word already in the collection ----
+  // Doesn't stop adding (synonyms are fine); checks every deck of the collection, since a word may
+  // live in another deck (e.g. one kept for verbs).
+  const otherDeckIds = $derived(($allDecks ?? []).filter((d) => d.collectionId === $deck?.collectionId && d.id !== id).map((d) => d.id));
+  // The other decks' cards, indexed once per visit (a big collection takes a moment to read); this
+  // deck's own cards come from the live list, so cards added here count straight away.
+  let otherIndex: { key: string; index: Promise<FrontIndex> } | null = null;
+  function otherDecksIndex(deckIds: string[]): Promise<FrontIndex> {
+    const key = deckIds.join();
+    if (otherIndex?.key !== key) otherIndex = { key, index: cardsInDecks(deckIds).then(indexFronts) };
+    return otherIndex.index;
+  }
+  let duplicates = $state<{ id: string; deck: string; back: string }[]>([]);
+
+  $effect(() => {
+    const text = front;
+    const deckIds = otherDeckIds;
+    const own = $cards ?? [];
+    if (!showAdd || !$deck) return;
+    const index = otherDecksIndex(deckIds); // start reading while the first word is typed
+    if (!normalizeFront(text)) {
+      duplicates = [];
+      return;
+    }
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      const found = findSameFront(text, own, await index);
+      if (cancelled) return;
+      const deckName = new Map(($allDecks ?? []).map((d) => [d.id, d.name]));
+      duplicates = found.map((c) => ({ id: c.id, deck: deckName.get(c.deckId) ?? '', back: c.back }));
+    }, 150);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  });
 
   function enterNext(e: KeyboardEvent, next: () => void) {
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
@@ -73,16 +116,13 @@
   }
 
   // ---- Filter ----
-  let query = $state('');
+  // Opened from the collection's word search: start with that word filtered.
+  let query = $state(takeDeckQuery());
   let filterTag = $state<string | null>(null);
   const usedTags = $derived(sortTags(tags.filter((tag) => $cards?.some((c) => c.tags.includes(tag.id)))));
   const filtered = $derived.by(() => {
-    const q = query.trim().toLowerCase();
-    return ($cards ?? []).filter(
-      (c) =>
-        (!filterTag || c.tags.includes(filterTag)) &&
-        (!q || [c.front, c.back, c.notes ?? ''].some((text) => text.toLowerCase().includes(q))),
-    );
+    const q = normalizeText(query);
+    return ($cards ?? []).filter((c) => (!filterTag || c.tags.includes(filterTag)) && (!q || [c.front, c.back, c.notes ?? ''].some((text) => normalizeText(text).includes(q))));
   });
   const filtering = $derived(!!query.trim() || filterTag !== null);
 
@@ -109,6 +149,8 @@
     } catch (err) {
       return deckFull(err);
     }
+    // A card moved to another deck leaves the live list, so read the other decks again.
+    if (input.deckId && input.deckId !== editing.deckId) otherIndex = null;
     editOpen = false;
     showToast(t('card.saved'));
   }
@@ -245,6 +287,16 @@
             onkeydown={(e) => enterNext(e, () => backEl?.focus())}
           ></textarea>
         </label>
+        <div class="duplicates" role="status" aria-live="polite">
+          {#if duplicates.length > 0}
+            <p class="small">{t('card.duplicate', { n: duplicates.length })}</p>
+            <ul class="small">
+              {#each duplicates.slice(0, 3) as dup (dup.id)}
+                <li><b>{dup.deck}</b> · <span class="card-text">{dup.back}</span></li>
+              {/each}
+            </ul>
+          {/if}
+        </div>
         <label class="field">
           <span>{t('card.back')}</span>
           <textarea
@@ -253,6 +305,17 @@
             bind:this={backEl}
             bind:value={back}
             placeholder={t('card.backPlaceholder')}
+            enterkeyhint="done"
+            onkeydown={(e) => enterNext(e, () => add())}
+          ></textarea>
+        </label>
+        <label class="field">
+          <span>{t('card.notes')}</span>
+          <textarea
+            class="input"
+            rows="1"
+            bind:value={notes}
+            placeholder={t('card.notesPlaceholder')}
             enterkeyhint="done"
             onkeydown={(e) => enterNext(e, () => add())}
           ></textarea>
@@ -490,6 +553,25 @@
     min-height: 44px;
     field-sizing: content;
     max-height: 160px;
+  }
+  .duplicates:not(:empty) {
+    margin: -6px 0 12px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+  .duplicates p {
+    margin: 0;
+    font-weight: 700;
+  }
+  .duplicates ul {
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .duplicates .card-text {
+    font-family: var(--font-card);
   }
   .add-actions {
     display: flex;

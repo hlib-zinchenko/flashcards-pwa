@@ -27,6 +27,14 @@ export function deckCards(deckId: string): Promise<Card[]> {
   return db.cards.where('[deckId+position]').between([deckId, Dexie.minKey], [deckId, Dexie.maxKey]).toArray();
 }
 
+/** Every card in these decks, in deck order. */
+export async function cardsInDecks(deckIds: string[]): Promise<Card[]> {
+  if (deckIds.length === 0) return [];
+  const found = await db.cards.where('deckId').anyOf(deckIds).toArray();
+  const order = new Map(deckIds.map((id, i) => [id, i]));
+  return found.sort((a, b) => order.get(a.deckId)! - order.get(b.deckId)! || a.position - b.position);
+}
+
 async function nextPosition(deckId: string): Promise<number> {
   const last = await db.cards
     .where('[deckId+position]')

@@ -51,3 +51,18 @@ export function navigate(path: string, opts: { replace?: boolean } = {}): void {
 }
 
 export const href = (path: string): string => `#${path}`;
+
+// Search to start the next deck screen with (set by the collection's word search). Read once.
+let pendingDeckQuery = '';
+
+/** Open a deck with its card list already searched for `query`. */
+export function openDeck(id: string, query: string): void {
+  pendingDeckQuery = query;
+  navigate(`/deck/${id}`);
+}
+
+export function takeDeckQuery(): string {
+  const query = pendingDeckQuery;
+  pendingDeckQuery = '';
+  return query;
+}
