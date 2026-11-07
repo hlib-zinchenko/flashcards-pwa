@@ -24,24 +24,27 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
 ## Features
 
 - **Collections:** decks are grouped into collections (one language, one course). The home screen lists collections; open one to see its decks. Decks can be moved between collections from the deck's ⋯ menu.
-- **One-tap study:** *Review weak cards* on the home screen starts a session with every New and Weak card; the ▶ button on a collection or deck starts that collection or deck. Both keep your usual direction, mode, order and card count.
-- **Decks & cards:** create, rename and delete decks; add, edit, reorder and move cards, with optional notes per card. Quick-add form: Enter moves to the next field, Enter again saves. Deleting a card can be undone from the toast.
+- **One-tap study:** the ▶ button on a collection or deck starts a session with its cards, keeping your usual direction, mode, order and card count.
+- **Decks & cards:** create, rename and delete decks; add, edit, reorder and move cards, with optional notes per card. Quick-add form: Enter moves to the next field, Enter again saves. Deleting a card can be undone from the toast. The deck's ⋯ menu can also swap front and back of every card or reset its progress. A deck holds up to 999 cards, so it opens and searches quickly.
 - **Tags:** built-in `verb`, `noun`, `adjective`, `phrase`, plus your own.
-- **Learning levels:** New → Weak → Learning → Confident → Strong → Mastered. *Know* moves a card up one level, *Don't know* moves it down one. There is no scheduling: you choose what to study. The home screen shows a colored bar per deck and a legend with totals per level.
+- **Learning levels:** New → Weak → Learning → Confident → Strong → Mastered. *Know* moves a card up one level, *Don't know* moves it down one. There is no scheduling: you choose what to study. Every collection and deck shows a colored bar of its levels, and the home screen has a legend with totals per level.
 - **Test mode**
-  - Pick one or more decks and how many cards, then the rest of the options, all on one screen:
+  - The Test tab uses the collection you opened last. Pick one or more of its decks and how many cards, then the rest of the options, all on one screen:
     - show the front or back first;
     - *Cram*: known cards leave the session, missed ones go back at a random spot until you know them all. *Refresh*: one pass, answers only update levels;
     - order: deck order, random, level ascending (weakest first);
     - filter by level and tag.
-  - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card. A **Notes** button on both sides of the card reveals its notes, and a **speaker** button reads that side aloud with the device's built-in voices (works offline). A collection's settings (⚙) list the languages its cards can be read in, each with a voice to try and pick; then each deck's ⋯ → Reading aloud chooses the language of the card front and back (or off). With no languages, nothing is read. Settings → Reading aloud has a speed slider (0.5× to 1.5×) that reads an English sample when you let go.
+  - Gestures: **tap** flips · **swipe right** = know · **swipe left** = don't know · **swipe down** = edit card. A **Notes** button on both sides of the card reveals its notes.
   - **Undo last answer** (header button) puts the card back and restores its level.
   - Keyboard: Space / ↑ / ↓ flip · → know · ← don't know · S reads aloud · Z or Backspace undo · E edits · Esc finishes.
-  - The summary leads with how many cards you knew on the first try and lists the ones you missed. If you stop early, **Continue** picks up where you left off; **Done** goes back to where you started.
+  - The summary leads with how many cards you knew on the first try and lists the ones you missed. **Retry missed** studies just those. If you stop early, **Continue** picks up where you left off; **Done** goes back to where you started.
+  - If the phone closes the app mid-session (iOS does this to apps in the background), the next launch offers to **Resume** it.
+- **Reading aloud:** a **speaker** button on the card reads that side with the device's built-in voices (works offline). A collection's settings (⋯) list the languages its cards can be read in, each with a voice to try and pick; then each deck's ⋯ → Reading aloud chooses the language of the card front and back (or off). With no languages, nothing is read. Settings → Reading aloud has a speed slider (0.5× to 1.5×) that reads an English sample when you let go.
 - **Import / export**
   - JSON backup of the whole library (with progress), for moving to another device. Merge or replace on import.
-  - CSV/TSV per deck: `front,back,tags,notes` with tags separated by `|` (tags and notes optional). Handy for writing cards in Excel or Google Sheets on a PC.
-- English and Ukrainian UI. Appearance: System, Light or Dark. Works offline.
+  - CSV/TSV: `front,back,tags,notes` with tags separated by `|` (tags and notes optional). Handy for writing cards in Excel or Google Sheets on a PC. Import into a deck or a collection; *Share CSV* exports a deck, *Share collection* exports every deck of a collection with an extra `deck` column. Imported into a collection, a file with more than 999 cards is split into decks "Name", "Name 2"…
+- Interface in English, Ukrainian, Spanish, German, French, Japanese, Portuguese, Italian, Turkish, Dutch and Chinese. Appearance: System, Light or Dark. Works offline.
+- **Feedback:** Settings → About has a contact email and can copy diagnostics for a bug report when something goes wrong.
 
 ## Install on a phone
 
@@ -60,7 +63,7 @@ front,back,tags,notes
 おはようございます,good morning,phrase,polite
 ```
 
-The header row is optional. Comma, tab and semicolon separators are all detected automatically.
+The header row is optional. Comma, tab and semicolon separators are all detected automatically. Imported into a collection, an optional fifth `deck` column puts each card into the deck with that name.
 
 ## Your data
 
@@ -81,7 +84,11 @@ npm test           # unit tests (Vitest)
 npm run check      # svelte-check / TypeScript
 npm run build      # production build into dist/
 npm run preview    # serve the build at http://localhost:4173/
+npm run e2e        # end-to-end tests (Playwright, WebKit) against a fresh build
+npm run perf       # load test with big libraries
+npm run screenshots # retake the README screenshots from docs/demo/demo-backup.json
 npm run icons      # regenerate PWA icons from public/icon.svg
+npm run og-image   # re-render public/og-image.png from docs/og/og-image.html (macOS Chrome)
 ```
 
 Stack: Svelte 5 (runes) + TypeScript + Vite, Dexie (IndexedDB), vite-plugin-pwa (Workbox), PapaParse.
@@ -98,7 +105,8 @@ src/
     session.ts   test filtering, ordering and the cram/refresh session
     gestures.ts  swipe classification
     i18n/        English (source of truth) and Ukrainian strings
-tests/           Vitest unit tests for the pure logic in lib/
+tests/           Vitest unit tests (pure logic, plus the database layer against fake-indexeddb)
+e2e/             Playwright tests, load test and README screenshots
 ```
 
 ## Release & deploy
