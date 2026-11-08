@@ -295,4 +295,12 @@ export const pt: Messages = {
   'whatsNew.title': 'Novidades',
   'whatsNew.ok': 'Entendi',
   'whatsNew.history': 'Histórico completo de versões',
+
+  'transfer.title': 'Mudança dos seus cartões',
+  'transfer.working': 'A transferir os seus cartões do endereço antigo…',
+  'transfer.done': 'Os seus cartões estão aqui',
+  'transfer.counts': 'Baralhos: {decks}. Cartões: {cards}.',
+  'transfer.open': 'Abrir os meus cartões',
+  'transfer.noOpener': 'Esta página recebe cartões do endereço antigo, flashcards.hzinchenko.com. Abra lá a app e toque em «Transferir os meus cartões».',
+  'transfer.fileFallback': 'Também pode guardar lá um ficheiro de cópia de segurança e importá-lo aqui, nas Definições.',
 };

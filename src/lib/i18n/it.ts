@@ -295,4 +295,12 @@ export const it: Messages = {
   'whatsNew.title': 'Novità',
   'whatsNew.ok': 'Ho capito',
   'whatsNew.history': 'Cronologia completa delle versioni',
+
+  'transfer.title': 'Trasferimento delle schede',
+  'transfer.working': 'Trasferimento delle schede dal vecchio indirizzo…',
+  'transfer.done': 'Le tue schede sono qui',
+  'transfer.counts': 'Mazzi: {decks}. Schede: {cards}.',
+  'transfer.open': 'Apri le mie schede',
+  'transfer.noOpener': 'Questa pagina riceve le schede dal vecchio indirizzo, flashcards.hzinchenko.com. Apri lì l’app e tocca «Trasferisci le schede».',
+  'transfer.fileFallback': 'Puoi anche salvare lì un file di backup e importarlo qui, nelle Impostazioni.',
 };

@@ -295,4 +295,12 @@ export const uk: Messages = {
   'whatsNew.title': 'Що нового',
   'whatsNew.ok': 'Зрозуміло',
   'whatsNew.history': 'Повна історія змін',
+
+  'transfer.title': 'Переносимо картки',
+  'transfer.working': 'Переносимо ваші картки зі старої адреси…',
+  'transfer.done': 'Ваші картки тут',
+  'transfer.counts': 'Колод: {decks}. Карток: {cards}.',
+  'transfer.open': 'Відкрити мої картки',
+  'transfer.noOpener': 'Ця сторінка приймає картки зі старої адреси, flashcards.hzinchenko.com. Відкрийте застосунок там і натисніть «Перенести картки».',
+  'transfer.fileFallback': 'Або збережіть там файл резервної копії й імпортуйте його тут, у Налаштуваннях.',
 };

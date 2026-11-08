@@ -295,4 +295,12 @@ export const nl: Messages = {
   'whatsNew.title': 'Wat is er nieuw',
   'whatsNew.ok': 'Begrepen',
   'whatsNew.history': 'Volledige releasegeschiedenis',
+
+  'transfer.title': 'Je kaarten verhuizen',
+  'transfer.working': 'Je kaarten worden van het oude adres overgezet…',
+  'transfer.done': 'Je kaarten zijn er',
+  'transfer.counts': 'Stapels: {decks}. Kaarten: {cards}.',
+  'transfer.open': 'Mijn kaarten openen',
+  'transfer.noOpener': 'Deze pagina ontvangt kaarten van het oude adres, flashcards.hzinchenko.com. Open daar de app en tik op ‘Kaarten verhuizen’.',
+  'transfer.fileFallback': 'Je kunt daar ook een back-upbestand opslaan en het hier in Instellingen importeren.',
 };

@@ -7,7 +7,8 @@ export type Route =
   | { name: 'deck'; id: string }
   | { name: 'test' }
   | { name: 'run' }
-  | { name: 'settings' };
+  | { name: 'settings' }
+  | { name: 'importLegacy' };
 
 function parse(hash: string): Route {
   const path = hash.replace(/^#/, '') || '/';
@@ -18,6 +19,7 @@ function parse(hash: string): Route {
   if (path === '/test') return { name: 'test' };
   if (path === '/test/run') return { name: 'run' };
   if (path === '/settings') return { name: 'settings' };
+  if (path === '/import-legacy') return { name: 'importLegacy' };
   return { name: 'decks' };
 }
 

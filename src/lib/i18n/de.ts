@@ -295,4 +295,12 @@ export const de: Messages = {
   'whatsNew.title': 'Neuigkeiten',
   'whatsNew.ok': 'Verstanden',
   'whatsNew.history': 'Alle Versionshinweise',
+
+  'transfer.title': 'Karten umziehen',
+  'transfer.working': 'Deine Karten werden von der alten Adresse übertragen…',
+  'transfer.done': 'Deine Karten sind da',
+  'transfer.counts': 'Stapel: {decks}. Karten: {cards}.',
+  'transfer.open': 'Meine Karten öffnen',
+  'transfer.noOpener': 'Diese Seite empfängt Karten von der alten Adresse, flashcards.hzinchenko.com. Öffne die App dort und tippe auf „Karten umziehen“.',
+  'transfer.fileFallback': 'Du kannst dort auch eine Sicherungsdatei speichern und sie hier in den Einstellungen importieren.',
 };

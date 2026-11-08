@@ -7,6 +7,7 @@
   import { router } from './lib/router.svelte';
   import Collection from './routes/Collection.svelte';
   import Deck from './routes/Deck.svelte';
+  import ImportLegacy from './routes/ImportLegacy.svelte';
   import Decks from './routes/Decks.svelte';
   import Settings from './routes/Settings.svelte';
   import TestRun from './routes/TestRun.svelte';
@@ -27,12 +28,14 @@
   <TestRun />
 {:else if route.name === 'settings'}
   <Settings />
+{:else if route.name === 'importLegacy'}
+  <ImportLegacy />
 {/if}
 
-{#if route.name !== 'run'}
+{#if route.name !== 'run' && route.name !== 'importLegacy'}
   <TabBar />
 {/if}
 <Toast />
 <ConfirmDialog />
 <UpdatePrompt />
-<WhatsNew />
+{#if route.name !== 'importLegacy'}<WhatsNew />{/if}

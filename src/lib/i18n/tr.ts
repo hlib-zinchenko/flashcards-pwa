@@ -295,4 +295,12 @@ export const tr: Messages = {
   'whatsNew.title': 'Yenilikler',
   'whatsNew.ok': 'Anladım',
   'whatsNew.history': 'Tüm sürüm geçmişi',
+
+  'transfer.title': 'Kartların taşınıyor',
+  'transfer.working': 'Kartların eski adresten taşınıyor…',
+  'transfer.done': 'Kartların burada',
+  'transfer.counts': 'Desteler: {decks}. Kartlar: {cards}.',
+  'transfer.open': 'Kartlarımı aç',
+  'transfer.noOpener': 'Bu sayfa eski adresten, flashcards.hzinchenko.com’dan kart alır. Uygulamayı orada açıp “Kartlarımı taşı”ya dokun.',
+  'transfer.fileFallback': 'Orada bir yedek dosyası kaydedip buradaki Ayarlar’dan içe de aktarabilirsin.',
 };

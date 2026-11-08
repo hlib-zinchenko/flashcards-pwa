@@ -295,4 +295,12 @@ export const fr: Messages = {
   'whatsNew.title': 'Nouveautés',
   'whatsNew.ok': 'Compris',
   'whatsNew.history': 'Historique complet des versions',
+
+  'transfer.title': 'Transfert de vos cartes',
+  'transfer.working': 'Transfert de vos cartes depuis l’ancienne adresse…',
+  'transfer.done': 'Vos cartes sont là',
+  'transfer.counts': 'Paquets : {decks}. Cartes : {cards}.',
+  'transfer.open': 'Ouvrir mes cartes',
+  'transfer.noOpener': 'Cette page reçoit les cartes de l’ancienne adresse, flashcards.hzinchenko.com. Ouvrez l’app là-bas et touchez « Transférer mes cartes ».',
+  'transfer.fileFallback': 'Vous pouvez aussi y enregistrer un fichier de sauvegarde et l’importer ici, dans Réglages.',
 };

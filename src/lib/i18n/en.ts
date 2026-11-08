@@ -297,6 +297,14 @@ export const en = {
   'whatsNew.title': "What's new",
   'whatsNew.ok': 'Got it',
   'whatsNew.history': 'Full release history',
+
+  'transfer.title': 'Moving your cards',
+  'transfer.working': 'Moving your cards from the old address…',
+  'transfer.done': 'Your cards are here',
+  'transfer.counts': 'Decks: {decks}. Cards: {cards}.',
+  'transfer.open': 'Open my cards',
+  'transfer.noOpener': 'This page receives cards from the old address, flashcards.hzinchenko.com. Open the app there and tap “Move my cards”.',
+  'transfer.fileFallback': 'You can also save a backup file there and import it here in Settings.',
 } as const;
 
 export type MessageKey = keyof typeof en;

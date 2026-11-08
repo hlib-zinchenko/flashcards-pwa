@@ -295,4 +295,12 @@ export const ja: Messages = {
   'whatsNew.title': '新機能',
   'whatsNew.ok': 'わかった',
   'whatsNew.history': 'リリース履歴をすべて見る',
+
+  'transfer.title': 'カードの引っ越し',
+  'transfer.working': '古いアドレスからカードを移しています…',
+  'transfer.done': 'カードが届きました',
+  'transfer.counts': 'デッキ: {decks}。カード: {cards}。',
+  'transfer.open': 'カードを開く',
+  'transfer.noOpener': 'このページは古いアドレス flashcards.hzinchenko.com からカードを受け取ります。そちらでアプリを開き、「カードを移す」をタップしてください。',
+  'transfer.fileFallback': '古いアドレスでバックアップファイルを保存し、ここの設定で読み込むこともできます。',
 };

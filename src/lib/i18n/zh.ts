@@ -295,4 +295,12 @@ export const zh: Messages = {
   'whatsNew.title': '新功能',
   'whatsNew.ok': '知道了',
   'whatsNew.history': '完整更新记录',
+
+  'transfer.title': '迁移卡片',
+  'transfer.working': '正在从旧地址迁移你的卡片…',
+  'transfer.done': '卡片已经到了',
+  'transfer.counts': '卡组：{decks}。卡片：{cards}。',
+  'transfer.open': '打开我的卡片',
+  'transfer.noOpener': '此页面接收来自旧地址 flashcards.hzinchenko.com 的卡片。请在那里打开应用并点按“迁移卡片”。',
+  'transfer.fileFallback': '你也可以在那里保存备份文件，然后在这里的设置中导入。',
 };
