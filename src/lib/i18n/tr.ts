@@ -303,4 +303,18 @@ export const tr: Messages = {
   'transfer.open': 'Kartlarımı aç',
   'transfer.noOpener': 'Bu sayfa eski adresten, flashcards.hzinchenko.com’dan kart alır. Uygulamayı orada açıp “Kartlarımı taşı”ya dokun.',
   'transfer.fileFallback': 'Orada bir yedek dosyası kaydedip buradaki Ayarlar’dan içe de aktarabilirsin.',
+
+  'moved.title': 'Karbka taşındı',
+  'moved.text': 'Uygulama artık {host} adresinde. Kartlarını kaybetmemek için oraya taşı.',
+  'moved.here': 'Şu an burada:',
+  'moved.move': 'Kartlarımı taşı',
+  'moved.save': 'Yedek dosyası kaydet',
+  'moved.later': 'Şimdi değil',
+  'moved.waiting': 'Yeni sekmede tamamlanıyor…',
+  'moved.blocked': 'Yeni adres açılmadı. Açılır pencerelere izin ver ya da bir yedek dosyası kaydedip orada içe aktar.',
+  'moved.open': '{host} aç',
+  'moved.ios1': 'Aşağıdaki düğmeyle bir yedek dosyası kaydet.',
+  'moved.ios2': '{host} adresini Safari’de aç ve Ana Ekrana ekle.',
+  'moved.ios3': 'Yeni uygulamada Ayarlar → Yedeği içe aktar’a gidip dosyayı seç.',
+  'moved.stillWorks': 'Uygulama şimdilik burada da çalışıyor, ama yenilikler yalnızca yeni adrese gelecek.',
 };

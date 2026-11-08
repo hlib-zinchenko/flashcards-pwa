@@ -7,6 +7,12 @@
 
 export const LEGACY_ORIGIN: string = import.meta.env.VITE_LEGACY_ORIGIN || 'https://flashcards.hzinchenko.com';
 
+/** Where the app lives now. A legacy build sends the library there. */
+export const NEW_ORIGIN: string = import.meta.env.VITE_NEW_ORIGIN || 'https://app.karbka.com';
+
+/** Built for the old address (VITE_LEGACY=1): shows the "We moved" screen. */
+export const IS_LEGACY = import.meta.env.VITE_LEGACY === '1';
+
 /** Preferences carried over. Each is copied only when it isn't set here yet. */
 export const TRANSFER_PREFS = [
   'lang',
@@ -51,4 +57,21 @@ export function readBackupMessage(
 /** Preferences to write: the sent ones that aren't set here already. */
 export function prefsToApply(sent: Record<string, unknown>, isSet: (key: string) => boolean): Record<string, unknown> {
   return Object.fromEntries(Object.entries(sent).filter(([key]) => !isSet(key)));
+}
+
+/** A reply from the new address (ready, done or failed), or null for anything else. */
+export function readReply(
+  origin: string,
+  data: unknown,
+  allowed: string = NEW_ORIGIN,
+): Exclude<TransferMessage, { type: 'karbka-transfer-backup' }> | null {
+  if (origin !== allowed) return null;
+  if (typeof data !== 'object' || data === null) return null;
+  const msg = data as Record<string, unknown>;
+  if (msg.type === 'karbka-transfer-ready') return { type: msg.type };
+  if (msg.type === 'karbka-transfer-done' && typeof msg.decks === 'number' && typeof msg.cards === 'number') {
+    return { type: msg.type, decks: msg.decks, cards: msg.cards };
+  }
+  if (msg.type === 'karbka-transfer-failed') return { type: msg.type, error: String(msg.error ?? '') };
+  return null;
 }

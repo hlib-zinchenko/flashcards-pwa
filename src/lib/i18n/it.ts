@@ -303,4 +303,18 @@ export const it: Messages = {
   'transfer.open': 'Apri le mie schede',
   'transfer.noOpener': 'Questa pagina riceve le schede dal vecchio indirizzo, flashcards.hzinchenko.com. Apri lì l’app e tocca «Trasferisci le schede».',
   'transfer.fileFallback': 'Puoi anche salvare lì un file di backup e importarlo qui, nelle Impostazioni.',
+
+  'moved.title': 'Karbka si è trasferita',
+  'moved.text': 'Ora l’app si trova su {host}. Trasferisci lì le tue schede per non perderle.',
+  'moved.here': 'Qui ora:',
+  'moved.move': 'Trasferisci le schede',
+  'moved.save': 'Salva file di backup',
+  'moved.later': 'Non ora',
+  'moved.waiting': 'Completamento nella nuova scheda…',
+  'moved.blocked': 'Il nuovo indirizzo non si è aperto. Consenti i pop-up oppure salva un file di backup e importalo lì.',
+  'moved.open': 'Apri {host}',
+  'moved.ios1': 'Salva un file di backup con il pulsante qui sotto.',
+  'moved.ios2': 'Apri {host} in Safari e aggiungilo alla schermata Home.',
+  'moved.ios3': 'Nella nuova app vai su Impostazioni → Importa backup e scegli il file.',
+  'moved.stillWorks': 'Per ora l’app funziona ancora qui, ma le novità arrivano solo al nuovo indirizzo.',
 };

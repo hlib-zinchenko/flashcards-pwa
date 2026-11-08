@@ -303,4 +303,18 @@ export const ja: Messages = {
   'transfer.open': 'カードを開く',
   'transfer.noOpener': 'このページは古いアドレス flashcards.hzinchenko.com からカードを受け取ります。そちらでアプリを開き、「カードを移す」をタップしてください。',
   'transfer.fileFallback': '古いアドレスでバックアップファイルを保存し、ここの設定で読み込むこともできます。',
+
+  'moved.title': 'Karbka は引っ越しました',
+  'moved.text': 'アプリは {host} に移りました。カードを失わないよう、新しいアドレスへ移してください。',
+  'moved.here': '現在ここにあるもの:',
+  'moved.move': 'カードを移す',
+  'moved.save': 'バックアップを保存',
+  'moved.later': 'あとで',
+  'moved.waiting': '新しいタブで仕上げています…',
+  'moved.blocked': '新しいアドレスが開きませんでした。ポップアップを許可するか、バックアップファイルを保存して新しいアドレスで読み込んでください。',
+  'moved.open': '{host} を開く',
+  'moved.ios1': '下のボタンでバックアップファイルを保存します。',
+  'moved.ios2': 'Safari で {host} を開き、ホーム画面に追加します。',
+  'moved.ios3': '新しいアプリで 設定 → バックアップを読み込む を開き、ファイルを選びます。',
+  'moved.stillWorks': '当面はここでも使えますが、新機能は新しいアドレスにだけ届きます。',
 };

@@ -303,4 +303,18 @@ export const nl: Messages = {
   'transfer.open': 'Mijn kaarten openen',
   'transfer.noOpener': 'Deze pagina ontvangt kaarten van het oude adres, flashcards.hzinchenko.com. Open daar de app en tik op ‘Kaarten verhuizen’.',
   'transfer.fileFallback': 'Je kunt daar ook een back-upbestand opslaan en het hier in Instellingen importeren.',
+
+  'moved.title': 'Karbka is verhuisd',
+  'moved.text': 'De app staat nu op {host}. Verhuis je kaarten daarheen zodat je ze houdt.',
+  'moved.here': 'Nu hier:',
+  'moved.move': 'Kaarten verhuizen',
+  'moved.save': 'Back-upbestand opslaan',
+  'moved.later': 'Niet nu',
+  'moved.waiting': 'Wordt afgerond in het nieuwe tabblad…',
+  'moved.blocked': 'Het nieuwe adres is niet geopend. Sta pop-ups toe, of sla een back-upbestand op en importeer het daar.',
+  'moved.open': '{host} openen',
+  'moved.ios1': 'Sla met de knop hieronder een back-upbestand op.',
+  'moved.ios2': 'Open {host} in Safari en zet het op je beginscherm.',
+  'moved.ios3': 'Ga in de nieuwe app naar Instellingen → Back-up importeren en kies het bestand.',
+  'moved.stillWorks': 'De app werkt hier voorlopig nog, maar nieuwe functies komen alleen op het nieuwe adres.',
 };

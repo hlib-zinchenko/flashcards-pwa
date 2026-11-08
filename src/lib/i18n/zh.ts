@@ -303,4 +303,18 @@ export const zh: Messages = {
   'transfer.open': '打开我的卡片',
   'transfer.noOpener': '此页面接收来自旧地址 flashcards.hzinchenko.com 的卡片。请在那里打开应用并点按“迁移卡片”。',
   'transfer.fileFallback': '你也可以在那里保存备份文件，然后在这里的设置中导入。',
+
+  'moved.title': 'Karbka 已搬家',
+  'moved.text': '应用现在位于 {host}。请把卡片迁移过去，以免丢失。',
+  'moved.here': '这里现有：',
+  'moved.move': '迁移卡片',
+  'moved.save': '保存备份文件',
+  'moved.later': '以后再说',
+  'moved.waiting': '正在新标签页中完成…',
+  'moved.blocked': '新地址没有打开。请允许弹出窗口，或保存备份文件后在新地址导入。',
+  'moved.open': '打开 {host}',
+  'moved.ios1': '用下面的按钮保存备份文件。',
+  'moved.ios2': '在 Safari 中打开 {host} 并添加到主屏幕。',
+  'moved.ios3': '在新应用中打开 设置 → 导入备份，然后选择该文件。',
+  'moved.stillWorks': '暂时仍可在这里使用，但新功能只会出现在新地址。',
 };

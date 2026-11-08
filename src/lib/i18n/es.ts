@@ -303,4 +303,18 @@ export const es: Messages = {
   'transfer.open': 'Abrir mis tarjetas',
   'transfer.noOpener': 'Esta página recibe tarjetas de la dirección antigua, flashcards.hzinchenko.com. Abre allí la app y toca «Trasladar mis tarjetas».',
   'transfer.fileFallback': 'También puedes guardar allí un archivo de copia de seguridad e importarlo aquí, en Ajustes.',
+
+  'moved.title': 'Karbka se ha mudado',
+  'moved.text': 'La app ahora vive en {host}. Traslada allí tus tarjetas para no perderlas.',
+  'moved.here': 'Aquí ahora:',
+  'moved.move': 'Trasladar mis tarjetas',
+  'moved.save': 'Guardar copia de seguridad',
+  'moved.later': 'Ahora no',
+  'moved.waiting': 'Terminando en la pestaña nueva…',
+  'moved.blocked': 'La dirección nueva no se abrió. Permite las ventanas emergentes o guarda una copia de seguridad e impórtala allí.',
+  'moved.open': 'Abrir {host}',
+  'moved.ios1': 'Guarda una copia de seguridad con el botón de abajo.',
+  'moved.ios2': 'Abre {host} en Safari y añádelo a la pantalla de inicio.',
+  'moved.ios3': 'En la app nueva, ve a Ajustes → Importar copia de seguridad y elige el archivo.',
+  'moved.stillWorks': 'Por ahora la app sigue funcionando aquí, pero las novedades solo llegarán a la dirección nueva.',
 };

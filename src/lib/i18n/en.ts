@@ -305,6 +305,20 @@ export const en = {
   'transfer.open': 'Open my cards',
   'transfer.noOpener': 'This page receives cards from the old address, flashcards.hzinchenko.com. Open the app there and tap “Move my cards”.',
   'transfer.fileFallback': 'You can also save a backup file there and import it here in Settings.',
+
+  'moved.title': 'Karbka has moved',
+  'moved.text': 'The app now lives at {host}. Move your cards there so they stay with you.',
+  'moved.here': 'Here now:',
+  'moved.move': 'Move my cards',
+  'moved.save': 'Save backup file',
+  'moved.later': 'Not now',
+  'moved.waiting': 'Finishing in the new tab…',
+  'moved.blocked': 'The new address didn’t open. Allow pop-ups, or save a backup file and import it there.',
+  'moved.open': 'Open {host}',
+  'moved.ios1': 'Save a backup file with the button below.',
+  'moved.ios2': 'Open {host} in Safari and add it to your Home Screen.',
+  'moved.ios3': 'In the new app, go to Settings → Import backup and pick the file.',
+  'moved.stillWorks': 'The app keeps working here for now, but new features only come to the new address.',
 } as const;
 
 export type MessageKey = keyof typeof en;

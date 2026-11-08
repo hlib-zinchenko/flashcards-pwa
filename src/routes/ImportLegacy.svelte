@@ -66,7 +66,7 @@
     {:else if status.name === 'done'}
       <p class="big">{t('transfer.done')}</p>
       <p>{t('transfer.counts', { decks: status.decks, cards: status.cards })}</p>
-      <button class="btn primary" type="button" onclick={openLibrary}>{t('transfer.open')}</button>
+      <button class="btn btn-primary" type="button" onclick={openLibrary}>{t('transfer.open')}</button>
     {:else if status.name === 'failed'}
       <p>{t('settings.importFailed', { error: status.error })}</p>
       <p>{t('transfer.fileFallback')}</p>

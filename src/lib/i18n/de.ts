@@ -303,4 +303,18 @@ export const de: Messages = {
   'transfer.open': 'Meine Karten öffnen',
   'transfer.noOpener': 'Diese Seite empfängt Karten von der alten Adresse, flashcards.hzinchenko.com. Öffne die App dort und tippe auf „Karten umziehen“.',
   'transfer.fileFallback': 'Du kannst dort auch eine Sicherungsdatei speichern und sie hier in den Einstellungen importieren.',
+
+  'moved.title': 'Karbka ist umgezogen',
+  'moved.text': 'Die App wohnt jetzt unter {host}. Zieh deine Karten dorthin um, damit sie dir erhalten bleiben.',
+  'moved.here': 'Hier gerade:',
+  'moved.move': 'Karten umziehen',
+  'moved.save': 'Sicherungsdatei speichern',
+  'moved.later': 'Nicht jetzt',
+  'moved.waiting': 'Wird im neuen Tab abgeschlossen…',
+  'moved.blocked': 'Die neue Adresse hat sich nicht geöffnet. Erlaube Pop-ups oder speichere eine Sicherungsdatei und importiere sie dort.',
+  'moved.open': '{host} öffnen',
+  'moved.ios1': 'Speichere mit der Taste unten eine Sicherungsdatei.',
+  'moved.ios2': 'Öffne {host} in Safari und füge es zum Home-Bildschirm hinzu.',
+  'moved.ios3': 'Öffne in der neuen App Einstellungen → Backup importieren und wähle die Datei.',
+  'moved.stillWorks': 'Die App funktioniert hier vorerst weiter, aber Neues gibt es nur unter der neuen Adresse.',
 };

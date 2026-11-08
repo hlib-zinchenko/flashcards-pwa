@@ -8,6 +8,8 @@
   import Collection from './routes/Collection.svelte';
   import Deck from './routes/Deck.svelte';
   import ImportLegacy from './routes/ImportLegacy.svelte';
+  import MovedNotice from './components/MovedNotice.svelte';
+  import { IS_LEGACY } from './lib/transfer';
   import Decks from './routes/Decks.svelte';
   import Settings from './routes/Settings.svelte';
   import TestRun from './routes/TestRun.svelte';
@@ -38,4 +40,4 @@
 <Toast />
 <ConfirmDialog />
 <UpdatePrompt />
-{#if route.name !== 'importLegacy'}<WhatsNew />{/if}
+{#if route.name === 'importLegacy'}{:else if IS_LEGACY}<MovedNotice />{:else}<WhatsNew />{/if}
