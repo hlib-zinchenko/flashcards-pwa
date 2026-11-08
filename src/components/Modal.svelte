@@ -1,3 +1,7 @@
+<script lang="ts" module>
+  let nextId = 0;
+</script>
+
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { t } from '../lib/i18n/index.svelte';
@@ -12,6 +16,7 @@
   }: { open?: boolean; title: string; children: Snippet; footer?: Snippet; onclose?: () => void } = $props();
 
   let dialog: HTMLDialogElement;
+  const titleId = `modal-title-${++nextId}`;
 
   $effect(() => {
     if (open && !dialog.open) dialog.showModal();
@@ -26,6 +31,7 @@
 
 <dialog
   bind:this={dialog}
+  aria-labelledby={titleId}
   onclose={handleClose}
   onclick={(e) => {
     if (e.target === dialog) open = false;
@@ -34,7 +40,7 @@
   {#if open}
     <div class="sheet">
       <header>
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         <button class="icon-btn" type="button" onclick={() => (open = false)} aria-label={t('common.close')}>
           <Icon name="close" />
         </button>
