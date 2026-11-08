@@ -48,7 +48,7 @@ export function parseBackup(text: string, now = Date.now(), opts: ParseOptions =
   } catch {
     throw new BackupError('Not a valid JSON file');
   }
-  if (!isObj(raw) || raw.app !== BACKUP_APP) throw new BackupError('Not a Flashcards backup file');
+  if (!isObj(raw) || raw.app !== BACKUP_APP) throw new BackupError('Not a Karbka backup file');
   const version = num(raw, 'schemaVersion', 0);
   if (version < 1 || version > SCHEMA_VERSION) throw new BackupError(`Unsupported backup version: ${version}`);
   if (!Array.isArray(raw.decks) || !Array.isArray(raw.cards) || !Array.isArray(raw.tags)) {

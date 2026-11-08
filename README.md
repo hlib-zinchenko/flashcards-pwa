@@ -1,8 +1,8 @@
-<img src="docs/icons/readme-icon.svg" alt="Flashcards app icon: three fanned cards, the top one reading 好き" width="112">
+<img src="docs/icons/readme-icon.svg" alt="Karbka app icon: three fanned cards, the top one reading 好き" width="112">
 
-# Flashcards PWA
+# Karbka (Карбка)
 
-Offline flashcards that install to your phone's home screen. No App Store, no account, no server. Your data stays on your device.
+**Carve it into memory.** The name comes from the Ukrainian *карб*, a notch cut into a tally stick so you’d remember. Offline flashcards that install to your phone's home screen. No App Store, no account, no server. Your data stays on your device.
 
 I built this for my partner: she wanted a flashcard app on her iPhone and none of the existing ones, free or paid, fit how she studies. A native app meant a developer fee and App Store review, so I made it a PWA instead.
 

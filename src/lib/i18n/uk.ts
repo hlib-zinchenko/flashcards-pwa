@@ -2,7 +2,7 @@ import type { Messages } from './en';
 
 /** Ukrainian plural forms: one|few|many|other */
 export const uk: Messages = {
-  'app.name': 'Картки',
+  'app.name': 'Карбка',
 
   'nav.decks': 'Колоди',
   'nav.test': 'Тест',

@@ -35,7 +35,7 @@
     { href: `${REPO}/issues`, icon: 'message', label: () => t('settings.feedback') },
   ];
   const EMAIL = 'hello@hzinchenko.com';
-  const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(`Flashcards ${__APP_VERSION__}`)}`;
+  const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(`Karbka ${__APP_VERSION__}`)}`;
   const themes: [ThemePref, () => string][] = [
     ['system', () => t('settings.themeSystem')],
     ['light', () => t('settings.themeLight')],
@@ -93,7 +93,7 @@
 
   async function exportLibrary() {
     const backup = createBackup(await loadLibrary());
-    await saveFile(`flashcards-${dateStamp()}.json`, JSON.stringify(backup), 'application/json');
+    await saveFile(`karbka-${dateStamp()}.json`, JSON.stringify(backup), 'application/json');
     markBackedUp();
     showToast(t('settings.exported'));
   }

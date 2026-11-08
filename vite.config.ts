@@ -21,9 +21,9 @@ export default defineConfig({
       registerType: 'prompt',
       includeAssets: ['favicon.ico', 'favicon.svg', 'apple-touch-icon-180x180.png'],
       manifest: {
-        name: 'Flashcards',
-        short_name: 'Flashcards',
-        description: 'Offline flashcards for learning anything',
+        name: 'Karbka',
+        short_name: 'Karbka',
+        description: 'Karbka: offline flashcards for learning anything',
         lang: 'en',
         display: 'standalone',
         orientation: 'portrait',

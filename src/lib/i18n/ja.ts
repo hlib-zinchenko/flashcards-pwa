@@ -2,7 +2,7 @@ import type { Messages } from './en';
 
 /** Japanese has no plural forms: every string is a single form. */
 export const ja: Messages = {
-  'app.name': '単語カード',
+  'app.name': 'Karbka',
 
   'nav.decks': 'デッキ',
   'nav.test': 'テスト',

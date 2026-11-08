@@ -4,7 +4,7 @@
  * (English: one|other).
  */
 export const en = {
-  'app.name': 'Flashcards',
+  'app.name': 'Karbka',
 
   'nav.decks': 'Decks',
   'nav.test': 'Test',

@@ -74,7 +74,7 @@ export interface DiagnosticsInfo {
 export function diagnosticsText(info: DiagnosticsInfo): string {
   const count = (n: number | null) => (n === null ? 'unknown' : String(n));
   const lines = [
-    `Flashcards ${info.version}`,
+    `Karbka ${info.version}`,
     `Time: ${new Date(info.now).toISOString()}`,
     `User agent: ${info.userAgent}`,
     `Language: ${info.language}`,

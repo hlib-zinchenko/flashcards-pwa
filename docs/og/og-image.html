@@ -4,6 +4,7 @@
 <style>
   @font-face { font-family: Murecho; font-weight: 100 900; src: url(../../node_modules/@fontsource-variable/murecho/files/murecho-latin-wght-normal.woff2) format('woff2'); }
   @font-face { font-family: Onest; font-weight: 100 900; src: url(../../node_modules/@fontsource-variable/onest/files/onest-latin-wght-normal.woff2) format('woff2'); }
+  @font-face { font-family: Onest; font-weight: 100 900; unicode-range: U+0400-04FF; src: url(../../node_modules/@fontsource-variable/onest/files/onest-cyrillic-wght-normal.woff2) format('woff2'); }
   html, body { margin: 0; }
   body {
     width: 1200px; height: 630px; overflow: hidden; box-sizing: border-box;
@@ -12,7 +13,8 @@
   }
   .stack { flex: none; width: 430px; height: 510px; filter: drop-shadow(0 10px 0 rgb(62 49 102 / 0.18)); }
   h1 { margin: 0; font-family: Murecho, sans-serif; font-size: 112px; font-weight: 900; letter-spacing: -0.03em; line-height: 1; }
-  p { margin: 22px 0 34px; font-size: 38px; font-weight: 500; line-height: 1.25; color: #3e3166; }
+  .slogan { margin: 18px 0 0; font-size: 46px; font-weight: 800; color: #2b2142; line-height: 1.15; }
+  p { margin: 18px 0 34px; font-size: 38px; font-weight: 500; line-height: 1.25; color: #3e3166; }
   ul { display: flex; flex-wrap: wrap; gap: 14px; margin: 0; padding: 0; list-style: none; }
   li { padding: 12px 22px; border-radius: 999px; background: #fcfbff; box-shadow: 0 5px 0 #8c7bb8; font-size: 26px; font-weight: 700; color: #3e3166; }
   li.mint { background: #a8e4cb; box-shadow: 0 5px 0 #5fa88a; }
@@ -31,8 +33,9 @@
 </svg>
 
 <div>
-  <h1>Flashcards</h1>
-  <p>Make decks, swipe to learn.<br />On your phone, even offline.</p>
+  <h1>Karbka</h1>
+  <div class="slogan">Carve it into memory.</div>
+  <p>Flashcards you swipe to learn,<br />on your phone, even offline.</p>
   <ul>
     <li class="mint">Free</li>
     <li>No account</li>

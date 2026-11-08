@@ -2,7 +2,7 @@ import type { Messages } from './en';
 
 /** Portuguese plural forms: one|other (0 and 1 are "one") */
 export const pt: Messages = {
-  'app.name': 'Cartões',
+  'app.name': 'Karbka',
 
   'nav.decks': 'Baralhos',
   'nav.test': 'Teste',

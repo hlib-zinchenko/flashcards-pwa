@@ -2,7 +2,7 @@ import type { Messages } from './en';
 
 /** Turkish plural forms: one|other (a counted noun stays singular, so both forms are usually equal) */
 export const tr: Messages = {
-  'app.name': 'Kartlar',
+  'app.name': 'Karbka',
 
   'nav.decks': 'Desteler',
   'nav.test': 'Test',

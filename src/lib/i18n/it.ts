@@ -2,7 +2,7 @@ import type { Messages } from './en';
 
 /** Italian plural forms: one|other */
 export const it: Messages = {
-  'app.name': 'Flashcard',
+  'app.name': 'Karbka',
 
   'nav.decks': 'Mazzi',
   'nav.test': 'Test',

@@ -10,6 +10,17 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.18.0',
+    en: [
+      'The app has a name now: Karbka. Carve it into memory.',
+      'Your cards, decks and backups are untouched.',
+    ],
+    uk: [
+      'У застосунку тепер є назва: Карбка. Закарбуй у памʼяті.',
+      'Ваші картки, колоди й резервні копії лишаються на місці.',
+    ],
+  },
+  {
     version: '0.17.0',
     en: [
       'Deleted cards, decks and collections can be restored for 30 days: Settings → Recently deleted.',
@@ -37,19 +48,6 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Під час додавання картки застосунок попередить, якщо таке слово вже є в якійсь колоді колекції. Зберегти все одно можна.',
       'Під час додавання картки можна написати нотатки.',
       'Теги скидаються після кожної доданої картки, щоб не потрапити на наступну випадково.',
-    ],
-  },
-  {
-    version: '0.15.0',
-    en: [
-      'If the phone closes the app during a test, you can pick up where you left off: tap Resume.',
-      'When something goes wrong, the app says so. Settings → About can copy details for a bug report.',
-      'You can now email feedback to hello@hzinchenko.com from Settings → About.',
-    ],
-    uk: [
-      'Якщо телефон закрив застосунок посеред тесту, можна продовжити з того ж місця: натисніть «Продовжити».',
-      'Коли щось іде не так, застосунок про це каже. У Налаштування → Про застосунок можна скопіювати деталі для звіту про помилку.',
-      'Тепер можна написати відгук на hello@hzinchenko.com з Налаштування → Про застосунок.',
     ],
   },
 ];

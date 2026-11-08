@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Offline flashcards PWA: Svelte 5 (runes) + TypeScript + Vite, Dexie over IndexedDB, vite-plugin-pwa. No backend; all data lives on the device. Deployed to GitHub Pages at https://flashcards.hzinchenko.com/ (custom domain, served from the root).
+Karbka (Карбка in Ukrainian, Karbka in every other language; slogan “Carve it into memory.” / «Закарбуй у памʼяті.»): an offline flashcards PWA. Svelte 5 (runes) + TypeScript + Vite, Dexie over IndexedDB, vite-plugin-pwa. No backend; all data lives on the device. Deployed to GitHub Pages at https://flashcards.hzinchenko.com/ (custom domain, served from the root).
 
 ## Commands
 

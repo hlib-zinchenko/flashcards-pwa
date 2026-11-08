@@ -42,7 +42,7 @@ describe('diagnosticsText', () => {
   const info = { version: '1.2.3', now: 0, userAgent: 'UA', language: 'uk', standalone: true, screen: '390×844 @3x', decks: 2, cards: null, errors: [] };
   it('lists the device and library', () => {
     const text = diagnosticsText(info);
-    expect(text).toContain('Flashcards 1.2.3');
+    expect(text).toContain('Karbka 1.2.3');
     expect(text).toContain('Installed: yes');
     expect(text).toContain('Library: 2 decks, unknown cards');
     expect(text).toContain('No errors recorded.');

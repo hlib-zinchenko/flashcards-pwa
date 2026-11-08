@@ -2,7 +2,7 @@ import type { Messages } from './en';
 
 /** Simplified Chinese has no plural forms: every string is a single form. */
 export const zh: Messages = {
-  'app.name': '单词卡',
+  'app.name': 'Karbka',
 
   'nav.decks': '卡组',
   'nav.test': '测试',

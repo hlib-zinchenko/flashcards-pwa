@@ -2,7 +2,7 @@ import type { Messages } from './en';
 
 /** French plural forms: one|other (0 and 1 are "one") */
 export const fr: Messages = {
-  'app.name': 'Cartes',
+  'app.name': 'Karbka',
 
   'nav.decks': 'Paquets',
   'nav.test': 'Test',
