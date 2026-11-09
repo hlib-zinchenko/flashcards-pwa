@@ -23,6 +23,8 @@ export const TRANSFER_PREFS = [
   'gestureHintSeen',
   'installHintDismissed',
   'lastBackupAt',
+  // So What's new at the new address shows only what's new since the old one.
+  'lastSeenVersion',
 ] as const;
 
 export type TransferMessage =

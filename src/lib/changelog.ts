@@ -5,7 +5,7 @@
  * Keep only the latest MAX_ENTRIES releases: older ones live on the GitHub releases page, which the dialog links to.
  */
 export const MAX_ENTRIES = 3;
-export const RELEASES_URL = 'https://github.com/hlib-zinchenko/flashcards-pwa/releases';
+export const RELEASES_URL = 'https://github.com/hlib-zinchenko/karbka/releases';
 export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
@@ -13,11 +13,13 @@ export const CHANGELOG: ChangelogEntry[] = [
     version: '0.18.0',
     en: [
       'The app has a name now: Karbka. Carve it into memory.',
-      'Your cards, decks and backups are untouched.',
+      'It has a new address too: app.karbka.com. Add it to your home screen from here.',
+      'Coming from flashcards.hzinchenko.com? Open the app there: it moves your cards here in one tap, or by a backup file on iPhone.',
     ],
     uk: [
       'У застосунку тепер є назва: Карбка. Закарбуй у памʼяті.',
-      'Ваші картки, колоди й резервні копії лишаються на місці.',
+      'І нова адреса: app.karbka.com. Додайте її на початковий екран звідси.',
+      'Користувались flashcards.hzinchenko.com? Відкрийте застосунок там: він перенесе картки сюди одним дотиком, а на iPhone через файл копії.',
     ],
   },
   {

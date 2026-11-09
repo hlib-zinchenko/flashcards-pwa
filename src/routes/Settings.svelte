@@ -28,7 +28,7 @@
   import { setRate, speak, speechPrefs, speechSupported, stopSpeaking } from '../lib/speech.svelte';
 
   const tags = $derived(sortTags($allTags ?? []));
-  const REPO = 'https://github.com/hlib-zinchenko/flashcards-pwa';
+  const REPO = 'https://github.com/hlib-zinchenko/karbka';
   const links: { href: string; icon: IconName; label: () => string }[] = [
     { href: 'https://hzinchenko.com/', icon: 'globe', label: () => t('settings.madeBy', { name: 'Hlib Zinchenko' }) },
     { href: REPO, icon: 'code', label: () => t('settings.sourceCode') },

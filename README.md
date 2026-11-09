@@ -6,7 +6,7 @@
 
 I built this for my partner: she wanted a flashcard app on her iPhone and none of the existing ones, free or paid, fit how she studies. A native app meant a developer fee and App Store review, so I made it a PWA instead.
 
-**Live app:** https://flashcards.hzinchenko.com/
+**Live app:** https://app.karbka.com/
 
 <p>
   <img src="docs/screenshots/home.png" alt="Collections home: Japanese N5 and Trip to Tokyo with card counts, level bars and a card-level legend" width="220">
@@ -125,9 +125,9 @@ Pushes to `main` and pull requests run type checks, tests and a build without de
 One-time setup:
 - **Settings → Pages → Source:** GitHub Actions.
 - **Settings → Environments → github-pages → Deployment branches and tags:** add a tag rule `v*`.
-- **Settings → Pages → Custom domain:** `flashcards.hzinchenko.com`, with Enforce HTTPS. DNS has a `CNAME` from `flashcards` to `hlib-zinchenko.github.io`.
+- **Settings → Pages → Custom domain:** `app.karbka.com`, with Enforce HTTPS. DNS (Route 53) has a `CNAME` from `app.karbka.com` to `hlib-zinchenko.github.io`, and `karbka.com` is verified for the account in GitHub's Pages settings.
 
-The app is served from the root of its domain (`base: '/'`). To host it under a path instead, update `base` in `vite.config.ts` and the icon paths in `index.html`. Changing the address moves nobody's data: each user has to export a backup at the old address and import it at the new one.
+The app is served from the root of its domain (`base: '/'`). To host it under a path instead, update `base` in `vite.config.ts` and the icon paths in `index.html`. Changing the address moves nobody's data. The old address, https://flashcards.hzinchenko.com/, stays live from [flashcards-legacy](https://github.com/hlib-zinchenko/flashcards-legacy): the same app built with `VITE_LEGACY=1`, which shows a "Karbka has moved" screen and sends the library to `#/import-legacy` here (`src/lib/transfer.ts`), or by a backup file on an iPhone home-screen app.
 
 ## License
 
