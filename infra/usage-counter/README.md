@@ -15,7 +15,7 @@ Every request adds 1 to the row for one UTC day and one combination of these val
 | `platform` | ios, android, mac, windows, linux, other |
 | `form` | phone, tablet, desktop |
 | `installed` | installed (home screen, Dock, installed app) or tab |
-| `version` | the app version, like 0.18.0 |
+| `version` | the app version, like 1.0.0 |
 | `lang` | the interface language |
 | `age` | days since the device first opened the app: 0, 1-7, 8-30, 31-90, 91+ |
 | `cards` | cards in the library: 0, 1-50, 51-500, 501-2000, 2001+ |
@@ -42,7 +42,7 @@ Rows look like this:
 
 | pk | sk | count | fields | expires |
 | --- | --- | --- | --- | --- |
-| `app#2026-11-09` | `app\|ios\|phone\|installed\|0.18.0\|uk\|8-30\|51-500\|week` | 3 | the same values by name | 2 years later, epoch seconds |
+| `app#2026-11-09` | `app\|ios\|phone\|installed\|1.0.0\|uk\|8-30\|51-500\|week` | 3 | the same values by name | 2 years later, epoch seconds |
 | `site#2026-11-09` | `view\|ua\|android\|phone\|google.com` | 12 | … | … |
 | `site#2026-11-09` | `open\|en\|ios\|phone` | 4 | … | … |
 

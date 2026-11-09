@@ -62,7 +62,7 @@ describe('shouldSend', () => {
 });
 
 describe('the counter (infra/usage-counter)', () => {
-  const ping: AppPing = { kind: 'app', platform: 'ios', form: 'phone', installed: true, version: '0.18.0', lang: 'uk', age: '8-30', cards: '51-500', studied: 'week' };
+  const ping: AppPing = { kind: 'app', platform: 'ios', form: 'phone', installed: true, version: '1.0.0', lang: 'uk', age: '8-30', cards: '51-500', studied: 'week' };
 
   it('knows every value the app can send', () => {
     expect(LANGS).toEqual(LANGUAGES.map((l) => l.code));
@@ -80,8 +80,8 @@ describe('the counter (infra/usage-counter)', () => {
   it('counts an app ping in the row for its UTC day and values', () => {
     expect(toCount(ping, new Date(NOW))).toEqual({
       pk: 'app#2026-11-09',
-      sk: 'app|ios|phone|installed|0.18.0|uk|8-30|51-500|week',
-      fields: { kind: 'app', platform: 'ios', form: 'phone', installed: 'installed', version: '0.18.0', lang: 'uk', age: '8-30', cards: '51-500', studied: 'week' },
+      sk: 'app|ios|phone|installed|1.0.0|uk|8-30|51-500|week',
+      fields: { kind: 'app', platform: 'ios', form: 'phone', installed: 'installed', version: '1.0.0', lang: 'uk', age: '8-30', cards: '51-500', studied: 'week' },
     });
   });
 

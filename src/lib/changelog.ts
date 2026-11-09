@@ -10,7 +10,7 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
-    version: '0.18.0',
+    version: '1.0.0',
     en: [
       'The app has a name now: Karbka. Carve it into memory.',
       'It has a new address too: app.karbka.com. Add it to your home screen from here.',

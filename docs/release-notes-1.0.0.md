@@ -1,4 +1,4 @@
-# Karbka 0.18.0: a name and a new address
+# Karbka 1.0.0: a name and a new address
 
 The app has a name now: **Karbka** (Карбка), from the Ukrainian *карб*, a notch cut into a tally stick so you'd remember. *Carve it into memory.*
 
@@ -17,7 +17,7 @@ Your decks, cards, progress and settings (theme, language, test options) come al
 
 ---
 
-# Карбка 0.18.0: назва і нова адреса
+# Карбка 1.0.0: назва і нова адреса
 
 У застосунку тепер є назва: **Карбка**, від *карб*, зарубки на бирці, щоб памʼятати. *Закарбуй у памʼяті.*
 
