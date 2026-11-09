@@ -5,8 +5,8 @@
  * Settings → Usage counts explains it and turns it off; Global Privacy Control turns it off too.
  */
 
-/** The counter's Function URL. Empty until it's deployed, and then nothing is sent. Also allow its origin in `connect-src` in index.html. */
-export const USAGE_URL = '';
+/** The counter's Function URL (empty sends nothing). Its origin is also allowed in `connect-src` in index.html. */
+export const USAGE_URL = 'https://2b2tarw2mpxzk6bok5r77wyvpe0xnnpa.lambda-url.eu-north-1.on.aws/';
 /** Only the real app counts, not dev servers, previews, tests or the legacy build. */
 export const USAGE_HOST = 'app.karbka.com';
 

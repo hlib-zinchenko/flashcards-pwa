@@ -46,7 +46,7 @@ export const uk: Messages = {
   'collections.title': 'Колекції',
   'collections.new': 'Нова колекція',
   'collections.empty': 'Колекцій ще немає',
-  'collections.emptyHint': 'Колекція об’єднує колоди: одна мова, один курс. Створіть першу або відновіть резервну копію в Налаштуваннях.',
+  'collections.emptyHint': 'Колекція обʼєднує колоди: одна мова, один курс. Створіть першу або відновіть резервну копію в Налаштуваннях.',
   'collections.defaultName': 'Мої колоди',
 
   'collection.name': 'Назва колекції',

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <!-- Only this site's own files run, and nothing is sent anywhere else. The hash is the theme script below:
          change that script and tests/csp.test.ts prints the new hash. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-5IJnwLaTZnOY4fUFlLAkMPvMC1Jo4H16uNGE/XO7cOA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-5IJnwLaTZnOY4fUFlLAkMPvMC1Jo4H16uNGE/XO7cOA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://2b2tarw2mpxzk6bok5r77wyvpe0xnnpa.lambda-url.eu-north-1.on.aws; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#b0a3ce" />
     <script>
