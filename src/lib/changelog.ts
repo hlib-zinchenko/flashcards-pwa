@@ -15,11 +15,13 @@ export const CHANGELOG: ChangelogEntry[] = [
       'The app has a name now: Karbka. Carve it into memory.',
       'It has a new address too: app.karbka.com. Add it to your home screen from here.',
       'Coming from flashcards.hzinchenko.com? Open the app there: it moves your cards here in one tap, or by a backup file on iPhone.',
+      'Once a day the app now sends one anonymous count to our own server, to see whether Karbka is used and on which devices. Never your cards, no ID. Settings → Usage counts explains it and turns it off.',
     ],
     uk: [
       'У застосунку тепер є назва: Карбка. Закарбуй у памʼяті.',
       'І нова адреса: app.karbka.com. Додайте її на початковий екран звідси.',
       'Користувались flashcards.hzinchenko.com? Відкрийте застосунок там: він перенесе картки сюди одним дотиком, а на iPhone через файл копії.',
+      'Раз на день застосунок тепер надсилає один анонімний лічильник на наш власний сервер, щоб ми бачили, чи користуються Карбкою і на яких пристроях. Ніколи не картки, без ідентифікаторів. Налаштування → Статистика використання пояснює це й дає вимкнути.',
     ],
   },
   {

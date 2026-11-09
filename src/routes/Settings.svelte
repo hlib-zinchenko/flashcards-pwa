@@ -19,6 +19,7 @@
   import { showToast } from '../lib/toast.svelte';
   import { openWhatsNew } from '../lib/whatsNew.svelte';
   import { copyDiagnostics } from '../lib/errors.svelte';
+  import { setUsageEnabled, usage as usageCounts } from '../lib/usage.svelte';
   import { liveQuery } from 'dexie';
   import { db } from '../lib/db';
   import { DeckFullError } from '../lib/repo/cards';
@@ -363,6 +364,18 @@
   </section>
 
   <section class="section">
+    <h2 class="section-title">{t('settings.usageTitle')}</h2>
+    <div class="panel box">
+      <p class="small">{t('settings.usageText')}</p>
+      <label class="check">
+        <input type="checkbox" checked={usageCounts.enabled} onchange={(e) => setUsageEnabled(e.currentTarget.checked)} />
+        {t('settings.usageToggle')}
+      </label>
+      <a class="small" href={i18n.lang === 'uk' ? 'https://karbka.com/ua/#counts' : 'https://karbka.com/#counts'} target="_blank" rel="noopener">{t('settings.usageMore')}</a>
+    </div>
+  </section>
+
+  <section class="section">
     <h2 class="section-title">{t('settings.about')}</h2>
     <div class="panel list">
       <div class="box">
@@ -564,6 +577,17 @@
   }
   .box p:last-child {
     margin-bottom: 0;
+  }
+  .check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+  }
+  .check input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--accent);
   }
   .nudge {
     padding: 8px 10px;

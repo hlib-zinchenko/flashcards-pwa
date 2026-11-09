@@ -1,0 +1,12 @@
+{
+  "name": "karbka-usage-counter",
+  "private": true,
+  "type": "module",
+  "description": "The Lambda behind Karbka's usage counts, and a script that reports them. The Lambda itself needs no install: its runtime has the AWS SDK.",
+  "scripts": {
+    "report": "node report.mjs"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.700.0"
+  }
+}

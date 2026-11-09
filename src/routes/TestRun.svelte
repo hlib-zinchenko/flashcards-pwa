@@ -6,6 +6,7 @@
   import Modal from '../components/Modal.svelte';
   import SwipeCard from '../components/SwipeCard.svelte';
   import { countSession } from '../lib/backup.svelte';
+  import { noteStudied } from '../lib/usage.svelte';
   import { db } from '../lib/db';
   import { t, tagLabel } from '../lib/i18n/index.svelte';
   import { allCollections, allDecks, allTags } from '../lib/live';
@@ -250,6 +251,7 @@
     if (!counted) {
       counted = true;
       countSession();
+      noteStudied();
     }
     missedIds = [...session.missed];
     missedOpen = false;

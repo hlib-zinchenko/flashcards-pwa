@@ -25,6 +25,10 @@ export const TRANSFER_PREFS = [
   'lastBackupAt',
   // So What's new at the new address shows only what's new since the old one.
   'lastSeenVersion',
+  // The daily usage count: someone who turned it off keeps it off, and the age and last-studied ranges carry on.
+  'usageCounts',
+  'firstOpenedAt',
+  'lastStudiedAt',
 ] as const;
 
 export type TransferMessage =

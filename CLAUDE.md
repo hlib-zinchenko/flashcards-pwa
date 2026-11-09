@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Karbka (Карбка in Ukrainian, Karbka in every other language; slogan “Carve it into memory.” / «Закарбуй у памʼяті.»): an offline flashcards PWA. Svelte 5 (runes) + TypeScript + Vite, Dexie over IndexedDB, vite-plugin-pwa. No backend; all data lives on the device. Deployed to GitHub Pages at https://app.karbka.com/ (custom domain, served from the root). The old address, https://flashcards.hzinchenko.com/, is served by the `flashcards-legacy` repo: this app at a release tag, built with `VITE_LEGACY=1`.
+Karbka (Карбка in Ukrainian, Karbka in every other language; slogan “Carve it into memory.” / «Закарбуй у памʼяті.»): an offline flashcards PWA. Svelte 5 (runes) + TypeScript + Vite, Dexie over IndexedDB, vite-plugin-pwa. No backend for user data: cards and progress live only on the device. The one request out is the anonymous daily usage count (`src/lib/usage.ts`, `infra/usage-counter/`). Deployed to GitHub Pages at https://app.karbka.com/ (custom domain, served from the root). The old address, https://flashcards.hzinchenko.com/, is served by the `flashcards-legacy` repo: this app at a release tag, built with `VITE_LEGACY=1`.
 
 ## Commands
 

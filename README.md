@@ -2,7 +2,7 @@
 
 # Karbka (Карбка)
 
-**Carve it into memory.** The name comes from the Ukrainian *карб*, a notch cut into a tally stick so you’d remember. Offline flashcards that install to your phone's home screen. No App Store, no account, no server. Your data stays on your device.
+**Carve it into memory.** The name comes from the Ukrainian *карб*, a notch cut into a tally stick so you’d remember. Offline flashcards that install to your phone's home screen. No App Store, no account. Your cards never leave your device.
 
 I built this for my partner: she wanted a flashcard app on her iPhone and none of the existing ones, free or paid, fit how she studies. A native app meant a developer fee and App Store review, so I made it a PWA instead.
 
@@ -67,7 +67,11 @@ The header row is optional. Comma, tab and semicolon separators are all detected
 
 ## Your data
 
-Everything lives in the browser's IndexedDB on your device. Nothing is sent anywhere. The app asks the browser to keep storage persistent (you can also do it in Settings), but the browser can still clear it, so export a backup now and then. Settings shows when you last exported, and after 10 study sessions without a backup it reminds you (with a dot on the Settings tab).
+Everything lives in the browser's IndexedDB on your device. Your cards, decks and progress are never sent anywhere. The app asks the browser to keep storage persistent (you can also do it in Settings), but the browser can still clear it, so export a backup now and then. Settings shows when you last exported, and after 10 study sessions without a backup it reminds you (with a dot on the Settings tab).
+
+### Usage counts
+
+Once a day the app adds 1 to a count in Karbka's own AWS setup (a Lambda and a DynamoDB table in Stockholm, no third party), to see whether people use Karbka and on which devices, and so whether to keep developing it and make native iPhone and Android apps. It sends only coarse values: the kind of device, whether the app is installed, its version and language, how long the device has had it (in ranges), how many cards it holds (in ranges) and when it last finished a test (this week, this month, earlier, never). No cards, no ID, no IP address is kept. Turn it off in Settings → Usage counts; Global Privacy Control turns it off too. The code and the full list: [`src/lib/usage.ts`](src/lib/usage.ts) and [`infra/usage-counter/`](infra/usage-counter/).
 
 ## Updates
 

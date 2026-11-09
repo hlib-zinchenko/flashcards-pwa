@@ -8,6 +8,7 @@ import { installErrorHandlers } from './lib/errors.svelte';
 import { i18n } from './lib/i18n/index.svelte';
 import { applyTheme } from './lib/theme.svelte';
 import { purgeTrash } from './lib/repo/trash';
+import { sendDailyCount } from './lib/usage.svelte';
 
 installErrorHandlers();
 document.documentElement.lang = i18n.lang;
@@ -21,4 +22,13 @@ navigator.storage?.persisted?.().then((ok) => {
 // Items deleted over TRASH_DAYS ago leave "Recently deleted".
 void purgeTrash();
 
-export default mount(App, { target: document.getElementById('app')! });
+const app = mount(App, { target: document.getElementById('app')! });
+
+// The daily usage count (src/lib/usage.ts), after the first screen is up. An app left open
+// overnight counts again when it's next brought back.
+setTimeout(() => void sendDailyCount(), 3000);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') void sendDailyCount();
+});
+
+export default app;
