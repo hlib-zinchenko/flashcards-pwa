@@ -1,15 +1,27 @@
 import { expect, test, type Page } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
+import { en } from '../src/lib/i18n/en';
+import { uk } from '../src/lib/i18n/uk';
 
 // README screenshots from the demo library (docs/demo/demo-backup.json). Not part of the normal run:
 //   npm run screenshots
 // Writes docs/screenshots/*.png at 390×844, 2× (an iPhone-sized window in WebKit).
+// SHOTS_LANG=uk takes the same set with the Ukrainian interface and a library for learning English
+// (docs/demo/demo-backup-uk.json) into docs/screenshots/uk/, for the Ukrainian landing page.
 test.skip(!process.env.SHOTS, 'set SHOTS=1 to take the README screenshots');
 test.describe.configure({ timeout: 180_000 });
 test.use({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
 
-const backup = fileURLToPath(new URL('../docs/demo/demo-backup.json', import.meta.url));
-const dir = process.env.SHOTS_DIR ?? fileURLToPath(new URL('../docs/screenshots/', import.meta.url));
+const LANG = process.env.SHOTS_LANG === 'uk' ? 'uk' : 'en';
+const M = LANG === 'uk' ? uk : en;
+const DEMO = {
+  en: { file: 'demo-backup.json', home: 'Trip to Tokyo', collection: 'Japanese N5', deck: 'Japanese N5 verbs', tag: 'travel' },
+  uk: { file: 'demo-backup-uk.json', home: 'Поїздка до Лондона', collection: 'Англійська B1', deck: 'Англійські дієслова', tag: 'подорож' },
+}[LANG];
+const backup = fileURLToPath(new URL(`../docs/demo/${DEMO.file}`, import.meta.url));
+const dir = process.env.SHOTS_DIR ?? fileURLToPath(new URL(LANG === 'uk' ? '../docs/screenshots/uk/' : '../docs/screenshots/', import.meta.url));
+// "Start · {n} cards" without the count.
+const startLabel = new RegExp(`^${M['test.start'].split(' · ')[0]} · `);
 
 async function shot(page: Page, name: string): Promise<void> {
   // Let toasts, entry animations and fonts settle.
@@ -21,40 +33,41 @@ async function shot(page: Page, name: string): Promise<void> {
 async function importDemo(page: Page): Promise<void> {
   await page.goto('#/settings');
   const chooser = page.waitForEvent('filechooser');
-  await page.getByRole('button', { name: 'Import backup' }).click();
+  await page.getByRole('button', { name: M['settings.import'] }).click();
   await (await chooser).setFiles(backup);
-  await page.getByRole('button', { name: /Replace everything/ }).click();
-  await page.getByRole('button', { name: 'Replace everything', exact: true }).click();
-  await expect(page.getByText('travel', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: M['settings.replace'] }).first().click();
+  await page.getByRole('button', { name: M['settings.replace'], exact: true }).last().click();
+  await expect(page.getByText(DEMO.tag, { exact: true })).toBeVisible();
   // Start clean, without the "Backup imported" toast.
   await page.reload();
 }
 
 test('README screenshots', async ({ page }) => {
+  await page.addInitScript((lang) => localStorage.setItem('lang', JSON.stringify(lang)), LANG);
   await importDemo(page);
 
   await page.goto('#/');
-  await expect(page.getByText('Trip to Tokyo')).toBeVisible();
+  await expect(page.getByText(DEMO.home)).toBeVisible();
   await shot(page, 'home');
 
-  await page.getByText('Japanese N5').click();
-  await expect(page.getByText('Japanese N5 verbs')).toBeVisible();
+  await page.getByText(DEMO.collection, { exact: true }).click();
+  await expect(page.getByText(DEMO.deck)).toBeVisible();
   await shot(page, 'collection');
 
-  await page.getByRole('button', { name: 'Collection settings' }).click();
+  await page.getByRole('button', { name: M['collection.settings'] }).click();
   await shot(page, 'collection-settings');
   await page.keyboard.press('Escape');
 
-  await page.getByText('Japanese N5 verbs').click();
-  await expect(page.getByRole('heading', { name: 'Japanese N5 verbs' })).toBeVisible();
+  await page.getByText(DEMO.deck).click();
+  await expect(page.getByRole('heading', { name: DEMO.deck })).toBeVisible();
   await shot(page, 'deck');
 
-  await page.getByRole('link', { name: 'Test' }).click();
-  await expect(page.getByRole('button', { name: /^Start · / })).toBeVisible();
+  await page.getByRole('link', { name: M['nav.test'] }).click();
+  await expect(page.getByRole('button', { name: startLabel })).toBeVisible();
   await shot(page, 'test-setup');
 
-  await page.getByRole('button', { name: /^Start · / }).click();
-  const gotIt = page.getByRole('button', { name: 'Got it' });
+  await page.getByRole('button', { name: startLabel }).click();
+  const gotIt = page.getByRole('button', { name: M['run.gestureOk'] });
   if (await gotIt.isVisible().catch(() => false)) await gotIt.click();
   await expect(page.locator('.flipper').first()).toBeVisible();
 
@@ -63,13 +76,13 @@ test('README screenshots', async ({ page }) => {
     await page.getByRole('button', { name, exact: true }).click();
     await page.waitForTimeout(700);
   };
-  await answer('Know');
-  await answer('Don’t know');
-  await answer('Know');
+  await answer(M['run.know']);
+  await answer(M['run.dontKnow']);
+  await answer(M['run.know']);
 
-  await page.getByRole('button', { name: 'Flip', exact: true }).click();
+  await page.getByRole('button', { name: M['run.flip'], exact: true }).click();
   await page.waitForTimeout(700);
-  await page.getByRole('button', { name: 'Notes' }).last().click();
+  await page.getByRole('button', { name: M['run.showNotes'] }).last().click();
   await shot(page, 'test-back');
 
   // Halfway through a swipe to the right.
@@ -83,11 +96,11 @@ test('README screenshots', async ({ page }) => {
   await page.mouse.up();
 
   await page.waitForTimeout(700);
-  await answer('Don’t know');
-  for (let i = 0; i < 3; i++) await answer('Know');
-  await page.getByRole('button', { name: 'Finish' }).click();
+  await answer(M['run.dontKnow']);
+  for (let i = 0; i < 3; i++) await answer(M['run.know']);
+  await page.getByRole('button', { name: M['run.finish'] }).click();
   await shot(page, 'summary');
-  await page.getByRole('button', { name: 'Done' }).click();
+  await page.getByRole('button', { name: M['summary.done'] }).click();
 
   await page.goto('#/settings');
   await shot(page, 'settings');
@@ -96,6 +109,6 @@ test('README screenshots', async ({ page }) => {
   await page.goto('#/');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await page.getByText('Japanese N5').click();
+  await page.getByText(DEMO.collection, { exact: true }).click();
   await shot(page, 'collection-dark');
 });

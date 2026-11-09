@@ -1,0 +1,1017 @@
+{
+  "app": "flashcards-pwa",
+  "schemaVersion": 2,
+  "exportedAt": 1791968400000,
+  "collections": [
+    {
+      "id": "demo-collection-1",
+      "name": "Англійська B1",
+      "position": 0,
+      "languages": [
+        {
+          "lang": "en-GB"
+        },
+        {
+          "lang": "uk-UA"
+        }
+      ],
+      "createdAt": 1789462800000,
+      "updatedAt": 1791882000000
+    },
+    {
+      "id": "demo-collection-2",
+      "name": "Поїздка до Лондона",
+      "position": 1,
+      "languages": [
+        {
+          "lang": "en-GB"
+        },
+        {
+          "lang": "uk-UA"
+        }
+      ],
+      "createdAt": 1789462800000,
+      "updatedAt": 1791882000000
+    }
+  ],
+  "decks": [
+    {
+      "id": "demo-deck-1",
+      "name": "Англійські дієслова",
+      "collectionId": "demo-collection-1",
+      "speech": {
+        "front": "en-GB",
+        "back": "uk-UA"
+      },
+      "position": 0,
+      "createdAt": 1789549200000,
+      "updatedAt": 1791882000000
+    },
+    {
+      "id": "demo-deck-2",
+      "name": "Їжа та напої",
+      "collectionId": "demo-collection-2",
+      "speech": {
+        "front": "en-GB",
+        "back": "uk-UA"
+      },
+      "position": 0,
+      "createdAt": 1789635600000,
+      "updatedAt": 1791882000000
+    },
+    {
+      "id": "demo-deck-3",
+      "name": "Фрази в дорогу",
+      "collectionId": "demo-collection-2",
+      "speech": {
+        "front": "en-GB",
+        "back": "uk-UA"
+      },
+      "position": 1,
+      "createdAt": 1789722000000,
+      "updatedAt": 1791882000000
+    },
+    {
+      "id": "demo-deck-4",
+      "name": "Прикметники",
+      "collectionId": "demo-collection-1",
+      "speech": {
+        "front": "en-GB",
+        "back": "uk-UA"
+      },
+      "position": 1,
+      "createdAt": 1789808400000,
+      "updatedAt": 1791882000000
+    }
+  ],
+  "cards": [
+    {
+      "id": "demo-card-1-1",
+      "deckId": "demo-deck-1",
+      "front": "eat",
+      "back": "їсти",
+      "tags": [
+        "verb",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 0,
+      "level": 5,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789549200000,
+      "updatedAt": 1791882000000,
+      "notes": "ate, eaten · /iːt/",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-1-2",
+      "deckId": "demo-deck-1",
+      "front": "drink",
+      "back": "пити",
+      "tags": [
+        "verb",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 1,
+      "level": 5,
+      "timesSeen": 12,
+      "timesKnown": 11,
+      "timesMissed": 1,
+      "createdAt": 1789549260000,
+      "updatedAt": 1791882000000,
+      "notes": "drank, drunk",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-1-3",
+      "deckId": "demo-deck-1",
+      "front": "go",
+      "back": "йти, їхати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 2,
+      "level": 4,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789549320000,
+      "updatedAt": 1791882000000,
+      "notes": "went, gone · неправильне",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-1-4",
+      "deckId": "demo-deck-1",
+      "front": "come",
+      "back": "приходити",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 3,
+      "level": 4,
+      "timesSeen": 9,
+      "timesKnown": 8,
+      "timesMissed": 1,
+      "createdAt": 1789549380000,
+      "updatedAt": 1791882000000,
+      "notes": "came, come · неправильне",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-1-5",
+      "deckId": "demo-deck-1",
+      "front": "see",
+      "back": "бачити",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 4,
+      "level": 4,
+      "timesSeen": 9,
+      "timesKnown": 9,
+      "timesMissed": 0,
+      "createdAt": 1789549440000,
+      "updatedAt": 1791882000000,
+      "notes": "saw, seen",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-1-6",
+      "deckId": "demo-deck-1",
+      "front": "do",
+      "back": "робити",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 5,
+      "level": 5,
+      "timesSeen": 13,
+      "timesKnown": 12,
+      "timesMissed": 1,
+      "createdAt": 1789549500000,
+      "updatedAt": 1791882000000,
+      "notes": "did, done · неправильне",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-1-7",
+      "deckId": "demo-deck-1",
+      "front": "write",
+      "back": "писати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 6,
+      "level": 3,
+      "timesSeen": 7,
+      "timesKnown": 6,
+      "timesMissed": 1,
+      "createdAt": 1789549560000,
+      "updatedAt": 1791882000000,
+      "notes": "wrote, written",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-1-8",
+      "deckId": "demo-deck-1",
+      "front": "read",
+      "back": "читати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 7,
+      "level": 3,
+      "timesSeen": 9,
+      "timesKnown": 7,
+      "timesMissed": 2,
+      "createdAt": 1789549620000,
+      "updatedAt": 1791882000000,
+      "notes": "read /red/, read /red/",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-1-9",
+      "deckId": "demo-deck-1",
+      "front": "listen",
+      "back": "слухати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 8,
+      "level": 3,
+      "timesSeen": 9,
+      "timesKnown": 8,
+      "timesMissed": 1,
+      "createdAt": 1789549680000,
+      "updatedAt": 1791882000000,
+      "notes": "listen to music · t не читається",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-1-10",
+      "deckId": "demo-deck-1",
+      "front": "speak",
+      "back": "говорити",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 9,
+      "level": 2,
+      "timesSeen": 7,
+      "timesKnown": 4,
+      "timesMissed": 3,
+      "createdAt": 1789549740000,
+      "updatedAt": 1791882000000,
+      "notes": "spoke, spoken",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-1-11",
+      "deckId": "demo-deck-1",
+      "front": "buy",
+      "back": "купувати",
+      "tags": [
+        "verb",
+        "demo-tag-n5",
+        "demo-tag-travel"
+      ],
+      "position": 10,
+      "level": 2,
+      "timesSeen": 7,
+      "timesKnown": 5,
+      "timesMissed": 2,
+      "createdAt": 1789549800000,
+      "updatedAt": 1791882000000,
+      "notes": "bought, bought",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-1-12",
+      "deckId": "demo-deck-1",
+      "front": "wait",
+      "back": "чекати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 11,
+      "level": 2,
+      "timesSeen": 9,
+      "timesKnown": 6,
+      "timesMissed": 3,
+      "createdAt": 1789549860000,
+      "updatedAt": 1791882000000,
+      "notes": "wait for somebody",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-1-13",
+      "deckId": "demo-deck-1",
+      "front": "wake up",
+      "back": "прокидатися",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 12,
+      "level": 1,
+      "timesSeen": 5,
+      "timesKnown": 2,
+      "timesMissed": 3,
+      "createdAt": 1789549920000,
+      "updatedAt": 1791882000000,
+      "notes": "woke up, woken up",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-1-14",
+      "deckId": "demo-deck-1",
+      "front": "sleep",
+      "back": "спати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 13,
+      "level": 1,
+      "timesSeen": 7,
+      "timesKnown": 3,
+      "timesMissed": 4,
+      "createdAt": 1789549980000,
+      "updatedAt": 1791882000000,
+      "notes": "slept, slept",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-1-15",
+      "deckId": "demo-deck-1",
+      "front": "swim",
+      "back": "плавати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 14,
+      "level": 1,
+      "timesSeen": 7,
+      "timesKnown": 4,
+      "timesMissed": 3,
+      "createdAt": 1789550040000,
+      "updatedAt": 1791882000000,
+      "notes": "swam, swum",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-1-16",
+      "deckId": "demo-deck-1",
+      "front": "work",
+      "back": "працювати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 15,
+      "level": 0,
+      "timesSeen": 1,
+      "timesKnown": 0,
+      "timesMissed": 1,
+      "createdAt": 1789550100000,
+      "updatedAt": 1791882000000,
+      "notes": "правильне · worked",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-1-17",
+      "deckId": "demo-deck-1",
+      "front": "rest",
+      "back": "відпочивати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 16,
+      "level": 0,
+      "timesSeen": 0,
+      "timesKnown": 0,
+      "timesMissed": 0,
+      "createdAt": 1789550160000,
+      "updatedAt": 1791882000000,
+      "notes": "have a rest"
+    },
+    {
+      "id": "demo-card-1-18",
+      "deckId": "demo-deck-1",
+      "front": "teach",
+      "back": "навчати",
+      "tags": [
+        "verb",
+        "demo-tag-n5"
+      ],
+      "position": 17,
+      "level": 0,
+      "timesSeen": 3,
+      "timesKnown": 2,
+      "timesMissed": 1,
+      "createdAt": 1789550220000,
+      "updatedAt": 1791882000000,
+      "notes": "taught, taught",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-2-1",
+      "deckId": "demo-deck-2",
+      "front": "water",
+      "back": "вода",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 0,
+      "level": 5,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789635600000,
+      "updatedAt": 1791882000000,
+      "notes": "/ˈwɔːtə/",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-2-2",
+      "deckId": "demo-deck-2",
+      "front": "tea",
+      "back": "чай",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 1,
+      "level": 5,
+      "timesSeen": 12,
+      "timesKnown": 11,
+      "timesMissed": 1,
+      "createdAt": 1789635660000,
+      "updatedAt": 1791882000000,
+      "notes": "a cup of tea",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-2-3",
+      "deckId": "demo-deck-2",
+      "front": "bread",
+      "back": "хліб",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 2,
+      "level": 4,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789635720000,
+      "updatedAt": 1791882000000,
+      "notes": "a loaf of bread",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-2-4",
+      "deckId": "demo-deck-2",
+      "front": "fish",
+      "back": "риба",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 3,
+      "level": 4,
+      "timesSeen": 9,
+      "timesKnown": 8,
+      "timesMissed": 1,
+      "createdAt": 1789635780000,
+      "updatedAt": 1791882000000,
+      "notes": "fish and chips",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-2-5",
+      "deckId": "demo-deck-2",
+      "front": "meat",
+      "back": "мʼясо",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 4,
+      "level": 3,
+      "timesSeen": 8,
+      "timesKnown": 7,
+      "timesMissed": 1,
+      "createdAt": 1789635840000,
+      "updatedAt": 1791882000000,
+      "notes": "/miːt/, як meet",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-2-6",
+      "deckId": "demo-deck-2",
+      "front": "vegetables",
+      "back": "овочі",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 5,
+      "level": 3,
+      "timesSeen": 10,
+      "timesKnown": 8,
+      "timesMissed": 2,
+      "createdAt": 1789635900000,
+      "updatedAt": 1791882000000,
+      "notes": "/ˈvedʒtəblz/",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-2-7",
+      "deckId": "demo-deck-2",
+      "front": "fruit",
+      "back": "фрукти",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 6,
+      "level": 2,
+      "timesSeen": 6,
+      "timesKnown": 4,
+      "timesMissed": 2,
+      "createdAt": 1789635960000,
+      "updatedAt": 1791882000000,
+      "notes": "незлічуване: some fruit",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-2-8",
+      "deckId": "demo-deck-2",
+      "front": "egg",
+      "back": "яйце",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 7,
+      "level": 2,
+      "timesSeen": 8,
+      "timesKnown": 5,
+      "timesMissed": 3,
+      "createdAt": 1789636020000,
+      "updatedAt": 1791882000000,
+      "notes": "boiled egg · варене яйце",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-2-9",
+      "deckId": "demo-deck-2",
+      "front": "delicious",
+      "back": "смачний",
+      "tags": [
+        "adjective",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 8,
+      "level": 3,
+      "timesSeen": 9,
+      "timesKnown": 8,
+      "timesMissed": 1,
+      "createdAt": 1789636080000,
+      "updatedAt": 1791882000000,
+      "notes": "/dɪˈlɪʃəs/",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-2-10",
+      "deckId": "demo-deck-2",
+      "front": "sweet",
+      "back": "солодкий",
+      "tags": [
+        "adjective",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 9,
+      "level": 1,
+      "timesSeen": 6,
+      "timesKnown": 2,
+      "timesMissed": 4,
+      "createdAt": 1789636140000,
+      "updatedAt": 1791882000000,
+      "notes": "also: цукерка (AmE candy)",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-2-11",
+      "deckId": "demo-deck-2",
+      "front": "spicy",
+      "back": "гострий",
+      "tags": [
+        "adjective",
+        "demo-tag-food"
+      ],
+      "position": 10,
+      "level": 1,
+      "timesSeen": 6,
+      "timesKnown": 3,
+      "timesMissed": 3,
+      "createdAt": 1789636200000,
+      "updatedAt": 1791882000000,
+      "notes": "hot теж означає гострий",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-2-12",
+      "deckId": "demo-deck-2",
+      "front": "milk",
+      "back": "молоко",
+      "tags": [
+        "noun",
+        "demo-tag-n5",
+        "demo-tag-food"
+      ],
+      "position": 11,
+      "level": 0,
+      "timesSeen": 3,
+      "timesKnown": 2,
+      "timesMissed": 1,
+      "createdAt": 1789636260000,
+      "updatedAt": 1791882000000,
+      "notes": "незлічуване",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-3-1",
+      "deckId": "demo-deck-3",
+      "front": "Good morning",
+      "back": "Доброго ранку",
+      "tags": [
+        "phrase"
+      ],
+      "position": 0,
+      "level": 5,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789722000000,
+      "updatedAt": 1791882000000,
+      "notes": "до полудня",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-3-2",
+      "deckId": "demo-deck-3",
+      "front": "Thank you",
+      "back": "Дякую",
+      "tags": [
+        "phrase"
+      ],
+      "position": 1,
+      "level": 5,
+      "timesSeen": 12,
+      "timesKnown": 11,
+      "timesMissed": 1,
+      "createdAt": 1789722060000,
+      "updatedAt": 1791882000000,
+      "notes": "відповідь: You’re welcome",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-3-3",
+      "deckId": "demo-deck-3",
+      "front": "Excuse me",
+      "back": "Перепрошую",
+      "tags": [
+        "phrase",
+        "demo-tag-travel"
+      ],
+      "position": 2,
+      "level": 4,
+      "timesSeen": 10,
+      "timesKnown": 10,
+      "timesMissed": 0,
+      "createdAt": 1789722120000,
+      "updatedAt": 1791882000000,
+      "notes": "щоб звернутися в магазині чи кафе",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-3-4",
+      "deckId": "demo-deck-3",
+      "front": "How much is it?",
+      "back": "Скільки це коштує?",
+      "tags": [
+        "phrase",
+        "demo-tag-travel"
+      ],
+      "position": 3,
+      "level": 3,
+      "timesSeen": 8,
+      "timesKnown": 6,
+      "timesMissed": 2,
+      "createdAt": 1789722180000,
+      "updatedAt": 1791882000000,
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-3-5",
+      "deckId": "demo-deck-3",
+      "front": "Where is the station?",
+      "back": "Де вокзал?",
+      "tags": [
+        "phrase",
+        "demo-tag-travel"
+      ],
+      "position": 4,
+      "level": 2,
+      "timesSeen": 7,
+      "timesKnown": 5,
+      "timesMissed": 2,
+      "createdAt": 1789722240000,
+      "updatedAt": 1791882000000,
+      "notes": "station = вокзал, станція",
+      "lastReviewedAt": 1791536400000
+    },
+    {
+      "id": "demo-card-3-6",
+      "deckId": "demo-deck-3",
+      "front": "This one, please",
+      "back": "Ось це, будь ласка",
+      "tags": [
+        "phrase",
+        "demo-tag-travel",
+        "demo-tag-food"
+      ],
+      "position": 5,
+      "level": 2,
+      "timesSeen": 9,
+      "timesKnown": 6,
+      "timesMissed": 3,
+      "createdAt": 1789722300000,
+      "updatedAt": 1791882000000,
+      "notes": "показати пальцем",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-3-7",
+      "deckId": "demo-deck-3",
+      "front": "Do you have a menu in Ukrainian?",
+      "back": "У вас є меню українською?",
+      "tags": [
+        "phrase",
+        "demo-tag-travel",
+        "demo-tag-food"
+      ],
+      "position": 6,
+      "level": 1,
+      "timesSeen": 5,
+      "timesKnown": 2,
+      "timesMissed": 3,
+      "createdAt": 1789722360000,
+      "updatedAt": 1791882000000,
+      "notes": "menu /ˈmenjuː/",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-3-8",
+      "deckId": "demo-deck-3",
+      "front": "Could I have the bill, please?",
+      "back": "Можна рахунок, будь ласка?",
+      "tags": [
+        "phrase",
+        "demo-tag-travel",
+        "demo-tag-food"
+      ],
+      "position": 7,
+      "level": 0,
+      "timesSeen": 2,
+      "timesKnown": 1,
+      "timesMissed": 1,
+      "createdAt": 1789722420000,
+      "updatedAt": 1791882000000,
+      "notes": "AmE: the check",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-3-9",
+      "deckId": "demo-deck-3",
+      "front": "I have a reservation",
+      "back": "У мене бронювання",
+      "tags": [
+        "phrase",
+        "demo-tag-travel"
+      ],
+      "position": 8,
+      "level": 0,
+      "timesSeen": 0,
+      "timesKnown": 0,
+      "timesMissed": 0,
+      "createdAt": 1789722480000,
+      "updatedAt": 1791882000000,
+      "notes": "reservation = booking"
+    },
+    {
+      "id": "demo-card-4-1",
+      "deckId": "demo-deck-4",
+      "front": "big",
+      "back": "великий",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 0,
+      "level": 2,
+      "timesSeen": 6,
+      "timesKnown": 4,
+      "timesMissed": 2,
+      "createdAt": 1789808400000,
+      "updatedAt": 1791882000000,
+      "notes": "bigger, the biggest",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-4-2",
+      "deckId": "demo-deck-4",
+      "front": "small",
+      "back": "маленький",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 1,
+      "level": 2,
+      "timesSeen": 8,
+      "timesKnown": 5,
+      "timesMissed": 3,
+      "createdAt": 1789808460000,
+      "updatedAt": 1791882000000,
+      "notes": "smaller, the smallest",
+      "lastReviewedAt": 1791795600000
+    },
+    {
+      "id": "demo-card-4-3",
+      "deckId": "demo-deck-4",
+      "front": "new",
+      "back": "новий",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 2,
+      "level": 1,
+      "timesSeen": 7,
+      "timesKnown": 4,
+      "timesMissed": 3,
+      "createdAt": 1789808520000,
+      "updatedAt": 1791882000000,
+      "notes": "newer, the newest",
+      "lastReviewedAt": 1791709200000
+    },
+    {
+      "id": "demo-card-4-4",
+      "deckId": "demo-deck-4",
+      "front": "old",
+      "back": "старий",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 3,
+      "level": 1,
+      "timesSeen": 6,
+      "timesKnown": 2,
+      "timesMissed": 4,
+      "createdAt": 1789808580000,
+      "updatedAt": 1791882000000,
+      "notes": "також про людей: an old man",
+      "lastReviewedAt": 1791622800000
+    },
+    {
+      "id": "demo-card-4-5",
+      "deckId": "demo-deck-4",
+      "front": "expensive",
+      "back": "дорогий",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 4,
+      "level": 0,
+      "timesSeen": 0,
+      "timesKnown": 0,
+      "timesMissed": 0,
+      "createdAt": 1789808640000,
+      "updatedAt": 1791882000000,
+      "notes": "more expensive"
+    },
+    {
+      "id": "demo-card-4-6",
+      "deckId": "demo-deck-4",
+      "front": "cheap",
+      "back": "дешевий",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 5,
+      "level": 0,
+      "timesSeen": 3,
+      "timesKnown": 2,
+      "timesMissed": 1,
+      "createdAt": 1789808700000,
+      "updatedAt": 1791882000000,
+      "notes": "cheaper, the cheapest",
+      "lastReviewedAt": 1791882000000
+    },
+    {
+      "id": "demo-card-4-7",
+      "deckId": "demo-deck-4",
+      "front": "quiet",
+      "back": "тихий",
+      "tags": [
+        "adjective",
+        "demo-tag-n5"
+      ],
+      "position": 6,
+      "level": 0,
+      "timesSeen": 0,
+      "timesKnown": 0,
+      "timesMissed": 0,
+      "createdAt": 1789808760000,
+      "updatedAt": 1791882000000,
+      "notes": "не плутати з quite = досить"
+    }
+  ],
+  "tags": [
+    {
+      "id": "verb",
+      "name": "verb",
+      "preset": true,
+      "createdAt": 1789376400000
+    },
+    {
+      "id": "noun",
+      "name": "noun",
+      "preset": true,
+      "createdAt": 1789376400001
+    },
+    {
+      "id": "adjective",
+      "name": "adjective",
+      "preset": true,
+      "createdAt": 1789376400002
+    },
+    {
+      "id": "phrase",
+      "name": "phrase",
+      "preset": true,
+      "createdAt": 1789376400003
+    },
+    {
+      "id": "demo-tag-n5",
+      "name": "B1",
+      "preset": false,
+      "createdAt": 1789462800000
+    },
+    {
+      "id": "demo-tag-food",
+      "name": "їжа",
+      "preset": false,
+      "createdAt": 1789462800000
+    },
+    {
+      "id": "demo-tag-travel",
+      "name": "подорож",
+      "preset": false,
+      "createdAt": 1789462800000
+    }
+  ]
+}
