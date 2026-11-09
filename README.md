@@ -8,6 +8,8 @@ I built this for my partner: she wanted a flashcard app on her iPhone and none o
 
 **Live app:** https://app.karbka.com/
 
+**Website:** https://karbka.com/
+
 <p>
   <img src="docs/screenshots/home.png" alt="Collections home: Japanese N5 and Trip to Tokyo with card counts, level bars and a card-level legend" width="220">
   <img src="docs/screenshots/collection.png" alt="A collection with its decks, a play button per deck and the languages it reads aloud" width="220">
