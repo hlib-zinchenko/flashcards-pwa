@@ -227,7 +227,7 @@ export const en = {
   'settings.voiceAuto': 'Automatic',
   'settings.voiceNone': 'No voices on this device',
   'settings.voiceTry': 'Try the {lang} voice',
-  'settings.voicePerCollection': 'Languages and voices are set in each collection (⚙), and each deck picks the language of the card front and back.',
+  'settings.voicePerCollection': 'Languages and voices are set in each collection (⋯), and each deck picks the language of the card front and back.',
   'settings.speechRate': 'Speed',
   'settings.speechSlow': 'Slower',
   'settings.speechFast': 'Faster',

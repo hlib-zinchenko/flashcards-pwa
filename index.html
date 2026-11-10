@@ -17,14 +17,15 @@
         document.querySelector('meta[name="theme-color"]').content = dark ? '#1c1529' : '#b0a3ce';
       } catch (e) {}
     </script>
-    <title>Karbka: carve it into memory. Offline flashcards for your phone</title>
-    <meta name="description" content="Karbka is a flashcard app for your phone: carve it into memory. Make decks and learn them with quick swipe tests. Works offline and installs to your home screen. No account: your cards stay on your device." />
+    <!-- This is the app itself; karbka.com is the page about it, so the words here point there. -->
+    <title>Karbka app: open your flashcards</title>
+    <meta name="description" content="The Karbka flashcard app. Make decks, study them with swipe tests, and install it on your phone, tablet or computer. Free, works offline, no account. What it is and how to install it: karbka.com." />
     <link rel="canonical" href="https://app.karbka.com/" />
     <!-- Sharing previews. Absolute URLs: update them if the domain changes. -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Karbka" />
-    <meta property="og:title" content="Karbka: carve it into memory" />
-    <meta property="og:description" content="Flashcards you swipe to learn. Works offline, no account needed." />
+    <meta property="og:title" content="Karbka app: open your flashcards" />
+    <meta property="og:description" content="Flashcards you swipe to learn, on your phone, tablet or computer. Free, works offline, no account." />
     <meta property="og:url" content="https://app.karbka.com/" />
     <meta property="og:image" content="https://app.karbka.com/og-image.png" />
     <meta property="og:image:type" content="image/png" />
@@ -32,20 +33,22 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Karbka flashcards app: a fanned stack of cards, the top one reading 好き" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:locale:alternate" content="uk_UA" />
     <meta name="twitter:card" content="summary_large_image" />
+    <!-- The same app karbka.com describes (same @id), so search engines see one product, not two. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
+        "@type": ["SoftwareApplication", "WebApplication"],
+        "@id": "https://karbka.com/#app",
         "name": "Karbka",
         "alternateName": "Карбка",
-        "url": "https://app.karbka.com/",
-        "description": "Karbka: offline flashcards that install to your phone's home screen. No account, and your cards never leave your device.",
+        "url": "https://karbka.com/",
+        "installUrl": "https://app.karbka.com/",
+        "description": "Offline flashcards for phones, tablets and computers that install from the browser. No account, and your cards never leave your device.",
         "applicationCategory": "EducationalApplication",
-        "operatingSystem": "Any (web browser)",
-        "inLanguage": ["en", "uk"],
-        "image": "https://app.karbka.com/og-image.png",
+        "operatingSystem": "iOS, iPadOS, Android, Windows, macOS, Linux",
+        "isAccessibleForFree": true,
+        "image": "https://karbka.com/img/og-image.png",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
       }
     </script>
@@ -59,6 +62,15 @@
   </head>
   <body>
     <div id="app"></div>
+    <!-- For browsers without JavaScript and for crawlers that don't run it. -->
+    <noscript>
+      <main style="max-width: 36rem; margin: 0 auto; padding: 2rem 1rem; font-family: system-ui, sans-serif; line-height: 1.5">
+        <h1>Karbka, the free flashcard app</h1>
+        <p>Make decks of flashcards and learn them with swipe tests, on your phone, tablet or computer. It works offline, needs no account, and your cards stay on your device.</p>
+        <p>Karbka needs JavaScript to run. Turn it on and reload this page.</p>
+        <p><a href="https://karbka.com/">What Karbka is and how to install it</a> · <a href="https://karbka.com/ua/" hreflang="uk" lang="uk">Українською</a></p>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

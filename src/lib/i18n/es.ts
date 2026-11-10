@@ -225,7 +225,7 @@ export const es: Messages = {
   'settings.voiceAuto': 'Automática',
   'settings.voiceNone': 'No hay voces en este dispositivo',
   'settings.voiceTry': 'Probar la voz de {lang}',
-  'settings.voicePerCollection': 'Los idiomas y las voces se configuran en cada colección (⚙), y cada mazo elige el idioma del anverso y del reverso.',
+  'settings.voicePerCollection': 'Los idiomas y las voces se configuran en cada colección (⋯), y cada mazo elige el idioma del anverso y del reverso.',
   'settings.speechRate': 'Velocidad',
   'settings.speechSlow': 'Más lenta',
   'settings.speechFast': 'Más rápida',

@@ -23,8 +23,13 @@ export default defineConfig({
       manifest: {
         name: 'Karbka',
         short_name: 'Karbka',
+        // The identity of installed copies. Without an id it was start_url, which resolves to the same
+        // https://app.karbka.com/, so installs stay the same app. Never change it.
+        id: '/',
         description: 'Karbka: offline flashcards for learning anything',
         lang: 'en',
+        dir: 'ltr',
+        categories: ['education', 'productivity'],
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#b0a3ce',
@@ -37,6 +42,14 @@ export default defineConfig({
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
           { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
           { src: 'monochrome-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'monochrome' },
+        ],
+        // Shown in the install dialog on Android and by app stores (PWABuilder). WebP, so the
+        // precache (png only) leaves them out. From docs/screenshots/ with cwebp -q 80.
+        screenshots: [
+          { src: 'screenshots/test-swipe.webp', sizes: '780x1688', type: 'image/webp', form_factor: 'narrow', label: 'Swipe a card right if you know it, left if you don’t' },
+          { src: 'screenshots/test-setup.webp', sizes: '780x1688', type: 'image/webp', form_factor: 'narrow', label: 'Choose the decks, the side to show first and the order' },
+          { src: 'screenshots/summary.webp', sizes: '780x1688', type: 'image/webp', form_factor: 'narrow', label: 'See what you knew on the first try, then retry the misses' },
+          { src: 'screenshots/deck.webp', sizes: '780x1688', type: 'image/webp', form_factor: 'narrow', label: 'A deck imported from CSV, each card with its tags' },
         ],
       },
       workbox: {

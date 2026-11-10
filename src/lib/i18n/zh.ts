@@ -225,7 +225,7 @@ export const zh: Messages = {
   'settings.voiceAuto': '自动',
   'settings.voiceNone': '此设备上没有语音',
   'settings.voiceTry': '试听{lang}语音',
-  'settings.voicePerCollection': '语言和语音在每个合集（⚙）中设置，每个卡组再选择卡片正面和背面的语言。',
+  'settings.voicePerCollection': '语言和语音在每个合集（⋯）中设置，每个卡组再选择卡片正面和背面的语言。',
   'settings.speechRate': '速度',
   'settings.speechSlow': '更慢',
   'settings.speechFast': '更快',

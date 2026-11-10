@@ -225,7 +225,7 @@ export const tr: Messages = {
   'settings.voiceAuto': 'Otomatik',
   'settings.voiceNone': 'Bu cihazda ses yok',
   'settings.voiceTry': '{lang} sesini dene',
-  'settings.voicePerCollection': 'Diller ve sesler her koleksiyonda (⚙) ayarlanır, her deste de kartın ön ve arka yüzünün dilini seçer.',
+  'settings.voicePerCollection': 'Diller ve sesler her koleksiyonda (⋯) ayarlanır, her deste de kartın ön ve arka yüzünün dilini seçer.',
   'settings.speechRate': 'Hız',
   'settings.speechSlow': 'Daha yavaş',
   'settings.speechFast': 'Daha hızlı',

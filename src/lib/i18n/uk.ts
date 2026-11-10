@@ -225,7 +225,7 @@ export const uk: Messages = {
   'settings.voiceAuto': 'Автоматично',
   'settings.voiceNone': 'На цьому пристрої немає голосів',
   'settings.voiceTry': 'Послухати голос: {lang}',
-  'settings.voicePerCollection': 'Мови й голоси налаштовуються в кожній колекції (⚙), а кожна колода вибирає мову лицьового та зворотного боку.',
+  'settings.voicePerCollection': 'Мови й голоси налаштовуються в кожній колекції (⋯), а кожна колода вибирає мову лицьового та зворотного боку.',
   'settings.speechRate': 'Швидкість',
   'settings.speechSlow': 'Повільніше',
   'settings.speechFast': 'Швидше',

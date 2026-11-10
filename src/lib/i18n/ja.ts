@@ -225,7 +225,7 @@ export const ja: Messages = {
   'settings.voiceAuto': '自動',
   'settings.voiceNone': 'このデバイスには音声がありません',
   'settings.voiceTry': '{lang}の音声を試す',
-  'settings.voicePerCollection': '言語と音声は各コレクション（⚙）で設定し、各デッキでカードの表と裏の言語を選びます。',
+  'settings.voicePerCollection': '言語と音声は各コレクション（⋯）で設定し、各デッキでカードの表と裏の言語を選びます。',
   'settings.speechRate': '速さ',
   'settings.speechSlow': 'ゆっくり',
   'settings.speechFast': '速く',

@@ -225,7 +225,7 @@ export const nl: Messages = {
   'settings.voiceAuto': 'Automatisch',
   'settings.voiceNone': 'Geen stemmen op dit apparaat',
   'settings.voiceTry': 'De stem voor {lang} uitproberen',
-  'settings.voicePerCollection': 'Talen en stemmen stel je in per collectie (⚙), en elke stapel kiest de taal van de voor- en achterkant.',
+  'settings.voicePerCollection': 'Talen en stemmen stel je in per collectie (⋯), en elke stapel kiest de taal van de voor- en achterkant.',
   'settings.speechRate': 'Snelheid',
   'settings.speechSlow': 'Langzamer',
   'settings.speechFast': 'Sneller',
