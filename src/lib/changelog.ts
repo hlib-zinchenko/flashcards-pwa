@@ -10,6 +10,19 @@ export type ChangelogEntry = { version: string; en: string[]; uk: string[] };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.0.1',
+    en: [
+      'New guide: how to import cards from Excel, Google Sheets, Numbers or Quizlet, at karbka.com/csv.',
+      'Installing on Android now shows pictures of the app first.',
+      'The voices hint in Settings now points to the right button: ⋯ at the top of a collection.',
+    ],
+    uk: [
+      'Новий посібник: як імпортувати картки з Excel, Google Таблиць, Numbers чи Quizlet, на karbka.com/ua/csv.',
+      'Під час встановлення на Android тепер видно знімки застосунку.',
+      'Підказка про голоси в Налаштуваннях тепер вказує на правильну кнопку: ⋯ угорі колекції.',
+    ],
+  },
+  {
     version: '1.0.0',
     en: [
       'The app has a name now: Karbka. Carve it into memory.',
@@ -37,21 +50,6 @@ export const CHANGELOG: ChangelogEntry[] = [
       '«Замінити все» під час імпорту теж зберігає там стару бібліотеку, тож до неї можна повернутися.',
       'Видалення колоди чи колекції можна одразу скасувати.',
       'Застосунок нагадає зробити резервну копію, якщо ви навчаєтеся понад тиждень без неї.',
-    ],
-  },
-  {
-    version: '0.16.0',
-    en: [
-      'Search words across a whole collection: tap the magnifier on the collection screen.',
-      'Adding a card warns you if the same word is already in any deck of the collection. You can still save it.',
-      'You can write notes when adding a card.',
-      'Tags are cleared after each card you add, so they don’t go onto the next one by mistake.',
-    ],
-    uk: [
-      'Пошук слів у всій колекції: натисніть лупу на екрані колекції.',
-      'Під час додавання картки застосунок попередить, якщо таке слово вже є в якійсь колоді колекції. Зберегти все одно можна.',
-      'Під час додавання картки можна написати нотатки.',
-      'Теги скидаються після кожної доданої картки, щоб не потрапити на наступну випадково.',
     ],
   },
 ];
